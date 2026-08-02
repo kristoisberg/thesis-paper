@@ -63,6 +63,41 @@ jobs:
         with:
           path: preview
 
+  review:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Run adversarial review
+        continue-on-error: true
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .github/prompts/adversarial-review.txt
+          output-file: adversarial-review.md
+          model: gpt-5.6-sol
+          effort: medium
+          permission-profile: ":read-only"
+          safety-strategy: drop-sudo
+          codex-args: '["-c", "web_search=\"live\""]'
+
+      - name: Add review to summary
+        if: hashFiles('adversarial-review.md') != ''
+        run: |
+          printf '## Adversarial paper review\n\n' >> "$GITHUB_STEP_SUMMARY"
+          cat adversarial-review.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload adversarial review
+        if: hashFiles('adversarial-review.md') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: adversarial-review
+          path: adversarial-review.md
+
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
