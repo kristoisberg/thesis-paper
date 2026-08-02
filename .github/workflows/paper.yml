@@ -1,0 +1,82 @@
+name: Build paper
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - paper/**
+      - template/**
+      - .github/workflows/paper.yml
+  pull_request:
+    paths:
+      - paper/**
+      - template/**
+      - .github/workflows/paper.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build PDFs
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: |
+            main.tex
+            supplementary.tex
+          working_directory: paper
+          texlive_version: "2026"
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v7
+        with:
+          name: paper-build
+          path: |
+            paper/main.pdf
+            paper/supplementary.pdf
+          if-no-files-found: error
+
+      - name: Prepare preview
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir preview
+          cp paper/main.pdf preview/paper.pdf
+          cp paper/supplementary.pdf preview/supplementary.pdf
+          printf '%s\n' \
+            '<!doctype html>' \
+            '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Paper preview</title>' \
+            '<style>body{font:16px sans-serif;margin:1rem}object{width:100%;height:calc(100vh - 6rem)}</style></head><body>' \
+            '<h1>Paper preview</h1><p><a href="paper.pdf">Paper PDF</a> · <a href="supplementary.pdf">Supplementary PDF</a></p>' \
+            '<object data="paper.pdf" type="application/pdf" aria-label="Paper PDF preview"><p><a href="paper.pdf">Open the paper PDF</a></p></object></body></html>' \
+            > preview/index.html
+
+      - name: Upload Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: preview
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v4
