@@ -43,7 +43,9 @@ Status: adversarial-feedback revisions implemented; not submission-ready
 
 ## Next Drafting Tasks
 
-- Compile in an environment with `pdflatex` or another compatible LaTeX engine.
+- Run `make` from the repository root to compile both PDFs using the same
+  Dockerized TeX Live environment as CI. Use `make main`,
+  `make supplementary`, or `make clean` for individual builds and cleanup.
 - Obtain both authors' approval for the contribution statement.
 - Create a DOI-backed archive if desired and resolve the archival-identifier marker.
 - Re-run the submission-readiness gate after all confirmation markers are removed.

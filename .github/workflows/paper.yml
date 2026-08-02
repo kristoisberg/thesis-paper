@@ -6,11 +6,13 @@ on:
     paths:
       - paper/**
       - template/**
+      - Makefile
       - .github/workflows/paper.yml
   pull_request:
     paths:
       - paper/**
       - template/**
+      - Makefile
       - .github/workflows/paper.yml
   workflow_dispatch:
 
@@ -24,15 +26,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Build PDFs
-        uses: xu-cheng/latex-action@v4
-        env:
-          TEXINPUTS: "${{ github.workspace }}/template:"
-        with:
-          root_file: |
-            main.tex
-            supplementary.tex
-          working_directory: paper
-          texlive_version: "2026"
+        run: make paper
 
       - name: Upload PDFs
         uses: actions/upload-artifact@v7
