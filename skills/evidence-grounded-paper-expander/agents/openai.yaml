@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evidence-Grounded Paper Expander"
+  short_description: "Expand papers with traceable source evidence"
+  default_prompt: "Use $evidence-grounded-paper-expander to deepen this manuscript without padding or unsupported claims."

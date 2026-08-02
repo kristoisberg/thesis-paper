@@ -22,7 +22,7 @@ Prioritize these result groups:
 
 Keep in main paper:
 
-- one compact detector-performance table;
+- one detector-performance table containing TP, FP, FN, test support, precision, recall, and F1 for every antipattern against the original ground truth;
 - one prevalence table;
 - one co-occurrence visualization or table;
 - one API-association table or split table for Implicit Columns and Poor Man's Search Engine;
@@ -45,3 +45,14 @@ Do not overstate:
 - prompting strategy superiority without significance tests;
 - corrected ground truth scores as unbiased estimates.
 
+## RQ Reporting
+
+Use the full RQ text as each result subsection heading. For every RQ:
+
+1. define the population, unit, and denominator;
+2. present absolute counts before or alongside ratios;
+3. distinguish observation from interpretation;
+4. describe uncertainty and design limitations without inventing inference;
+5. close with a concise answer.
+
+Report the corrected 0.93 localisation F1 separately as an optimistic sensitivity analysis. Use 0.88 as the primary detector result, including in the abstract.

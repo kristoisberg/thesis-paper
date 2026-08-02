@@ -24,6 +24,17 @@ Check that the paper reports:
 - cost/runtime reporting where used to justify model choice;
 - artifact availability.
 
+Require these explicit Study Design subsections:
+
+- `Operational Definitions`;
+- `Annotation and Adjudication`;
+- `Model and Prompt Selection`;
+- `Evaluation Protocol`.
+
+Use “adjudication” accurately: if no independent adjudicator existed, say so and describe the actual disagreement-review and correction procedure.
+
+Require the main text to report test support per antipattern, the project-level data split, all fixed seeds, model parameters, schema/query prompt separation, structured-output validation, retry policy, IoU threshold, NMS assignment, averaging rule, and analysis units.
+
 ## Statistical Discipline
 
 Require careful language:
@@ -32,6 +43,8 @@ Require careful language:
 - corrected ground truth scores are optimistic;
 - jOOQ API call counts are a proxy, not exact SQL statement counts;
 - single-run LLM evaluations do not establish output variance.
+- sensitivity results discovered through model disagreements are optimistic and do not estimate errors missed by both human and model;
+- do not invent confidence intervals or significance tests when project-level raw outputs or repeated runs are unavailable.
 
 ## Output Shape
 
@@ -41,4 +54,4 @@ Return:
 - overclaims to weaken;
 - reproducibility gaps;
 - concrete text-level requirements for the later manuscript.
-
+- performed mitigations and sensitivity analyses, separated from future work.

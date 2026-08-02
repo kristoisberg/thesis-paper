@@ -28,9 +28,12 @@ Cover:
 For each threat:
 
 - state the risk plainly;
-- explain what was done to mitigate it;
-- define how it limits claims;
+- identify the mitigation or sensitivity analysis actually performed;
+- state explicitly when no mitigation was performed;
+- define the residual limitation and resulting claim boundary;
 - avoid defensive wording.
+
+Do not relabel a design choice as a sensitivity analysis. Valid sensitivity evidence in this repository includes original-versus-corrected ground truth and localisation-versus-classification comparisons. Fixed seeds, structured outputs, disabled fallbacks, decision trees, and washout re-annotation are mitigations, not sensitivity analyses.
 
 ## Output Shape
 
@@ -41,4 +44,3 @@ Return a threats checklist grouped by validity type:
 - external validity;
 - conclusion validity;
 - reliability/reproducibility.
-

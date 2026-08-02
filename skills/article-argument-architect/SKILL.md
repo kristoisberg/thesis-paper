@@ -35,6 +35,19 @@ Prefer 3 to 4 claims:
 - large-scale empirical evidence of SQL antipattern prevalence and co-occurrence in 602 projects;
 - API-level evidence that jOOQ convenience methods are associated with common query antipatterns.
 
+## Novelty and Prior Thesis
+
+Require one introduction paragraph that distinguishes the combined contribution from:
+
+- SQL extraction followed by rule-based detection;
+- dedicated API- or AST-based rules;
+- LLM code-smell classification;
+- LLM static-analysis and line-level localisation studies.
+
+Frame novelty around the validated instrument plus the 602-project empirical analysis. Avoid unverified first-ever claims.
+
+State explicitly that the article is based on Kristo Isberg's master's thesis, identify reused data, software, experiments, and results, and explain how the paper reframes and deepens them for EMSE. Do not imply new experiments where none were performed.
+
 ## Default Outline
 
 1. Introduction
@@ -46,6 +59,8 @@ Prefer 3 to 4 claims:
 7. Threats to Validity
 8. Conclusion
 
+Use each full research question as a heading inside the corresponding results section. End each RQ subsection with a short, evidence-bounded answer.
+
 ## Exclusion Rules
 
 Exclude:
@@ -54,4 +69,3 @@ Exclude:
 - broad tutorial-style background;
 - implementation architecture unless required to reproduce the study;
 - exhaustive appendix content from the main paper.
-

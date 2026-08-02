@@ -16,6 +16,11 @@ This inventory records thesis material for the EMSE manuscript. It is intentiona
 | Seven qualifying antipatterns were retained for experiments after filtering out sparse classes. | `thesis/chapters/03_dataset_creation.tex` | Scope definition | Explain why the article covers 7 of 19 annotated antipatterns. |
 | LLM evaluation is a multi-label, multi-occurrence localisation task using line-span IoU and F1-score. | `thesis/chapters/04_evaluation.tex` | Method novelty | Define IoU threshold clearly. |
 | A prediction is a TP when IoU >= 0.5; NMS assigns only the highest-overlap prediction to each ground truth span. | `thesis/chapters/04_evaluation.tex` | Evaluation method | Useful differentiator from pure file-level classification. |
+| The project sample used head-tail breakpoints of 31 and 94 relevant files, class sizes 467/100/36, a 10% stratified sample, and seed 123456. | `thesis/chapters/03_dataset_creation.tex` | Repository sampling replication | Report corrected 29/91 distribution only as a robustness observation. |
+| Annotation guidelines were iteratively encoded as decision trees; new variants triggered re-review of potentially affected earlier files. | `thesis/chapters/03_dataset_creation.tex` | Annotation protocol | This is a mitigation, not independent adjudication. |
+| The held-out test supports are 270, 105, 36, 36, 39, 21, and 16 for the seven antipatterns. | `thesis/chapters/03_dataset_creation.tex`; `thesis/appendices/appendix-localisation-confusion-matrices.tex` | Detector table denominators | Equal TP+FN in the original ground truth. |
+| Validation experiments analysed 20 projects and 823 files; final testing analysed 20 projects and 502 files. | `thesis/chapters/07_results.tex` | Model-selection and test protocol | Keep validation and test evidence distinct. |
+| API labels were developed iteratively until at least 98% of occurrences were categorised. | `thesis/chapters/06_project_analysis.tex` | RQ4 method | Report remaining uncategorised shares in results. |
 | Zero-shot prompting was selected for the final tool because complex prompts did not reliably improve performance and increased cost/runtime. | `thesis/chapters/07_results.tex` | Detector configuration rationale | Avoid claiming statistical superiority without tests. |
 | Final localised detector using Claude Opus 4.5 achieved weighted F1 0.88 uncorrected and 0.93 corrected. | `thesis/chapters/07_results.tex` | Instrument validity | Corrected score is optimistic because corrections were tool-triggered. |
 | Classification mode achieved weighted F1 0.88 uncorrected and 0.94 corrected. | `thesis/chapters/07_results.tex` | Comparison to localisation | Keep secondary; localisation is the article's methodological hook. |
@@ -37,6 +42,14 @@ This inventory records thesis material for the EMSE manuscript. It is intentiona
 - GitHub search terms and omitted-project details.
 - Complete annotated-antipattern list and sparse antipattern classes.
 
+## Claim Boundaries
+
+- Primary detector estimate: weighted localisation F1 = 0.88 against the original test ground truth.
+- Sensitivity only: corrected F1 = 0.93; corrections were prompted by detector disagreements.
+- Descriptive only: model and prompting-strategy comparisons used single runs and no significance tests.
+- Proxy-based: occurrences per 100 \jooq statements use static SQL-executing API references.
+- Thesis-derived: the dataset, detector, experiments, and large-scale results originate in Kristo Isberg's master's thesis; the article reframes and deepens their presentation.
+
 ## Discard or Heavily Compress
 
 - Thesis outline and degree-program structure.
@@ -44,4 +57,3 @@ This inventory records thesis material for the EMSE manuscript. It is intentiona
 - Tool implementation architecture, TypeScript/Bun details, component diagrams, and workflow diagrams unless needed for artifact reproducibility.
 - Reflection on work process and supervisor collaboration.
 - Personal learning narrative.
-

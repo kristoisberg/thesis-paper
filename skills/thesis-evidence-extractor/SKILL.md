@@ -24,6 +24,15 @@ Start with:
 
 Use appendices only when main text points to a needed table, prompt, decision tree, or validation artifact.
 
+For journal-depth expansion, read the complete relevant passages rather than copying only this skill's priority facts. Extract especially:
+
+- operational adaptations and exclusions for all seven evaluated antipatterns;
+- repository search, filtering, size thresholds, sampling percentages, and seeds;
+- annotation fields, iterative codebook revision, washout sampling, and agreement calculation;
+- train/validation/test purposes, project-level separation, balancing objective, and test supports;
+- model eligibility, parameter values, prompt variants, development/evaluation separation, and retry handling;
+- IoU/NMS matching, aggregation, costs, runtime, co-occurrence formulas, and API categorisation coverage.
+
 ## Classification Labels
 
 Classify extracted material as:
@@ -68,3 +77,4 @@ Produce an evidence inventory with:
 - proposed article section;
 - reviewer-risk note if any.
 
+Include a permitted-claim field when evidence can support only descriptive, sensitivity, proxy-based, or thesis-derived wording.

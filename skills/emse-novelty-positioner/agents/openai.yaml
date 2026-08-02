@@ -1,0 +1,4 @@
+interface:
+  display_name: "EMSE Novelty Positioner"
+  short_description: "Position EMSE novelty against prior work"
+  default_prompt: "Use $emse-novelty-positioner to strengthen and verify manuscript novelty."

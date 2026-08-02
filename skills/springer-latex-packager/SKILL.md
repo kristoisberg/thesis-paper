@@ -50,6 +50,9 @@ Check:
 - abstract is 150 to 250 words;
 - keywords count is 4 to 6;
 - declarations are present;
+- declarations include Author Contributions, Funding, Competing Interests, Data Availability, Code and Materials Availability, Ethics Approval, and Consent to Participate;
+- thesis-derived-work disclosure is visible in the manuscript;
 - source files compile;
 - no thesis-specific package assumptions leak into the article.
 
+Keep the paper bibliography self-contained. Do not modify the completed thesis bibliography to add article-only related work.

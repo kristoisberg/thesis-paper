@@ -21,6 +21,10 @@ Use a compact empirical-study structure:
 - Follow the large-scale static-analysis framing of `Trautsch_et_al_2023`: define the analysis unit, density metric, comparison baseline, and practical relevance.
 - Follow the human-vs-automated framing of `Morales_et_al_2020`: be explicit about what the automated tool is compared against and what human judgement provides.
 - Use `Patel_et_al_2024` as the MSR-style model for transparent data collection, practical implications, and threats.
+- Use `Alomari_et_al_2026` to position against current LLM code-smell detection and to calibrate RQ-labelled result subsections.
+- Use `Su_McMillan_2026` to position against current LLM static-analysis capability studies and to separate task capability from deployable analysis.
+- The seven supplied examples contain approximately 10,000--23,000 PDF-extracted words. Use approximately 12,000 words as this manuscript's evidence-depth target, not as a formal journal limit.
+- Put the full RQ text in each results subsection heading and end each subsection with a direct answer.
 
 ## Abstract Pattern
 
@@ -38,4 +42,4 @@ Use 150 to 250 words with five moves:
 - Prefer "we study", "we evaluate", "we find" over process-heavy narration.
 - Keep result claims quantitative and bounded to the observed population.
 - Put limitations in the main text, not only at the end.
-
+- Expand by adding definitions, decisions, denominators, uncertainty, and interpretation; never by repeating motivation.

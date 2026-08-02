@@ -37,7 +37,8 @@ Check for:
 - editable source files available for submission;
 - declarations under `Statements and Declarations`;
 - competing interests statement;
-- data availability and artifact availability statements;
+- final data availability plus separate code and materials availability statements;
+- author contributions, ethics approval, and consent statements where applicable;
 - AI-use documentation in Methods or an equivalent section when generative AI contributed beyond copy editing;
 - all figures and tables cited in order;
 - no undefined abbreviations in the abstract.
@@ -55,3 +56,4 @@ Flag immediately:
 - missing declarations;
 - inconsistent Springer formatting.
 
+For this manuscript, permit explicit author-confirmation placeholders during drafting but fail submission readiness while any placeholder remains. Verify current requirements from the official journal page rather than treating the project word target as an EMSE rule.

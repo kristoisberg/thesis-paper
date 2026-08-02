@@ -23,16 +23,18 @@ The main EMSE contribution should be the empirical evidence from the annotated d
 1. `emse-journal-fit-auditor`
 2. `emse-example-calibrator`
 3. `thesis-evidence-extractor`
-4. `article-argument-architect`
-5. `methodology-rigor-reviewer`
-6. `results-synthesis-specialist`
-7. `threats-and-reviewer-risk-editor`
-8. `springer-latex-packager`
-9. `acceptance-checker`
+4. `emse-novelty-positioner`
+5. `article-argument-architect`
+6. `methodology-rigor-reviewer`
+7. `results-synthesis-specialist`
+8. `threats-and-reviewer-risk-editor`
+9. `evidence-grounded-paper-expander`
+10. `springer-latex-packager`
+11. `acceptance-checker`
 
 ## Current Phase
 
-Phase 1: conversion blueprinting.
+Phase 2: feedback-driven journal expansion.
 
 Initial conversion artifacts have been created:
 
@@ -42,8 +44,9 @@ Initial conversion artifacts have been created:
 - `paper/reviewer-risk-checklist.md`
 - `paper/main.tex`
 - `paper/drafting-notes.md`
+- `paper/feedback-remediation-matrix.md`
 
-The first manuscript draft has started in `paper/main.tex`.
+The first manuscript draft is being expanded from approximately 4,753 words to an evidence-backed target of approximately 12,000 words.
 
 ## Defaults Chosen
 
@@ -52,6 +55,9 @@ The first manuscript draft has started in `paper/main.tex`.
 - Primary contribution: empirical software engineering study, not thesis condensation.
 - RQ emphasis: thesis RQ4/RQ5 as primary findings; RQ1/RQ2 as method selection; RQ3 as detector validity.
 - Supplementary material: use for full prompts, decision trees, confusion matrices, and large correlation matrices.
+- Use full RQ text in result subsection headings.
+- Use 0.88 as the primary detector result; treat 0.93 only as optimistic sensitivity analysis.
+- Preserve explicit author-confirmation placeholders until the authors approve contribution roles and archival identifiers.
 
 ## Required User Data Before Submission-Ready Drafting
 

@@ -23,10 +23,11 @@ If any directory is missing, stop and report the blocker.
 1. Run `emse-journal-fit-auditor` to load current EMSE/Springer constraints.
 2. Run `emse-example-calibrator` to derive style and structure patterns from `examples/`.
 3. Run `thesis-evidence-extractor` to inventory reusable thesis evidence.
-4. Run `article-argument-architect` to define the article angle, RQs, outline, and novelty claims.
+4. Run `emse-novelty-positioner` and `article-argument-architect` to define the article angle, RQs, outline, thesis relationship, and defensible novelty claims.
 5. Run `methodology-rigor-reviewer`, `results-synthesis-specialist`, and `threats-and-reviewer-risk-editor` as independent review passes.
-6. Run `springer-latex-packager` to map accepted content to SVJour3 outputs.
-7. Run `acceptance-checker` for desk-reject and reviewer-risk gates.
+6. Run `evidence-grounded-paper-expander` to deepen the manuscript from traceable evidence and enforce the agreed section budgets.
+7. Run `springer-latex-packager` to map accepted content to SVJour3 outputs.
+8. Run `acceptance-checker` for desk-reject and reviewer-risk gates.
 
 ## Conversion Launch
 
@@ -41,7 +42,7 @@ Minimum kickoff artifact:
 - blocking user-supplied data still needed
 - first conversion tasks
 
-Do not draft manuscript prose until required author/declaration data and the article blueprint are available.
+Do not claim submission readiness until required author/declaration data are available. During drafting, preserve missing non-discoverable facts as explicit author-confirmation markers. Require the article blueprint before drafting prose.
 
 ## Defaults
 
@@ -50,6 +51,9 @@ Do not draft manuscript prose until required author/declaration data and the art
 - Main angle: empirical study of LLM-based detection and localisation of SQL antipatterns in jOOQ projects.
 - RQ emphasis: thesis RQ4/RQ5 as the primary EMSE empirical contribution; RQ1/RQ2 as method-selection evidence; RQ3 as detector validity.
 - Supplementary material: use for large confusion matrices, full prompt listings, decision trees, and oversized appendix tables unless the user says otherwise.
+- Manuscript depth: target approximately 12,000 words, normally 11,000--13,000, without treating this project target as a journal rule.
+- Results structure: use the full research questions as result subsection headings.
+- Corrected ground truth: present only as an explicitly optimistic sensitivity analysis; use the original ground truth for primary performance claims.
 
 ## Hard Stop Conditions
 
@@ -59,4 +63,3 @@ Stop the workflow if:
 - source evidence is unavailable or internally contradictory;
 - requested edits would fabricate or strengthen unsupported empirical claims;
 - Springer/EMSE guidance has changed and cannot be verified.
-
