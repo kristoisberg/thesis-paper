@@ -25,6 +25,8 @@ jobs:
 
       - name: Build PDFs
         uses: xu-cheng/latex-action@v4
+        env:
+          TEXINPUTS: "${{ github.workspace }}/template:"
         with:
           root_file: |
             main.tex
