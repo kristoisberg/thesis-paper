@@ -1,0 +1,347 @@
+\RequirePackage{fix-cm}
+\documentclass[smallextended]{../template/svjour3}
+
+\smartqed
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{xspace}
+
+\journalname{Empirical Software Engineering}
+
+\newcommand{\jooq}{jOOQ\xspace}
+
+\begin{document}
+
+\title{An Empirical Study of LLM-Based Localisation of SQL Antipatterns in \jooq Database Access Code}
+\titlerunning{LLM-Based Localisation of SQL Antipatterns in \jooq}
+
+\author{Kristo Isberg \and Erki Eessaar}
+\authorrunning{K. Isberg and E. Eessaar}
+
+\institute{K. Isberg \at
+              Tallinn University of Technology, Tallinn, Estonia \\
+              \email{krisbe@taltech.ee}
+           \and
+           E. Eessaar \at
+              Tallinn University of Technology, Tallinn, Estonia \\
+              \email{erki.eessaar@taltech.ee}
+}
+
+\date{Received: date / Accepted: date}
+
+\maketitle
+
+\begin{abstract}
+SQL antipatterns are recurring database design and query mistakes that can degrade maintainability, correctness, and performance. Detecting such antipatterns in application code is difficult when SQL statements are constructed dynamically through domain-specific libraries such as \jooq. This paper studies whether large language models can support line-level localisation of SQL antipatterns in \jooq-based Java code and uses the resulting detector to investigate how these antipatterns occur in open-source projects. We construct a manually annotated dataset of 1,562 antipattern occurrences from 61 GitHub projects and evaluate detection as a multi-label, multi-occurrence localisation task using line-span Intersection over Union, precision, recall, and F1-score. The selected detector achieves a weighted F1-score of 0.88 against the original ground truth and 0.93 against a corrected version. We then apply the detector to 602 projects containing 17,450 relevant files, flagging 15,931 occurrences of seven SQL antipatterns. The most common antipatterns, Implicit Columns and ID Required, appear in 535 and 523 projects, respectively. We also identify co-occurrence patterns and show that a small set of \jooq convenience methods is associated with many query antipattern occurrences. These results provide empirical evidence on SQL antipatterns in \jooq projects and illustrate the promise and limitations of LLM-based localisation for static analysis of dynamic database access code.
+\keywords{Empirical software engineering \and SQL antipatterns \and Static analysis \and Large language models \and Mining software repositories \and \jooq}
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+SQL remains one of the most widely used languages in software systems, yet recurring database design and query mistakes continue to appear in production code. These recurring mistakes are commonly described as SQL antipatterns: familiar but flawed solutions to database problems \cite{karwin2023sql}. Prior work has reported SQL antipatterns in both open-source and industrial systems and has linked them to maintainability and quality concerns \cite{muse2020prevalence,sharma2018smelly,lyu2019quantifying,DBLP:conf/sigmod/DintyalaNA20}. Despite this evidence, tool support remains uneven, especially when database access code does not contain plain SQL strings.
+
+This paper focuses on \jooq, a Java library for constructing SQL statements through a type-safe domain-specific language. \jooq improves integration between Java and relational databases, but it also complicates static analysis: SQL statements can be built through fluent APIs, generated schema classes, intermediate Java variables, and conditional control flow. Traditional approaches that first extract SQL statements and then parse them can therefore miss behaviours that are visible in the source code but hard to reconstruct as complete SQL statements \cite{nagy2017static,meurice2016static}. Large language models (LLMs) offer a possible alternative because they can reason over source-level context without requiring a complete language-specific extractor for every dynamic query pattern.
+
+We study this possibility as an empirical software engineering problem. Rather than treating LLM output as a file-level classification only, we evaluate SQL-antipattern detection as a localisation task: a detector must identify both the antipattern type and the line span where the occurrence appears. This framing is important for static analysis adoption because developers need actionable locations, not only project-level or file-level labels.
+
+The study has two connected goals. First, we evaluate whether LLMs can localise SQL antipatterns in \jooq-based Java code with sufficient accuracy to serve as a research instrument. Second, we use the resulting detector to analyse the prevalence, co-occurrence, and API-level manifestations of SQL antipatterns across a large set of open-source \jooq projects.
+
+We address the following research questions:
+
+\begin{description}
+    \item[RQ1:] How accurately can LLMs localise SQL antipattern occurrences in \jooq-based Java code?
+    \item[RQ2:] How prevalent are SQL antipatterns in open-source \jooq projects?
+    \item[RQ3:] Which SQL antipatterns co-occur across projects and files?
+    \item[RQ4:] Which \jooq API methods are most frequently associated with query antipattern occurrences?
+\end{description}
+
+We separate RQ3 from RQ4 because they capture different empirical dimensions of the same phenomenon. RQ3 studies project- and file-level relationships among antipatterns, whereas RQ4 studies concrete source-level API patterns associated with query antipattern occurrences.
+
+The paper makes the following contributions:
+
+\begin{itemize}
+    \item a manually annotated dataset of 1,562 SQL-antipattern occurrences in 61 \jooq projects;
+    \item an evaluation of LLM-based SQL-antipattern detection as a multi-label, multi-occurrence localisation task;
+    \item a large-scale empirical analysis of seven SQL antipatterns across 602 open-source \jooq projects;
+    \item evidence of co-occurrence patterns and \jooq API associations that can inform documentation, developer guidance, and future static-analysis tools.
+\end{itemize}
+
+\section{Background and Related Work}
+\label{sec:background}
+
+\subsection{SQL Antipattern Detection}
+\label{sec:sql-antipattern-detection}
+
+SQL antipatterns describe recurring database design, query, and application-development mistakes \cite{karwin2023sql}. Prior empirical work has shown that such antipatterns are present in real systems and can persist for long periods \cite{muse2020prevalence}. Sharma et al. studied SQL smells in database-centric applications, while Muse et al. analysed the prevalence of SQL antipatterns using SQLInspect, a static-analysis tool that extracts SQL statements from Java code before detecting selected antipatterns \cite{sharma2018smelly,muse2020prevalence,nagy2017static,nagy2018sqlinspect}.
+
+This query-extraction architecture is a natural fit for embedded SQL strings, but it creates a dependency on the completeness of the extractor. Meurice et al. report query-extraction precision of at least 0.879 and recall of at least 0.715 across evaluated systems \cite{meurice2016static}; Nagy et al. and Muse et al. consequently treat extraction quality as a limiting factor for downstream antipattern detection \cite{nagy2017static,muse2020prevalence}. This limitation is especially relevant for \jooq because source code can express database behaviour through generated schema classes, fluent API calls, and host-language control flow rather than directly parseable SQL strings.
+
+Recent LLM-based smell and vulnerability detectors provide a second point of comparison. De et al. evaluate LLMs for PL/SQL smell detection, including a smell corresponding to the \texttt{SELECT *} subset of Implicit Columns \cite{de2025effectiveness}. Other studies evaluate LLMs for broader code-smell or vulnerability detection tasks \cite{sadik2025benchmarking,tamberg_suurte_2024,blaauwendraad2025evaluating}. These studies show that LLMs can be useful for code-quality detection, but most reported tasks are classification-oriented. Our study differs by evaluating SQL-antipattern detection as a line-span localisation task in Java source code using \jooq.
+
+\subsection{\jooq and Dynamic Database Access Code}
+\label{sec:jooq-background}
+
+\jooq represents SQL concepts as Java API calls and generated schema classes. This design helps developers construct type-safe queries, but it also means that antipatterns may be expressed through combinations of generated code, fluent method calls, and raw SQL fragments. For example, blind projections related to the Implicit Columns antipattern can arise from convenience methods that fetch all fields from a table, not only from explicit \texttt{SELECT *} strings. The \jooq documentation discourages blind projections when redundant data should be avoided \cite{jooq2025select}, yet such calls are among the most convenient ways to retrieve generated records.
+
+The presence of generated schema classes is also important. Some antipatterns are visible in DDL-like generated code, such as generic primary keys or missing constraints. Others appear in DML/DQL query construction code. A detector for \jooq therefore needs to inspect both generated classes and hand-written database access code, while respecting that the two file categories expose different antipattern families.
+
+\subsection{LLMs for Code Analysis and Localisation}
+\label{sec:llm-localisation}
+
+Recent work has applied machine learning and LLMs to code translation, code smell detection, defect prediction, and other software engineering tasks \cite{DBLP:journals/ese/FontanaMZM16,de2025effectiveness,sadik2025benchmarking}. For the present study, the key methodological distinction is localisation. A detector that returns only a file-level label is less actionable than one that identifies the affected line span. We therefore evaluate LLM outputs using line-span overlap and classification metrics, aligning the task more closely with localised defect prediction and warning generation than with binary file classification.
+
+\section{Study Design}
+\label{sec:study-design}
+
+\subsection{Repository Mining}
+\label{sec:repository-mining}
+
+We mined GitHub repositories for Java projects that use \jooq and store generated \jooq classes in version control. The generated classes were required because several database design antipatterns can only be detected from schema representations; compiling arbitrary GitHub projects to generate those classes would introduce substantial build and dependency failures.
+
+The mining process used the GitHub Code Search API \cite{githubSearchApi} to search Maven and Gradle manifest files for \jooq dependencies. On 10 January 2026, the search identified 3,829 projects declaring a \jooq dependency. Filtering for repositories with generated \jooq classes reduced this set to 802 projects. Filtering again for non-generated Java files referencing \jooq reduced the set to 645 projects. Manual, LLM-assisted duplicate and fork review removed 42 projects, resulting in 603 projects. A later duplicate removal yielded the final analysis set of 602 projects.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.58\textwidth]{figures/data_funnel_diagram.png}
+\caption{Repository mining and filtering process. The final 602-project dataset contains open-source Java projects that declare a \jooq dependency, store generated \jooq classes in source control, and contain non-generated Java code referencing \jooq.}
+\label{fig:data-funnel}
+\end{figure}
+
+This mining strategy is intentionally conservative. It favours projects where source-level analysis of both query code and generated schema code is possible. Its main limitation is incompleteness: the GitHub Code Search API limits each query to 1,000 results, and projects using other build tools or not committing generated \jooq classes are outside the final population.
+
+\subsection{Ground Truth Dataset}
+\label{sec:ground-truth}
+
+We selected a stratified random sample of 61 projects for manual annotation. Projects were stratified by the number of relevant database access files using head-tail breaks, resulting in 47 small, 10 medium, and 4 large projects. The sample used a fixed pseudo-random seed to support reproducibility.
+
+The annotation process covered 19 SQL antipatterns from Karwin's taxonomy \cite{karwin2023sql}. Each occurrence was recorded with project, file path, antipattern name, code fragment, line range, and reasoning. The final annotated dataset contained 1,562 occurrences. For model evaluation and large-scale analysis, we retained seven qualifying antipatterns with sufficient support across projects and occurrences: Implicit Columns, ID Required, Keyless Entry, Fear of the Unknown, 31 Flavors, Poor Man's Search Engine, and Rounding Errors. Antipatterns occurring in fewer than three projects or fewer than 25 total occurrences were excluded from later experiments to avoid drawing conclusions from sparse classes.
+
+The ground truth was created by a single annotator. To assess internal consistency, a subset of 128 files was re-annotated after a 30-day washout period. The resulting Cohen's Kappa was 0.834, indicating high consistency over time. This value does not replace inter-annotator agreement; it is a consistency check rather than evidence of independent expert consensus.
+
+The 61 annotated projects were assigned to training, validation, and test splits as whole projects rather than splitting files from the same project across different subsets. This avoids prompt development and evaluation sharing project-specific conventions. The split used a Monte Carlo seed search over one million candidate seeds to balance antipattern counts across a 34/33/33 project split. The selected seed was 767573.
+
+\subsection{LLM Detector and Evaluation Metrics}
+\label{sec:detector-metrics}
+
+We evaluate detection as a multi-label, multi-occurrence localisation task. For each predicted occurrence, the detector must return an antipattern type and an inclusive line range. We compute line-span Intersection over Union (IoU) between the predicted span and ground-truth span:
+
+\begin{equation}
+\mathrm{IoU} = \frac{|S_p \cap S_g|}{|S_p \cup S_g|}
+\end{equation}
+
+A prediction is counted as a true positive if the predicted antipattern type matches the ground truth and the line-span overlap satisfies $\mathrm{IoU} \geq 0.5$. Predictions below the threshold are false positives, and unmatched ground-truth spans are false negatives. When multiple predictions overlap a single ground-truth occurrence, Non-Maximum Suppression assigns only the highest-overlap prediction as the true positive and counts the remaining predictions as false positives. We report precision, recall, and F1-score.
+
+We evaluated four contemporary models selected for architectural diversity, performance, repeatability, and structured-output support: OpenAI GPT-5.2, Z.ai GLM-5, Anthropic Claude Opus 4.5 with reasoning disabled, and OpenAI gpt-oss-120B \cite{gpt52,DBLP:journals/corr/abs-2602-15763,opus45Card,DBLP:journals/corr/abs-2508-10925}. Structured outputs were required so responses could be validated against a schema rather than parsed from free text \cite{structuredOutputs}. The experiments were executed through OpenRouter as a unified provider gateway, with model fallbacks disabled \cite{openRouter2026homepage}.
+
+The prompt design separated generated-schema files from hand-written query files. Schema prompts targeted database-design antipatterns and received additional constraint context needed for cases such as Keyless Entry. Query prompts targeted DML/DQL antipatterns in code interacting directly with \jooq. Each input line was prefixed with its line number to reduce localisation errors. The final detector used Claude Opus 4.5 with reasoning disabled, temperature set to 0.0, and zero-shot prompts. This configuration was selected because the evaluated prompt-engineering variants did not consistently improve detection performance and increased cost or runtime.
+
+\subsection{Large-Scale Analysis}
+\label{sec:large-scale-method}
+
+We applied the detector to all 602 projects in the final dataset. The analysis covered 17,450 relevant files. For each antipattern, we measured occurrence count, number of containing projects, occurrences per project, occurrences per containing project, and occurrences per 100 \jooq statements. Because statically counting executed SQL statements in dynamic \jooq code is unreliable, the final metric uses references to \jooq API methods that execute SQL statements as a proxy. This proxy supports within-study comparison but should not be directly equated with statement-density metrics from plain-SQL studies.
+
+To analyse co-occurrence, we computed Jaccard indices, conditional probabilities, and Spearman correlations at both project and file levels. To analyse API associations, we manually categorised the \jooq API methods most frequently associated with query antipattern occurrences.
+
+\section{Detector Evaluation}
+\label{sec:detector-evaluation}
+
+This section answers RQ1 by evaluating whether the selected LLM detector can localise SQL antipattern occurrences accurately enough to support the large-scale study. Table~\ref{tab:detector-performance} summarises the detector's localisation performance by antipattern. The uncorrected evaluation uses the original human ground truth. The corrected evaluation incorporates mistakes found during qualitative analysis of false positives and false negatives.
+
+\begin{table}
+\caption{Localisation performance of the selected LLM detector. Corrected scores account for ground-truth errors discovered during error analysis and should be interpreted as optimistic.}
+\label{tab:detector-performance}
+\centering
+\small
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{Original} & \multicolumn{3}{c}{Corrected} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Antipattern & P & R & F1 & P & R & F1 \\
+\midrule
+Implicit Columns & 0.98 & 0.94 & 0.96 & 1.00 & 0.94 & 0.97 \\
+ID Required & 0.87 & 0.85 & 0.86 & 0.99 & 0.94 & 0.96 \\
+Keyless Entry & 0.54 & 0.97 & 0.69 & 0.75 & 1.00 & 0.86 \\
+Fear of the Unknown & 0.44 & 0.53 & 0.48 & 0.98 & 0.71 & 0.82 \\
+31 Flavors & 0.97 & 0.97 & 0.97 & 0.97 & 0.97 & 0.97 \\
+Poor Man's Search Engine & 0.76 & 0.62 & 0.68 & 0.76 & 0.62 & 0.68 \\
+Rounding Errors & 1.00 & 0.81 & 0.90 & 1.00 & 0.81 & 0.90 \\
+\midrule
+Weighted total & 0.88 & 0.88 & 0.88 & 0.96 & 0.91 & 0.93 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The localised detector achieved a weighted F1-score of 0.88 against the original ground truth. After correcting discovered annotation errors, the F1-score increased to 0.93. The corrected value should not be read as an unbiased estimate of detector performance: corrections were triggered by the detector's disagreements with the ground truth, and therefore do not reveal occurrences missed by both the human annotator and the detector.
+
+The hardest antipatterns were Keyless Entry and Fear of the Unknown. Both require contextual judgement about schema relationships, business concepts, or the meaning of default and nullable values. For example, Keyless Entry requires deciding whether an apparent identifier column should refer to another table and whether an appropriate key exists. Fear of the Unknown requires distinguishing genuinely nullable values from special defaults or nullable declarations that are semantically non-nullable. These cases expose the main limitation of file-local prompting: some decisions depend on project conventions and domain semantics that may not be present in the analysed file.
+
+The strongest performance appeared for antipatterns with more local syntactic or API-level signals, such as Implicit Columns and 31 Flavors. This pattern supports the use of LLMs as a flexible detector for source-level antipatterns, but it also suggests that future improvements should focus on retrieval or static pre-analysis for context-dependent cases rather than simply adding more prompt instructions.
+
+Classification mode achieved a similar weighted F1-score: 0.88 against the original ground truth and 0.94 against the corrected ground truth. It is nevertheless less useful as a static-analysis output because it cannot distinguish multiple occurrences in the same file or identify the exact code range that should be inspected. We therefore treat classification as a secondary robustness check and use the localisation mode as the primary instrument for the large-scale study.
+
+\section{Large-Scale Results}
+\label{sec:large-scale-results}
+
+\subsection{Prevalence of SQL Antipatterns}
+\label{sec:prevalence}
+
+This subsection answers RQ2. The large-scale analysis flagged 15,931 occurrences across the 602 projects. Table~\ref{tab:prevalence} shows the prevalence of each detected antipattern.
+
+\begin{table}
+\caption{Prevalence of SQL antipatterns in 602 analysed \jooq projects.}
+\label{tab:prevalence}
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Antipattern & Occurrences & Projects & Per project & Per containing project & Per 100 \jooq statements \\
+\midrule
+Implicit Columns & 7,289 & 535 & 12.11 & 13.62 & 21.94 \\
+ID Required & 3,597 & 523 & 5.98 & 6.88 & 10.83 \\
+Keyless Entry & 2,153 & 200 & 3.58 & 10.77 & 6.48 \\
+Fear of the Unknown & 1,256 & 205 & 2.09 & 6.13 & 3.78 \\
+31 Flavors & 390 & 87 & 0.65 & 4.48 & 1.17 \\
+Poor Man's Search Engine & 583 & 114 & 0.97 & 5.11 & 1.75 \\
+Rounding Errors & 663 & 86 & 1.10 & 7.71 & 2.00 \\
+\midrule
+Total & 15,931 & 601 & 26.46 & 26.51 & 47.96 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Implicit Columns and ID Required dominate the detected occurrences. Implicit Columns appears in 535 projects, or approximately 89\% of the dataset, while ID Required appears in 523 projects, or approximately 87\%. The remaining antipatterns appear in fewer projects but remain concentrated within affected projects. For example, Keyless Entry appears in 200 projects but averages 10.77 occurrences within those projects.
+
+\subsection{Co-occurrence Patterns}
+\label{sec:cooccurrence}
+
+This subsection answers RQ3 by summarising the main project- and file-level co-occurrence patterns. The full Jaccard, conditional probability, and Spearman matrices are intended for supplementary material because they are too large for the main text.
+
+\begin{table}
+\caption{Summary of the main co-occurrence patterns observed in the large-scale analysis.}
+\label{tab:cooccurrence-summary}
+\centering
+\begin{tabular}{p{4.2cm}p{2.1cm}p{2.1cm}p{5.3cm}}
+\toprule
+Pattern & Jaccard & Spearman & Interpretation \\
+\midrule
+Implicit Columns and ID Required & 0.81 & 0.43 & High-prevalence pair; projects with more generic identifier design also tend to contain more blind projections. \\
+Keyless Entry and Fear of the Unknown & 0.34 & 0.32 & Constraint-neglect pair; approximately half of projects containing one also contain the other. \\
+Implicit Columns and Poor Man's Search Engine & -- & positive at file level & Query antipatterns show a local tendency to appear in the same database access files. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The strongest project-level co-occurrence pattern is the pair Implicit Columns and ID Required, with a Jaccard index of 0.81 and Spearman correlation of 0.43 (Table~\ref{tab:cooccurrence-summary}). This pair is partly explained by the high individual prevalence of both antipatterns, but the positive rank correlation suggests that projects with more generic identifier design also tend to contain more blind projections.
+
+A second pattern links Keyless Entry and Fear of the Unknown. These antipatterns appear in roughly one third of projects and share a Spearman correlation of 0.32. Both concern weak or ambiguous schema constraints, suggesting a broader pattern of constraint neglect in affected projects.
+
+At the file level, design and query antipatterns tend to separate because they are often located in generated schema classes and database access classes, respectively. This separation is expected from the structure of \jooq projects and should not be interpreted as evidence that schema and query problems are unrelated at the project level. Query antipatterns are more likely to co-occur within the same files, particularly where fluent \jooq calls concentrate data retrieval logic.
+
+The conditional probability results further indicate that rarer antipatterns seldom appear in otherwise clean projects. For instance, projects containing Poor Man's Search Engine are very likely also to contain Implicit Columns. Given the high baseline prevalence of Implicit Columns, this does not make the rarer antipattern predictive by itself, but it does suggest that uncommon query smells tend to appear on top of more common database access issues.
+
+\subsection{\jooq API Associations}
+\label{sec:api-associations}
+
+This subsection answers RQ4 by connecting query antipattern occurrences to concrete \jooq API usage patterns. Table~\ref{tab:api-associations} summarises the dominant API associations for the two query antipatterns analysed in detail. For Implicit Columns, calls that fetch all columns from a table account for a large majority of detections. For Poor Man's Search Engine, the most common associations are methods that generate \texttt{LIKE} predicates with wildcard matching.
+
+\begin{table}
+\caption{Most frequent \jooq API associations for selected query antipatterns.}
+\label{tab:api-associations}
+\centering
+\small
+\begin{tabular}{p{3.2cm}p{6.4cm}rr}
+\toprule
+Antipattern & Associated method or pattern & Occurrences & Share \\
+\midrule
+Implicit Columns & \texttt{DSL/DSLContext.selectFrom(TABLE)} & 3,417 & 46.9\% \\
+Implicit Columns & \texttt{DSL/DSLContext.select().from(TABLE)} & 1,810 & 24.8\% \\
+Implicit Columns & \texttt{TABLE.fields()} & 665 & 9.1\% \\
+Implicit Columns & \texttt{DSL.asterisk()} & 280 & 3.8\% \\
+Implicit Columns & Generated DAO methods & 163 & 2.2\% \\
+Implicit Columns & \texttt{DSL/DSLContext.fetch(TABLE, ...)} & 151 & 2.1\% \\
+Implicit Columns & Plain SQL wildcards & 137 & 1.9\% \\
+Implicit Columns & \texttt{DSL/DSLContext.fetchOne(TABLE, ...)} & 130 & 1.8\% \\
+Implicit Columns & \texttt{DSL/DSLContext.select(TABLE).from(TABLE)} & 107 & 1.5\% \\
+Implicit Columns & Other/uncategorised & 429 & 5.9\% \\
+\midrule
+Poor Man's Search Engine & \texttt{Field.like} & 273 & 46.8\% \\
+Poor Man's Search Engine & \texttt{Field.containsIgnoreCase} & 96 & 16.5\% \\
+Poor Man's Search Engine & \texttt{Field.likeIgnoreCase} & 87 & 14.9\% \\
+Poor Man's Search Engine & \texttt{Field.contains} & 61 & 10.5\% \\
+Poor Man's Search Engine & Plain SQL \texttt{LIKE} & 17 & 2.9\% \\
+Poor Man's Search Engine & \texttt{Field.likeRegex} & 12 & 2.1\% \\
+Poor Man's Search Engine & Other/uncategorised & 37 & 6.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These associations do not prove that the API causes the antipatterns. They do, however, identify concrete API surfaces where developer guidance, documentation warnings, examples, or future static-analysis rules could be targeted.
+
+\section{Discussion}
+\label{sec:discussion}
+
+The results suggest that SQL antipatterns are not isolated edge cases in open-source \jooq projects. Two antipatterns, Implicit Columns and ID Required, are nearly ubiquitous in the analysed dataset. The frequency of Implicit Columns is especially notable because many occurrences are not literal \texttt{SELECT *} strings. They arise through \jooq idioms that fetch generated records or all table fields. This supports the need for source-level analysis that understands API semantics rather than only extracted SQL strings.
+
+The detector results also show why localisation matters. A file-level label can indicate that a file contains an antipattern, but it does not provide enough information for a developer to inspect or fix the occurrence. By evaluating line spans with IoU, we can distinguish models that merely recognise a file-level smell from models that identify actionable source regions. This is particularly important for multi-occurrence files where several antipatterns of the same type may appear.
+
+The comparison with SQLInspect-style approaches is nuanced. SQLInspect relies on extracting SQL from Java code, and the query extractor's reported performance bounds the antipattern detector built on top of it \cite{nagy2017static,meurice2016static,muse2020prevalence}. Our LLM-based approach bypasses some extraction problems by inspecting the Java source and generated \jooq classes directly. This enables detection of blind projections expressed as \jooq convenience calls and schema-level Fear of the Unknown occurrences that are outside the DML/DQL scope of SQLInspect. At the same time, this is not a direct head-to-head comparison: the tools target different representations, antipattern subsets, and evaluation designs.
+
+The density results also require careful interpretation. Muse et al. report Implicit Columns and Fear of the Unknown as percentages of SQL statements \cite{muse2020prevalence}. Our corresponding density metric counts occurrences per 100 static \jooq statement proxies, and a single generated or fluent source construct can correspond to runtime behaviour that is hard to count statically. The larger observed rates therefore should be read primarily as evidence that \jooq exposes additional source-level manifestations, not as a direct claim that \jooq projects are categorically more prone to SQL antipatterns than plain-SQL projects.
+
+For practitioners, the API-association results are the most actionable. The dominant Implicit Columns associations point to convenience methods that make broad projections easy and idiomatic. The Poor Man's Search Engine associations show that methods such as \texttt{contains} and \texttt{containsIgnoreCase} can hide wildcard-based matching behind a higher-level API. Documentation and examples could therefore highlight when these methods are appropriate and when more explicit projections or full-text search mechanisms should be preferred.
+
+The study also reveals the limits of LLM-based static analysis. Context-dependent antipatterns remain difficult, and several false positives and false negatives were tied to domain-specific interpretations of identifiers, audit tables, default values, or business logic. These cases suggest that future detectors may need retrieval over project context, explicit schema relationship modelling, or hybrid static-analysis prefilters rather than prompting alone. A practical tool would also need workflow features not evaluated here, such as suppression handling, incremental analysis, and developer-facing explanations tested in realistic maintenance tasks.
+
+\section{Threats to Validity}
+\label{sec:threats}
+
+\paragraph{Construct validity}
+The ground truth was produced by a single annotator. The intra-annotator Kappa of 0.834 indicates stable annotation decisions over time, but it does not establish agreement between independent experts. The corrected evaluation metrics are also optimistic because corrections were identified through analysis of the detector's disagreements with the original ground truth. Occurrences missed by both the annotator and detector remain unknown. The definition of several antipatterns also required adapting plain-SQL descriptions to \jooq source code, which may affect comparability with studies using different operationalisations.
+
+\paragraph{Internal validity}
+Prompting-strategy comparisons are descriptive. We did not perform statistical significance tests over the observed performance differences, and the experiments were constrained by cost and runtime. Few-shot examples were derived mainly from the training set and may have overfit edge cases observed during prompt development. LLM nondeterminism may also affect repeatability even with temperature set to 0.0 and structured outputs enforced.
+
+\paragraph{External validity}
+The repository dataset consists of open-source GitHub projects that use \jooq and commit generated \jooq classes to source control. The results may not generalise to closed-source enterprise systems, projects that generate \jooq classes only during builds, non-Java systems, or other query builders such as LINQ or SQLAlchemy. The GitHub Code Search API limit of 1,000 results per query may have excluded some relevant projects, and the Maven/Gradle-oriented search strategy excludes projects using other build setups.
+
+\paragraph{Conclusion validity}
+Occurrences per 100 \jooq statements use static references to SQL-executing \jooq API methods as a proxy for executed SQL statements. Because dynamic control flow and loops can change runtime statement counts, these density values should not be directly compared with plain-SQL statement-density metrics.
+
+\paragraph{Reliability and reproducibility}
+The experiments used commercial and gateway-hosted LLM endpoints. Provider updates, backend routing, quantisation differences, and gateway caching semantics can affect future replications, especially for open-weight models accessed through a provider abstraction. We disabled automatic model fallbacks, used structured outputs, and selected point-in-time model snapshots where possible, but these measures do not provide the determinism expected from conventional static-analysis tools.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper presented an empirical study of LLM-based localisation of SQL antipatterns in \jooq database access code. We constructed a manually annotated dataset of 1,562 antipattern occurrences, evaluated detection as a line-span localisation task, and used the selected detector to analyse 602 open-source \jooq projects. The detector achieved a weighted F1-score of 0.88 against the original ground truth and 0.93 against a corrected version. The large-scale analysis flagged 15,931 occurrences, with Implicit Columns and ID Required appearing in nearly 90\% of projects.
+
+The findings show that SQL antipatterns in \jooq projects often arise through API-level constructs rather than only through explicit SQL strings. They also show that LLM-based localisation can complement traditional extraction-based static analysis for dynamic database access libraries. The strongest future opportunities are hybrid detectors that combine LLM source understanding with stronger project-context retrieval, schema modelling, and reproducibility controls.
+
+\section*{Supplementary Material}
+
+The supplementary material is intended to contain artifacts that support replication and auditability but are too large for the main manuscript: full prompt templates, annotation decision trees, per-antipattern confusion matrices, complete Jaccard/Spearman/conditional-probability matrices, GitHub search terms, and the omitted-project list.
+
+\section*{Statements and Declarations}
+
+\paragraph{Competing interests}
+The authors declare that they have no competing interests.
+
+\paragraph{Funding}
+No funding was received for conducting this study.
+
+\paragraph{Data availability}
+The detector is available at \url{https://github.com/kristoisberg/jooq-antipattern-detector}. Additional research artifacts, including experimental scripts, evaluated prompts, results, and source material, are available at \url{https://github.com/kristoisberg/masters-thesis}. A DOI-backed archival copy should be added before submission if one is created.
+
+\paragraph{Use of artificial intelligence}
+Generative artificial intelligence tools were used as supportive aids during the research and manuscript preparation process. Google Gemini, Google NotebookLM, and OpenAI Codex were used to support drafting, restructuring, wording improvements, code development, and artifact preparation. The authors critically reviewed, fact-checked, and edited all AI-assisted content and take full responsibility for the accuracy, originality, and integrity of the manuscript.
+
+\bibliographystyle{../template/spbasic}
+\bibliography{../thesis/references}
+
+\end{document}

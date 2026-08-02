@@ -1,0 +1,294 @@
+\RequirePackage{fix-cm}
+\documentclass[smallextended]{../template/svjour3}
+
+\smartqed
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{xspace}
+\usepackage{listings}
+
+\newcommand{\jooq}{jOOQ\xspace}
+
+\begin{document}
+
+\title{Supplementary Material for ``An Empirical Study of LLM-Based Localisation of SQL Antipatterns in \jooq Database Access Code''}
+\author{Kristo Isberg \and Erki Eessaar}
+\authorrunning{K. Isberg and E. Eessaar}
+\institute{K. Isberg \at
+              Tallinn University of Technology, Tallinn, Estonia \\
+              \email{krisbe@taltech.ee}
+           \and
+           E. Eessaar \at
+              Tallinn University of Technology, Tallinn, Estonia \\
+              \email{erki.eessaar@taltech.ee}
+}
+\maketitle
+
+\section{Repository Mining Details}
+\label{sec:supp-mining}
+
+The repository mining process used GitHub Code Search queries over Maven and Gradle manifests to find Java projects declaring a \jooq dependency. Table~\ref{tab:supp-search-families} summarises the query families used during mining, and Listing~\ref{lst:supp-search-terms} gives the exact search terms.
+
+\begin{table}
+\caption{GitHub Code Search query families used for repository mining.}
+\label{tab:supp-search-families}
+\centering
+\begin{tabular}{ll}
+\toprule
+Family & Query intent \\
+\midrule
+Maven XML and Maven POM & Match \jooq artifacts in Maven manifests. \\
+Gradle short dependency syntax & Match \texttt{org.jooq:jooq} dependency declarations. \\
+Gradle long dependency syntax & Match dependency declarations with \texttt{group: org.jooq}. \\
+Gradle plugins & Match \jooq code-generation plugin usage. \\
+Gradle Kotlin syntax & Match Kotlin DSL dependencies and plugins. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{lstlisting}[caption={GitHub Code Search terms used for repository mining.},label={lst:supp-search-terms},basicstyle=\small\ttfamily,breaklines=true]
+# Maven
+language:xml "<artifactId>jooq</artifactId>"
+language:xml "<artifactId>jooq-"
+language:xml "<artifactId>jooq-codegen-maven</artifactId>"
+language:xml "<artifactId>jooq-codegen</artifactId>"
+language:xml "<artifactId>jooq-meta/artifactId>"
+language:xml "<artifactId>jooq-meta-extensions</artifactId>"
+language:xml "<artifactId>jooq-meta-extensions-liquibase</artifactId>"
+language:xml "<artifactId>jooq-meta-extensions-hibernate</artifactId>"
+language:xml "<artifactId>jooq-postgres-extensions</artifactId>"
+language:xml "<artifactId>jooq-jackson-extensions</artifactId>"
+language:xml "<artifactId>jooq-jpa-extensions</artifactId>"
+language:xml "<artifactId>jooq-reactor-extensions</artifactId>"
+language:xml "<artifactId>jooq-beans-extensions</artifactId>"
+language:xml "<artifactId>jooq-checker</artifactId>"
+
+language:"Maven POM" "<artifactId>jooq</artifactId>"
+language:"Maven POM" "<artifactId>jooq-"
+language:"Maven POM" "<artifactId>jooq-codegen-maven</artifactId>"
+language:"Maven POM" "<artifactId>jooq-codegen</artifactId>"
+language:"Maven POM" "<artifactId>jooq-meta</artifactId>"
+language:"Maven POM" "<artifactId>jooq-meta-extensions</artifactId>"
+language:"Maven POM" "<artifactId>jooq-meta-extensions-liquibase</artifactId>"
+language:"Maven POM" "<artifactId>jooq-meta-extensions-hibernate</artifactId>"
+language:"Maven POM" "<artifactId>jooq-postgres-extensions</artifactId>"
+language:"Maven POM" "<artifactId>jooq-jackson-extensions</artifactId>"
+language:"Maven POM" "<artifactId>jooq-jpa-extensions</artifactId>"
+language:"Maven POM" "<artifactId>jooq-reactor-extensions</artifactId>"
+language:"Maven POM" "<artifactId>jooq-beans-extensions</artifactId>"
+language:"Maven POM" "<artifactId>jooq-checker</artifactId>"
+
+# Gradle short syntax
+language:gradle "\"org.jooq:jooq:"
+language:gradle "'org.jooq:jooq:"
+language:gradle "\"org.jooq:jooq-"
+language:gradle "'org.jooq:jooq-"
+language:gradle "\"org.jooq:jooq-meta"
+language:gradle "'org.jooq:jooq-meta"
+language:gradle "\"org.jooq:jooq"
+language:gradle "'org.jooq:jooq"
+
+# Gradle long syntax
+language:gradle "group: \"org.jooq\""
+language:gradle "group:\"org.jooq\""
+language:gradle "group: 'org.jooq'"
+language:gradle "group:'org.jooq'"
+
+# Gradle plugins
+language:gradle "jooq-codegen-gradle"
+language:gradle "\"nu.studer.jooq\""
+language:gradle "'nu.studer.jooq'"
+
+# Gradle Kotlin syntax
+extension:kts "org.jooq:jooq:"
+extension:kts "org.jooq:jooq-"
+extension:kts "org.jooq:jooq"
+extension:kts "jooq-codegen-gradle"
+extension:kts "nu.studer.jooq"
+\end{lstlisting}
+
+Table~\ref{tab:supp-omitted-projects} summarises the groups of repositories omitted during duplicate and clone removal.
+
+\begin{table}
+\caption{Omitted repository groups identified during duplicate and clone removal.}
+\label{tab:supp-omitted-projects}
+\centering
+\begin{tabular}{p{4.5cm}rp{6cm}}
+\toprule
+Reason & Count & Examples \\
+\midrule
+\jooq source or derivative repositories & 4 & \texttt{jOOQ/jOOQ}, \texttt{zhoupan/jooq-android} \\
+Baeldung Spring tutorial clones & 24 & \texttt{eugenp/tutorials}, \texttt{alephzed/baeldung-tutorials} \\
+Apress Spring tutorial clones & 4 & \texttt{neekon2508/SpringStudy}, \texttt{steveyangpi/pro-spring-6-Learning} \\
+Inflearn \jooq tutorial clones & 5 & \texttt{hnstsn/jooq-practice}, \texttt{kyhyeok/jOOQ} \\
+Vert.x Zero clones & 3 & \texttt{51568488/vertx-zero}, \texttt{silentbalanceyh/vertx-zero} \\
+picodotdev examples clones & 2 & \texttt{jhavierc/EjemplosJava}, \texttt{optimus-alfaomega/Java-Casos-Practicos} \\
+Late-discovered duplicate & 1 & \texttt{Davincii254/Stroom}, a clone of \texttt{gchq/stroom} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Annotation Codebook and Intra-Annotator Check}
+\label{sec:supp-annotation}
+
+The annotation process used decision trees to stabilise the interpretation of SQL antipatterns in \jooq source code. Figures~\ref{fig:supp-dt-implicit-columns}--\ref{fig:supp-dt-rounding-errors} show the decision trees for the seven antipatterns analysed in the paper.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_implicit_columns.png}
+\caption{Decision tree for annotating Implicit Columns.}
+\label{fig:supp-dt-implicit-columns}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_id_required.png}
+\caption{Decision tree for annotating ID Required.}
+\label{fig:supp-dt-id-required}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_keyless_entry.png}
+\caption{Decision tree for annotating Keyless Entry.}
+\label{fig:supp-dt-keyless-entry}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_fear_of_the_unknown.png}
+\caption{Decision tree for annotating Fear of the Unknown.}
+\label{fig:supp-dt-fear-of-the-unknown}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_31_flavors.png}
+\caption{Decision tree for annotating 31 Flavors.}
+\label{fig:supp-dt-31-flavors}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_poor_mans_search_engine.png}
+\caption{Decision tree for annotating Poor Man's Search Engine.}
+\label{fig:supp-dt-poor-mans-search-engine}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_rounding_errors.png}
+\caption{Decision tree for annotating Rounding Errors.}
+\label{fig:supp-dt-rounding-errors}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/annotation_confusion_matrix.png}
+\caption{Intra-annotator confusion matrix from the 30-day washout re-annotation check.}
+\label{fig:supp-annotation-confusion}
+\end{figure}
+
+\section{Prompt Templates}
+\label{sec:supp-prompts}
+
+The final prompt set separated generated schema classes from hand-written query code. Schema prompts targeted database-design antipatterns and received additional constraint context. Query prompts targeted DML/DQL antipatterns in files interacting directly with the \jooq DSL or generated DAOs. Listings~\ref{lst:supp-schema-instructions} and~\ref{lst:supp-query-instructions} provide the final detection instructions. Full sample inputs and output schemas are provided in the artifact repository to preserve exact formatting.
+
+\begin{lstlisting}[caption={Final detection instructions used for generated-schema prompts.},label={lst:supp-schema-instructions},basicstyle=\small\ttfamily,breaklines=true]
+- ID Required: Never identify this issue in classes representing views, as views cannot contain primary keys. If the class represents a table, always detect the antipattern, if the name of the primary key is just "id" (case-insensitive). Also detect the issue if a synthetic primary key column exists, even though another unique constraint exists, which is suitable as a primary key (the constraint is on columns, which are virtually immutable by nature), and which does not complicate foreign keys referencing the table too much. Only include the lines of the primary key column definition in the line range, do not include comments or anything else.
+- Keyless Entry: A column, which refers to another table, is missing its foreign key. Never identify this issue in classes representing views, as views cannot contain foreign keys. Only report this issue if the "Keys" class provided at the end contains a primary key that this is appropriate for this column to refer to.
+- Rounding Errors: Storing fixed-precision values in floating-point type columns, such as FLOAT and REAL, rather than using fixed-precision types like DECIMAL and NUMERIC.
+- 31 Flavors: Specifying allowed values in the column definition, i.e. with a CHECK constraint or an ENUM type, rather than using a lookup table. Only include the lines of the column definition in the line range, do not include comments or anything else. Do not report the issue if the CHECK constraint is used to check the value for emptiness or against a range of values (including greater/lesser than comparisons).
+- Fear of the Unknown: A special default value, such as an empty string, is used to mark a missing value, rather than NULL, and the special value does not hold a semantic meaning. A column, which can never be NULL in practice (e.g. it has a default value), is marked as NULLABLE.
+
+If the file does not contain any antipatterns, leave the list of occurrences empty.
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Final detection instructions used for DML/DQL query-code prompts.},label={lst:supp-query-instructions},basicstyle=\small\ttfamily,breaklines=true]
+- Poor Man's Search Engine: Usage of LIKE, ILIKE or regular expressions to perform full-text search. Report the issue if it isn't obvious from the method input parameters, whether the patterns contain wildcards used for full-text search. Do not report the issue if LIKE, ILIKE or regex is used for prefix search. Only include the line(s) where the full-text search condition is created in the line range.
+- Implicit Columns: A query fetching all columns from a database table. In addition to obvious violations, report cases where jOOQ fetches all columns of a table into records or generated DAOs (located in a package ending with `tables.daos`). Do not report this issue if it occurs within a `fetchCount` or `fetchExists` call. Only include the line(s) where the blind projection is selected in the line range, do not include the rest of the query.
+- Fear of the Unknown: Query logic uses a NULLABLE column in a way that produces incorrect results with NULL. Do not report issues that arise from insufficient null-handling in Java code. Also do not report the issue if you're unsure if the column is NULLABLE.
+
+Only identify problems in code, which interacts directly with the jOOQ DSL or generated DAOs (located in a package ending with `tables.daos`). Do not identify problems in code, which interacts with higher level abstractions. In case of multiple consecutive issues, report them separately, even if they are on consecutive lines. If the file does not contain any antipatterns, leave the list of occurrences empty.
+\end{lstlisting}
+
+\section{Detector Evaluation Details}
+\label{sec:supp-detector-details}
+
+Table~\ref{tab:supp-localisation-counts} reports the uncorrected localisation counts used to derive the main manuscript's detector-performance table. Corrected confusion matrices are available in the artifact repository and should be read as optimistic because corrections were discovered through detector disagreements.
+
+\begin{table}
+\caption{Uncorrected localisation counts by antipattern.}
+\label{tab:supp-localisation-counts}
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Antipattern & TP & FP & FN \\
+\midrule
+Implicit Columns & 253 & 4 & 17 \\
+ID Required & 89 & 13 & 16 \\
+Keyless Entry & 35 & 30 & 1 \\
+Fear of the Unknown & 19 & 24 & 17 \\
+31 Flavors & 38 & 1 & 1 \\
+Poor Man's Search Engine & 13 & 4 & 8 \\
+Rounding Errors & 13 & 0 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Co-occurrence Matrices}
+\label{sec:supp-cooccurrence}
+
+Figures~\ref{fig:supp-jaccard-project}--\ref{fig:supp-spearman-file} provide the full co-occurrence matrices summarised in the main manuscript.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/jaccard_project.png}
+\caption{Project-level Jaccard index.}
+\label{fig:supp-jaccard-project}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/jaccard_file.png}
+\caption{File-level Jaccard index.}
+\label{fig:supp-jaccard-file}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/conditional_project.png}
+\caption{Project-level conditional probability.}
+\label{fig:supp-conditional-project}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/conditional_file.png}
+\caption{File-level conditional probability.}
+\label{fig:supp-conditional-file}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/spearman_project.png}
+\caption{Project-level Spearman correlation.}
+\label{fig:supp-spearman-project}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{supplementary-figures/spearman_file.png}
+\caption{File-level Spearman correlation.}
+\label{fig:supp-spearman-file}
+\end{figure}
+
+\bibliographystyle{../template/spbasic}
+\bibliography{../thesis/references}
+
+\end{document}
