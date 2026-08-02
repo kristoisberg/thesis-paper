@@ -1,20 +1,18 @@
 # Article Blueprint
 
-Status: initial conversion blueprint
+Status: revised after adversarial EMSE screening feedback
 
 Revision target: feedback-remediated journal draft of approximately 12,000 words (normally 11,000--13,000), excluding references and supplementary material. This is a project target calibrated from the supplied examples, not an EMSE rule.
 
-## Working Title Options
+## Working Title
 
-1. An Empirical Study of LLM-Based Localisation of SQL Antipatterns in jOOQ Database Access Code
-2. Detecting and Localising SQL Antipatterns in jOOQ Projects with Large Language Models: An Empirical Study
-3. SQL Antipatterns in the Wild: LLM-Based Localisation and Large-Scale Evidence from jOOQ Projects
+Validating LLM-Based Localisation for Mining SQL Antipatterns in jOOQ Repositories
 
-Recommended: option 1. It foregrounds EMSE fit, LLM localisation, SQL antipatterns, and jOOQ without sounding like a tool paper.
+The title foregrounds the validated measurement protocol and its bounded repository use without implying a general detector.
 
 ## Core Claim
 
-This paper presents an empirical software engineering study showing how LLM-based localisation can support the detection and large-scale analysis of SQL antipatterns in dynamic jOOQ database access code.
+This paper evaluates occurrence-localised LLM detection on a project-disjoint held-out set and uses that fallible instrument for bounded analysis of detector outputs in 602 jOOQ repositories.
 
 ## Proposed Research Questions
 
@@ -29,8 +27,8 @@ Thesis RQ1/RQ2 should appear as method-selection evidence under RQ1, not as sepa
 
 - A manually annotated dataset of SQL antipattern occurrences in jOOQ-based Java projects, with line-level localisation labels.
 - An evaluation of LLM-based antipattern detection as a multi-label, multi-occurrence localisation task using IoU, NMS, precision, recall, and F1.
-- A large-scale empirical analysis of seven SQL antipatterns across 602 open-source jOOQ projects.
-- Evidence of co-occurrence patterns and jOOQ API method associations that suggest practical documentation and tool-design targets.
+- Bounded detector-output measurements for seven SQL antipatterns across 602 open-source jOOQ projects.
+- Exploratory, size-unadjusted co-detection and jOOQ API-association evidence for future validation and tool design.
 
 ## Proposed Section Plan
 
@@ -38,7 +36,7 @@ Thesis RQ1/RQ2 should appear as method-selection evidence under RQ1, not as sepa
    - Problem: SQL antipatterns matter, but dynamic jOOQ code resists conventional SQL extraction and AST-based detection.
    - Gap: little evidence on SQL antipattern prevalence in jOOQ projects and limited localisation-oriented LLM evaluation.
    - Sharp novelty comparison against extraction-based, API/AST-rule, LLM smell-classification, and LLM localisation studies.
-   - Explicit relationship to Kristo Isberg's master's thesis.
+   - No thesis-conversion or editorial-provenance argument.
    - Contributions and RQs.
 2. Background and Related Work
    - SQL antipattern detection and static analysis.
@@ -51,20 +49,18 @@ Thesis RQ1/RQ2 should appear as method-selection evidence under RQ1, not as sepa
    - Model and Prompt Selection.
    - Evaluation Protocol.
    - Large-scale statistical analysis.
-4. Detector Evaluation
-   - Model/prompt selection compressed.
-   - Localisation and classification performance.
-   - Corrected vs uncorrected ground truth.
-5. Large-Scale Results
-   - Prevalence.
-   - Co-occurrence.
-   - API method associations.
-6. Discussion
+4. Results
+   - RQ1 detector evaluation and ground-truth sensitivity.
+   - RQ2 confidence-tiered detector-output prevalence.
+   - RQ3 exploratory co-detection with project-size confounding explicit.
+   - RQ4 API method associations.
+5. Discussion
    - SQL decay patterns in jOOQ projects.
    - Implications for jOOQ API use, documentation, and static-analysis tooling.
    - Comparison to prior SQLInspect/plain-SQL results with proxy caveat.
-7. Threats to Validity
-8. Conclusion
+6. Threats to Validity
+7. Conclusion
+8. Prior-dissemination and other declarations
 
 Use the full RQ wording as result subsection headings and close each with a concise answer.
 
@@ -75,8 +71,7 @@ Use the full RQ wording as result subsection headings and close each with a conc
 | Introduction | 650--800 |
 | Background and Related Work | 1,600--2,000 |
 | Study Design | 3,000--3,400 |
-| Detector Evaluation | 1,200--1,500 |
-| Large-Scale Results | 1,600--2,000 |
+| Results | 2,800--3,500 |
 | Discussion | 1,300--1,600 |
 | Threats to Validity | 700--900 |
 | Conclusion | 250--350 |

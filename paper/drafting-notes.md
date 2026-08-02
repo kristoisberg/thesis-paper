@@ -1,6 +1,6 @@
 # Drafting Notes
 
-Status: feedback-remediated journal-depth draft
+Status: adversarial-feedback revisions implemented; not submission-ready
 
 ## Created Draft Files
 
@@ -8,12 +8,14 @@ Status: feedback-remediated journal-depth draft
 - `paper/figures/data_funnel_diagram.png`: draft Figure 1 asset copied from the thesis figures.
 - `paper/supplementary.tex`: supplementary material scaffold.
 - `paper/supplementary-figures/`: supplementary figure assets copied from the thesis figures.
+- `paper/cover-letter.md`: journal-fit and prior-dissemination cover-letter draft.
 
 ## Remaining Pre-Submission Confirmations
 
-- Kristo Isberg is currently assumed to be the corresponding author.
+- Confirm the corresponding author; Kristo Isberg is only a drafting assumption.
 - Confirm the Author Contributions statement with both authors.
-- Replace or remove the archival-identifier marker after deciding whether to create a DOI-backed snapshot.
+- Deposit and cite a DOI-backed immutable artifact snapshot.
+- Record exact provider model identifiers, prompt/artifact version, repository commits, and collection snapshot.
 - Compile and package the manuscript in an environment with a compatible LaTeX engine.
 
 ## Validation
@@ -27,16 +29,16 @@ Status: feedback-remediated journal-depth draft
 - All `\ref{...}` keys used in `paper/supplementary.tex` have matching labels.
 - All figures referenced from `paper/supplementary.tex` exist under `paper/supplementary-figures/`.
 - Static check found no thesis-specific phrasing in `paper/supplementary.tex`.
-- Author metadata is filled in both `paper/main.tex` and `paper/supplementary.tex`.
+- Author names and affiliations are filled in both LaTeX files; corresponding-author approval remains blocked.
 - Competing interests, funding, data availability, code/materials availability, ethics, consent, and AI-use declarations are present in `paper/main.tex`.
-- Author Contributions and an optional archival identifier remain explicit author-confirmation items.
-- The draft is approximately 11,456 whitespace-delimited LaTeX words, excluding the bibliography and supplementary material.
+- Author Contributions, corresponding author, reproducibility identifiers, and archival DOI remain explicit blockers.
+- The draft remains approximately 11,500 whitespace-delimited LaTeX words, excluding the bibliography and supplementary material.
 - Each RQ appears as a result subsection heading and ends with a direct answer.
 - Study Design includes Operational Definitions, Annotation and Adjudication, Model and Prompt Selection, and Evaluation Protocol.
 - The detector table reports TP, FP, FN, test support, precision, recall, and F1 for every antipattern.
 - `paper/references.bib` is self-contained and includes the added 2026 EMSE novelty comparators and the source thesis.
-- The supplementary material is approximately 1,409 words, excluding figure content.
-- Local PDF compilation was not possible because `pdflatex` is not installed in this environment.
+- The supplement is cited as Online Resource 1 and now contains split and operational configuration details moved from the main manuscript.
+- Both `main.tex` and `supplementary.tex` compile successfully with the exact TeX Live 2026 Docker image used by CI.
 - The draft currently references `../template/svjour3.cls`, `../template/spbasic.bst`, and `../thesis/references.bib`; the final submission package should be flattened later.
 
 ## Next Drafting Tasks

@@ -35,9 +35,9 @@ Prefer 3 to 4 claims:
 - large-scale empirical evidence of SQL antipattern prevalence and co-occurrence in 602 projects;
 - API-level evidence that jOOQ convenience methods are associated with common query antipatterns.
 
-## Novelty and Prior Thesis
+## Novelty and Prior Dissemination
 
-Require one introduction paragraph that distinguishes the combined contribution from:
+Require an introduction comparison that distinguishes the combined contribution from:
 
 - SQL extraction followed by rule-based detection;
 - dedicated API- or AST-based rules;
@@ -46,18 +46,19 @@ Require one introduction paragraph that distinguishes the combined contribution 
 
 Frame novelty around the validated instrument plus the 602-project empirical analysis. Avoid unverified first-ever claims.
 
-State explicitly that the article is based on Kristo Isberg's master's thesis, identify reused data, software, experiments, and results, and explain how the paper reframes and deepens them for EMSE. Do not imply new experiments where none were performed.
+State explicitly that the article is based on Kristo Isberg's master's thesis and identify reused data, software, experiments, and results. Put this disclosure in a prior-dissemination declaration and the cover letter, not in the scientific motivation. Do not present reorganisation or rewriting as a scientific contribution and do not imply new experiments where none were performed.
+
+Prefer titles that name both the validated measurement protocol and its bounded repository use. Avoid titles that imply a general SQL-antipattern detector or broader novelty than the evaluated jOOQ setting supports.
 
 ## Default Outline
 
 1. Introduction
 2. Background and Related Work
 3. Study Design
-4. LLM-Based Antipattern Localisation
-5. Large-Scale Empirical Results
-6. Discussion
-7. Threats to Validity
-8. Conclusion
+4. Results, with RQ1--RQ4 as subsections
+5. Discussion
+6. Threats to Validity
+7. Conclusion
 
 Use each full research question as a heading inside the corresponding results section. End each RQ subsection with a short, evidence-bounded answer.
 

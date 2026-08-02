@@ -22,6 +22,9 @@ Cover:
 - LLM nondeterminism despite zero temperature and structured outputs;
 - commercial API and OpenRouter routing/model-version reproducibility risks;
 - single-run evaluation cost constraints.
+- class-dependent detector error propagated into corpus-wide counts;
+- missing manual validation of population outputs;
+- project size as an uncontrolled confounder in occurrence-count correlations and co-occurrence interpretation.
 
 ## Reviewer Response Strategy
 
@@ -34,6 +37,8 @@ For each threat:
 - avoid defensive wording.
 
 Do not relabel a design choice as a sensitivity analysis. Valid sensitivity evidence in this repository includes original-versus-corrected ground truth and localisation-versus-classification comparisons. Fixed seeds, structured outputs, disabled fallbacks, decision trees, and washout re-annotation are mitigations, not sensitivity analyses.
+
+Do not imply that explicit acknowledgement removes a threat. If independent annotation, repeated runs, population-output validation, or size-adjusted analysis was not performed, state that fact and narrow the affected result rather than proposing a numerical repair.
 
 ## Output Shape
 

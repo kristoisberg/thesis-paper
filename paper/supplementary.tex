@@ -14,9 +14,12 @@
 
 \newcommand{\jooq}{jOOQ\xspace}
 
+\journalname{Empirical Software Engineering}
+
 \begin{document}
 
-\title{Supplementary Material for ``An Empirical Study of LLM-Based Localisation of SQL Antipatterns in \jooq Database Access Code''}
+\title{Online Resource 1: Supplementary Material for ``Validating LLM-Based Localisation for Mining SQL Antipatterns in \jooq Repositories''}
+\titlerunning{Online Resource 1: LLM Localisation for Mining \jooq Repositories}
 \author{Kristo Isberg \and Erki Eessaar}
 \authorrunning{K. Isberg and E. Eessaar}
 \institute{K. Isberg \at
@@ -27,6 +30,7 @@
               Tallinn University of Technology, Tallinn, Estonia \\
               \email{erki.eessaar@taltech.ee}
 }
+\date{}
 \maketitle
 
 \section{Repository Mining Details}
@@ -140,49 +144,49 @@ The annotation process used decision trees to stabilise the interpretation of SQ
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_implicit_columns.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_implicit_columns.png}
 \caption{Decision tree for annotating Implicit Columns.}
 \label{fig:supp-dt-implicit-columns}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_id_required.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_id_required.png}
 \caption{Decision tree for annotating ID Required.}
 \label{fig:supp-dt-id-required}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_keyless_entry.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_keyless_entry.png}
 \caption{Decision tree for annotating Keyless Entry.}
 \label{fig:supp-dt-keyless-entry}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_fear_of_the_unknown.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_fear_of_the_unknown.png}
 \caption{Decision tree for annotating Fear of the Unknown.}
 \label{fig:supp-dt-fear-of-the-unknown}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_31_flavors.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_31_flavors.png}
 \caption{Decision tree for annotating 31 Flavors.}
 \label{fig:supp-dt-31-flavors}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_poor_mans_search_engine.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_poor_mans_search_engine.png}
 \caption{Decision tree for annotating Poor Man's Search Engine.}
 \label{fig:supp-dt-poor-mans-search-engine}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{supplementary-figures/decision_tree_rounding_errors.png}
+\includegraphics[width=\textwidth,height=.75\textheight,keepaspectratio]{supplementary-figures/decision_tree_rounding_errors.png}
 \caption{Decision tree for annotating Rounding Errors.}
 \label{fig:supp-dt-rounding-errors}
 \end{figure}
@@ -193,6 +197,19 @@ The annotation process used decision trees to stabilise the interpretation of SQ
 \caption{Intra-annotator confusion matrix from the 30-day washout re-annotation check.}
 \label{fig:supp-annotation-confusion}
 \end{figure}
+
+\section{Split Construction and Operational Configuration}
+\label{sec:supp-configuration}
+
+The 61 annotated projects were assigned as whole projects to training, validation, and test subsets using a Monte Carlo search over seeds 0 through 1,000,000. For each of the seven sufficiently supported antipatterns, the coefficient of variation divided the standard deviation of its three split counts by their mean. The objective summed the squared coefficients across the seven classes, penalising candidates in which even a less frequent class was concentrated in one subset. Seed 767573 produced the selected 34/33/33 project split with objective score 0.52. The search used labels and project membership, not model outputs.
+
+The model comparison used OpenAI GPT-5.2, Z.ai GLM-5, Anthropic Claude Opus 4.5 with reasoning disabled, and OpenAI gpt-oss-120B through OpenRouter with provider fallbacks disabled. Claude Opus 4.5 and GLM-5 used temperature 0.0; gpt-oss-120B used 1.0 because near-zero settings produced token-repetition loops; GPT-5.2 did not expose temperature in the evaluated reasoning configuration. GPT-5.2 and gpt-oss-120B used their highest selected reasoning effort. Failed, empty, or schema-invalid responses were retried locally.
+
+Under zero-shot prompting, GPT-5.2, GLM-5, and Claude Opus 4.5 each achieved weighted validation F1 of 0.88, while gpt-oss-120B achieved 0.83. Claude processed the 823 validation files in 367 seconds with no retries at USD 29.97; GPT-5.2 took 2,423 seconds and cost USD 26.16; GLM-5 cost USD 11.77, took 5,774 seconds, and required 175 retries; gpt-oss-120B cost USD 1.49 but exhibited long reasoning cycles and malformed values. Few-shot prompting increased average cost by 31\% with negligible overall improvement. Chain-of-thought and tree-of-thought increased Claude's F1 to 0.90 but increased runtime by 160\% and 1,181\%, respectively, and did not consistently help reasoning models.
+
+The final held-out run used Claude Opus 4.5, reasoning disabled, temperature 0.0, zero-shot schema/query prompts, structured output, and disabled provider fallbacks. It analysed 502 relevant files from 20 test projects in 386 seconds at a cost of USD 14.34. The unchanged configuration then analysed 17,450 relevant files from 602 projects in 12,391 seconds (3 hours 31 minutes) at a cost of USD 1,036.32. All model calls were single observations.
+
+[REPRODUCIBILITY METADATA CONFIRMATION REQUIRED: record the exact provider model identifiers, prompt/artifact version, repository commits, and corpus collection snapshot before submission.]
 
 \section{Prompt Templates}
 \label{sec:supp-prompts}
@@ -287,8 +304,5 @@ Figures~\ref{fig:supp-jaccard-project}--\ref{fig:supp-spearman-file} provide the
 \caption{File-level Spearman correlation.}
 \label{fig:supp-spearman-file}
 \end{figure}
-
-\bibliographystyle{../template/spbasic}
-\bibliography{references}
 
 \end{document}

@@ -23,8 +23,7 @@ Target approximately 12,000 main-manuscript words, normally within 11,000--13,00
 - Introduction: 650--800.
 - Background and Related Work: 1,600--2,000.
 - Study Design: 3,000--3,400.
-- Detector Evaluation: 1,200--1,500.
-- Large-Scale Results: 1,600--2,000.
+- Results: 2,800--3,500 across RQ1--RQ4.
 - Discussion: 1,300--1,600.
 - Threats to Validity: 700--900.
 - Conclusion: 250--350.
@@ -36,7 +35,9 @@ Treat these as drafting targets, not EMSE submission limits.
 - Trace every number, procedure, interpretation, and limitation to the thesis, artifact, or cited source.
 - Move operational definitions, sampling, annotation, split construction, model selection, prompt development, evaluation rules, and statistical units into the main text when needed for replication.
 - Keep complete prompts, decision trees, large matrices, and exhaustive tables in supplementary material.
+- Move exhaustive provider costs, retry behaviour, prompt configurations, and the split-optimisation formula to supplementary material unless they directly answer an RQ.
 - State when an analysis is descriptive. Do not create significance, confidence, robustness, or sensitivity claims without corresponding data and calculations.
+- Use recovered main-text space for class-specific measurement uncertainty and boundaries on population findings. Do not substitute prose for an unperformed population audit, repeated-run study, independent annotation, or project-size adjustment.
 - Distinguish a performed mitigation from future work and from a claim boundary.
 - Do not turn thesis process narrative or implementation architecture into article filler.
 

@@ -21,7 +21,7 @@ Check that the paper reports:
 - post-processing such as NMS if used;
 - classification vs localisation evaluation distinction;
 - corrected vs uncorrected ground truth handling;
-- cost/runtime reporting where used to justify model choice;
+- cost/runtime reporting only where needed to justify model choice, with exhaustive provider, retry, and prompt-configuration details moved to supplementary material;
 - artifact availability.
 
 Require these explicit Study Design subsections:
@@ -33,7 +33,7 @@ Require these explicit Study Design subsections:
 
 Use “adjudication” accurately: if no independent adjudicator existed, say so and describe the actual disagreement-review and correction procedure.
 
-Require the main text to report test support per antipattern, the project-level data split, all fixed seeds, model parameters, schema/query prompt separation, structured-output validation, retry policy, IoU threshold, NMS assignment, averaging rule, and analysis units.
+Require the main text to report test support per antipattern, the project-level data split, model identifiers and fixed parameters, schema/query prompt separation, structured-output validation, IoU threshold, NMS assignment, averaging rule, and analysis units. Keep the full split-optimisation formula, provider configurations, retry details, and prompt listings in supplementary material unless an RQ depends on them.
 
 ## Statistical Discipline
 
@@ -43,8 +43,12 @@ Require careful language:
 - corrected ground truth scores are optimistic;
 - jOOQ API call counts are a proxy, not exact SQL statement counts;
 - single-run LLM evaluations do not establish output variance.
+- corpus-wide outputs are not population-validated unless a separate manual audit was actually performed;
+- unadjusted co-occurrence does not distinguish association from project-size exposure;
 - sensitivity results discovered through model disagreements are optimistic and do not estimate errors missed by both human and model;
 - do not invent confidence intervals or significance tests when project-level raw outputs or repeated runs are unavailable.
+
+If raw outputs are unavailable, do not simulate corrections or claim the missing analyses. Require class-calibrated interpretation, identify project size as an uncontrolled confounder, and carry population validation, repeated runs, and independent annotation as residual limitations.
 
 ## Output Shape
 

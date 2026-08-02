@@ -1,6 +1,6 @@
 # EMSE Conversion Workflow
 
-Status: launched
+Status: feedback-remediation pass implemented; submission blockers remain
 
 Launched from the skill-forging workflow. This file starts the conversion workflow without drafting manuscript prose.
 
@@ -14,7 +14,7 @@ Launched from the skill-forging workflow. This file starts the conversion workfl
 
 ## Article Angle
 
-An empirical study of LLM-based detection and localisation of SQL antipatterns in jOOQ-based database access code.
+Validation of occurrence-localised LLM detection followed by bounded mining of detector outputs in jOOQ repositories.
 
 The main EMSE contribution should be the empirical evidence from the annotated dataset and 602-project mining study, with the LLM detector presented as the validated instrument that enables the study.
 
@@ -34,7 +34,7 @@ The main EMSE contribution should be the empirical evidence from the annotated d
 
 ## Current Phase
 
-Phase 2: feedback-driven journal expansion.
+Phase 3: adversarial-feedback remediation and readiness gating.
 
 Initial conversion artifacts have been created:
 
@@ -46,7 +46,7 @@ Initial conversion artifacts have been created:
 - `paper/drafting-notes.md`
 - `paper/feedback-remediation-matrix.md`
 
-The first manuscript draft is being expanded from approximately 4,753 words to an evidence-backed target of approximately 12,000 words.
+The manuscript has been restructured around one Results section, class-calibrated population claims, and explicit limits on unadjusted co-detection.
 
 ## Defaults Chosen
 
@@ -55,9 +55,13 @@ The first manuscript draft is being expanded from approximately 4,753 words to a
 - Primary contribution: empirical software engineering study, not thesis condensation.
 - RQ emphasis: thesis RQ4/RQ5 as primary findings; RQ1/RQ2 as method selection; RQ3 as detector validity.
 - Supplementary material: use for full prompts, decision trees, confusion matrices, and large correlation matrices.
+- Move split optimisation, provider configuration, retry, cost, and runtime detail to Online Resource 1.
 - Use full RQ text in result subsection headings.
+- Disclose thesis provenance in declarations and the cover letter, not the Introduction.
 - Use 0.88 as the primary detector result; treat 0.93 only as optimistic sensitivity analysis.
 - Preserve explicit author-confirmation placeholders until the authors approve contribution roles and archival identifiers.
+
+No new study data were available for this pass. Population-output validation, repeated LLM runs, independent annotation, and project-size-controlled co-occurrence remain unperformed and must not be implied.
 
 ## Required User Data Before Submission-Ready Drafting
 
@@ -70,9 +74,8 @@ The first manuscript draft is being expanded from approximately 4,753 words to a
 - whether supplementary information is allowed/preferred;
 - target manuscript length preference, if any.
 
-## First Conversion Tasks
+## Remaining Tasks
 
-- Build an evidence inventory from the thesis LaTeX.
-- Calibrate article structure from the five EMSE examples.
-- Draft a paper blueprint with title options, RQs, contribution claims, section outline, and table/figure plan.
-- Run methodology, results, and threats review passes before writing manuscript prose.
+- Confirm author contributions and corresponding author.
+- Deposit and cite an immutable artifact snapshot and record exact commits/model/prompt identifiers.
+- Compile the final flat submission package and re-run the acceptance gate.

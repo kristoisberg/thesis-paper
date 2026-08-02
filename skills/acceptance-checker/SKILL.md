@@ -19,6 +19,9 @@ Fail if the manuscript:
 - remains below the agreed journal-depth target without an explicit author decision;
 - violates obvious Springer formatting requirements;
 - makes unsupported novelty or generalizability claims.
+- uses thesis reorganisation as a scientific contribution;
+- lacks a compact comparison against extraction/rule-based and recent LLM smell studies;
+- leaves corresponding-author, contribution, or archival-identifier details unresolved.
 
 ## Reviewer-Reject Gate
 
@@ -35,6 +38,9 @@ Fail if the manuscript:
 - presents result sections without RQ-labelled headings and direct answers;
 - leaves novelty as “an LLM applied to jOOQ”;
 - omits or obscures the manuscript's relationship to the master's thesis.
+- interprets low-performing detector classes as population measurements with the same confidence as strong classes;
+- treats unadjusted co-occurrence as independent of project size;
+- implies that population-output validation, independent annotation, repeated runs, or size adjustment occurred when it did not.
 
 ## Mechanical Checks
 
@@ -51,4 +57,10 @@ Check:
 - every validity threat names an actual mitigation/sensitivity analysis and a residual claim boundary;
 - Author Contributions, Code and Materials Availability, Data Availability, Ethics Approval, and Consent statements are present;
 - no `[AUTHOR CONFIRMATION REQUIRED` or other unresolved submission placeholder remains;
+- one top-level Results section contains RQ1--RQ4;
+- prior thesis dissemination appears in a declaration or cover letter, not the Introduction's scientific contribution;
+- supplementary material is cited as a specific Online Resource rather than described as merely intended;
+- exact model identifiers, prompt version, repository commits, and collection snapshot are recorded or explicitly block readiness;
 - source compiles if LaTeX files exist.
+
+Treat a manuscript as feedback-remediated but not submission-ready when its claims have been narrowed honestly while required empirical extensions or author-supplied metadata remain unavailable.

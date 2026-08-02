@@ -18,6 +18,10 @@ Prioritize these result groups:
 - co-occurrence: Jaccard, conditional probability, and Spearman patterns;
 - API associations: `selectFrom`, `select().from`, `Field.like`, `contains`, and related jOOQ methods.
 
+## Results Structure
+
+Use one top-level `Results` section with RQ1--RQ4 as subsections. Do not split detector evaluation and repository findings into separate top-level result sections.
+
 ## Main vs Supplementary
 
 Keep in main paper:
@@ -44,6 +48,12 @@ Do not overstate:
 - density comparisons against plain SQL studies;
 - prompting strategy superiority without significance tests;
 - corrected ground truth scores as unbiased estimates.
+- weak-class population counts as equally reliable to high-performing classes;
+- unadjusted co-detection as evidence of a relationship independent of project size.
+
+Tier population interpretation by held-out class performance. Treat Keyless Entry and Fear of the Unknown as low-confidence detector outputs under the original reference data. Do not build a substantive corpus-wide construct from their association without independent validation.
+
+When project-level raw outputs are unavailable, retain RQ3 only as exploratory, unadjusted co-detection. State that project size is a plausible common cause and do not imply size-controlled association.
 
 ## RQ Reporting
 

@@ -1,43 +1,34 @@
 # Reviewer Risk Checklist
 
-Status: initial risk pass
+Status: feedback-remediated; substantial empirical and submission risks remain
 
 ## Construct Validity
 
-- Single annotator: Kappa 0.834 shows consistency over time, not agreement between independent experts.
-- Corrected ground truth: corrected scores are optimistic because corrections were discovered through the tool's outputs.
-- Localisation: IoU >= 0.5 must be justified as a practical line-span overlap threshold.
-- Proxy density: "occurrences per 100 jOOQ statements" uses static jOOQ API references, not executed SQL statements.
+- One annotator produced both passes; Kappa 0.834 measures temporal consistency, not independent agreement.
+- Corrected ground truth is optimistic because detector disagreements triggered review.
+- No independent manual audit tested whether held-out class error transfers to the 602-project outputs.
+- Keyless Entry and Fear of the Unknown population counts are low-confidence flags, not census-quality estimates.
+- IoU 0.5 and the static jOOQ statement proxy remain study-specific constructs.
 
-## Internal Validity
+## Internal and Reliability Risks
 
-- Prompting-strategy results are descriptive because statistical significance was not tested.
-- Few-shot examples may overfit edge cases from the training set.
-- LLM output nondeterminism remains possible even with zero temperature and structured outputs.
-- OpenRouter/backend routing may affect reproducibility for open-weight models.
-- Mitigations: project-level split, fixed seeds, structured outputs, disabled fallbacks, and recorded parameters.
-- Residual boundary: single-run results do not quantify run-to-run variance.
+- Model/prompt comparisons and the final test call set are single-run observations.
+- Zero temperature, structured output, project-disjoint splits, fixed seeds, and disabled fallbacks improve control but do not estimate run-to-run variance.
+- OpenRouter routing and provider/model changes prevent exact endpoint reproduction.
+- Exact provider identifiers, prompt/artifact version, repository commits, and collection snapshot still require confirmation.
 
-## External Validity
+## External and Conclusion Validity
 
-- Results apply directly to GitHub open-source Java projects using jOOQ with generated classes committed to source.
-- Results may not generalise to closed-source enterprise systems, non-Java systems, other query builders, or projects that generate jOOQ classes only at build time.
-- GitHub Code Search limits and Maven/Gradle-oriented search terms may miss relevant projects.
-- Mitigation: report the complete funnel and exact search terms; do not describe the repository set as exhaustive.
+- Findings apply to the analysed GitHub Java/jOOQ corpus with committed generated classes, not all jOOQ or enterprise systems.
+- Corpus counts inherit class-dependent error and were not accuracy-adjusted.
+- RQ3 reports exploratory co-detection only: project size was not controlled, and high marginal prevalence inflates overlap.
+- API patterns are associations, not causes; static statement proxies are not runtime SQL counts.
+- Population validation, repeated runs, independent annotation, and size-controlled analysis remain future empirical work.
 
-## Conclusion Validity
+## Desk-Reject Gate
 
-- Do not claim complex prompting is worse in general; only say it did not consistently improve this evaluation and increased cost/runtime.
-- Do not claim API methods cause antipatterns; claim they are frequently associated with detected occurrences.
-- Do not compare density values directly with plain SQL studies without explaining granularity and statement-count differences.
-- Use original-versus-corrected ground truth and localisation-versus-classification only as the sensitivity/robustness analyses actually performed.
-
-## Desk-Reject Avoidance
-
-- Lead with empirical contribution and scale.
-- Remove thesis framing and tutorial background.
-- Document AI use in methods/declarations.
-- Include artifact availability.
-- Keep limitations direct and visible.
-- Add a four-way novelty comparison and explicit thesis relationship.
-- Fail submission readiness if author-role or archival-link confirmation placeholders remain.
+- The Introduction now leads with occurrence-localised validation and maintenance consequences, not thesis conversion.
+- Related Work includes a cited comparison table; Results is a single section with four RQ subsections.
+- Thesis reuse is disclosed in declarations and the cover letter.
+- Online Resource 1 is cited specifically rather than promised vaguely.
+- Submission readiness must fail until corresponding author, author contributions, reproducibility identifiers, and immutable archive DOI are confirmed.

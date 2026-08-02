@@ -52,7 +52,14 @@ Check:
 - declarations are present;
 - declarations include Author Contributions, Funding, Competing Interests, Data Availability, Code and Materials Availability, Ethics Approval, and Consent to Participate;
 - thesis-derived-work disclosure is visible in the manuscript;
+- prior thesis dissemination is disclosed in a declaration and cover letter rather than used as scientific motivation;
+- the corresponding author is explicitly marked and approved;
+- model identifiers, prompt version, collection snapshot, and repository commits are recorded where available;
+- supplementary files are cited as numbered Online Resources with concise captions;
+- the data and code statements cite an immutable archived version and persistent identifier before submission readiness;
 - source files compile;
 - no thesis-specific package assumptions leak into the article.
 
 Keep the paper bibliography self-contained. Do not modify the completed thesis bibliography to add article-only related work.
+
+Do not replace unknown author roles, correspondence details, commits, or archival identifiers with guesses. Preserve them as hard blockers and fail submission readiness until the authors resolve them.

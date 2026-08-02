@@ -15,7 +15,7 @@ Frame novelty as a defensible difference in research design and evidence.
    - API- or AST-specific rules;
    - LLM-based code-smell classification;
    - LLM-based line-level localisation or static-analysis evaluation.
-3. Record for each comparator its input representation, target task, localisation unit, empirical scale, and principal limitation.
+3. Build a compact comparison table recording input representation, labels or target task, localisation unit, validation design, and use in repository mining.
 4. State what the paper combines that the individual comparators do not.
 5. Add citations next to each contrast and weaken any unverified priority claim.
 
@@ -45,8 +45,10 @@ Prefer transparent overlap language over vague repository references.
 
 Produce:
 
-- a compact comparison matrix;
+- a compact comparison matrix covering SQLInspect/extraction rules, API- or AST-specific rules, recent LLM smell studies, and this study;
 - one sharp introduction paragraph;
 - related-work integration requirements;
 - contribution wording with bounded claims;
 - missing or weak citations that require verification.
+
+Keep the matrix descriptive. Use `not evaluated` or `not reported` instead of inferring missing design properties, and do not present unlike metrics as controlled comparisons.

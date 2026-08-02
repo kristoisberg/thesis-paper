@@ -29,6 +29,17 @@ If any directory is missing, stop and report the blocker.
 7. Run `springer-latex-packager` to map accepted content to SVJour3 outputs.
 8. Run `acceptance-checker` for desk-reject and reviewer-risk gates.
 
+## Feedback Remediation
+
+For external editorial or reviewer feedback:
+
+1. Record every recommendation in `paper/feedback-remediation-matrix.md` as implemented, bounded, blocked, or declined with evidence.
+2. Route argument, methods, results, threats, and packaging changes through their existing specialist skills.
+3. Prefer updating reusable specialist rules over creating a feedback-specific skill.
+4. Distinguish prose/structure fixes from requests requiring new data or experiments.
+5. Never mark an empirical concern resolved when only its wording was narrowed.
+6. Re-run `acceptance-checker` and keep unresolved author or archival facts as hard blockers.
+
 ## Conversion Launch
 
 After skill forging and validation, launch conversion by creating or updating a workflow state artifact in `paper/` before drafting manuscript text.
@@ -52,7 +63,8 @@ Do not claim submission readiness until required author/declaration data are ava
 - RQ emphasis: thesis RQ4/RQ5 as the primary EMSE empirical contribution; RQ1/RQ2 as method-selection evidence; RQ3 as detector validity.
 - Supplementary material: use for large confusion matrices, full prompt listings, decision trees, and oversized appendix tables unless the user says otherwise.
 - Manuscript depth: target approximately 12,000 words, normally 11,000--13,000, without treating this project target as a journal rule.
-- Results structure: use the full research questions as result subsection headings.
+- Results structure: use one top-level Results section with the full research questions as subsections.
+- Thesis provenance: disclose prior dissemination in declarations and the cover letter, not as an Introduction contribution.
 - Corrected ground truth: present only as an explicitly optimistic sensitivity analysis; use the original ground truth for primary performance claims.
 
 ## Hard Stop Conditions
