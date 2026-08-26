@@ -58,7 +58,7 @@ jobs:
           path: preview
 
   review:
-    if: github.event_name != 'pull_request'
+    if: ${{ false }}
     needs: build
     runs-on: ubuntu-latest
     steps:
