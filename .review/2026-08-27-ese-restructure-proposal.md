@@ -2,7 +2,7 @@
 
 Date: 2026-08-27
 
-Scope: `paper/`, with `paper-old.pdf` used only as a structural reference.
+Scope: `paper/`, with `.review/paper-old.pdf` used only as a structural reference.
 
 ## Recommended paper identity
 
@@ -126,12 +126,14 @@ Each step below should leave a compilable paper and can be reviewed or committed
 
 ### Step 1: Record the baseline and map the source material
 
+Status: completed on 2026-08-27. See `2026-08-27-ese-step-1-baseline-map.md`.
+
 Actions:
 
 - Record the current page count, section order, figures, tables, appendices, and unresolved LaTeX warnings.
 - Create a paragraph-level routing map from the current chapters to the proposed sections.
 - Mark each block as keep in main paper, move online, condense later, or remove.
-- Use `paper-old.pdf` only to check the proposed order and RQ grouping.
+- Use `.review/paper-old.pdf` only to check the proposed order and RQ grouping.
 
 Completion check: every current section, figure, and table has a destination. No manuscript text has changed.
 
