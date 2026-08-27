@@ -50,14 +50,14 @@ Figure~\ref{fig:toolResults} shows a shortened text rendering of an analysis rep
 \phantomsection
 \captionlistentry[figure]{Results displayed by the tool (truncated).}\label{fig:toolResults}
 \begin{lstlisting}[
-    frame=none, 
-    basicstyle=\small, 
-    breaklines=true, 
-    breakatwhitespace=false, 
+    frame=none,
+    basicstyle=\small,
+    breaklines=true,
+    breakatwhitespace=false,
     breakindent=0pt,
     emph={jOOQ, Antipattern, Detector, Summary, Findings, Implicit, Columns, ID, Required},
     emphstyle=\bfseries,
-    literate={!!!}{}{0} 
+    literate={!!!}{}{0}
 ]
 jOOQ Antipattern Detector
 Model      google:gemini-3.1-flash-lite-preview
@@ -105,14 +105,14 @@ src/main/java/com/inventory/prosta/bot/repository/AccountRepo.java
 The tool utilises the following technologies:
 
 \begin{itemize}
-    \item \textbf{Bun \nobreakcite{bunHomepage}:} Modern JavaScript toolkit, consisting of a JavaScript runtime, bundler, test runner, and package manager. It was selected for its high performance, simple setup, built-in support for TypeScript, and built-in ability to compile applications into standalone executables.
-    \item \textbf{TypeScript \nobreakcite{typeScriptHomepage}:} Strongly typed superset of JavaScript, enabling developers to catch errors (e.g., type mismatches and nullability errors) during development, rather than at runtime. It was selected for its compile-time type safety and enhanced IDE support compared to JavaScript.
-    \item \textbf{Biome \nobreakcite{biomeHomepage}:} Modern code formatter and linter for JavaScript and TypeScript. It was selected for its high performance, simple setup, and built-in support for TypeScript.
-    \item \textbf{Vercel AI SDK \nobreakcite{aiSdkHomepage}:} Standardised interface for communicating with LLM providers, hiding provider-specific interface differences behind a unified abstraction.
-    \item \textbf{Commander \nobreakcite{commanderGitHub}:} Lightweight framework for building CLI applications, used for parsing command-line arguments.
-    \item \textbf{fast-glob \nobreakcite{fastGlobGitHub}:} Performance-oriented library for traversing the file system and retrieving file paths based on “glob” patterns (e.g., \texttt{**/*.java}). Used to find relevant files in the directory of the analysed project.
-    \item \textbf{p-limit \nobreakcite{pLimitGitHub}:} Library for running multiple asynchronous functions with limited concurrency. Used to perform a limited number of parallel requests against the LLM provider.
-    \item \textbf{Zod \nobreakcite{zodHomepage}:} TypeScript-first library for schema validation. Used for defining schemas for configuration options and LLM responses, and for validating objects against their respective schemas.
+    \item \textbf{Bun:} \nobreakcite{bunHomepage} Modern JavaScript toolkit, consisting of a JavaScript runtime, bundler, test runner, and package manager. It was selected for its high performance, simple setup, built-in support for TypeScript, and built-in ability to compile applications into standalone executables.
+    \item \textbf{TypeScript:} \nobreakcite{typeScriptHomepage} Strongly typed superset of JavaScript, enabling developers to catch errors (e.g., type mismatches and nullability errors) during development, rather than at runtime. It was selected for its compile-time type safety and enhanced IDE support compared to JavaScript.
+    \item \textbf{Biome:} \nobreakcite{biomeHomepage} Modern code formatter and linter for JavaScript and TypeScript. It was selected for its high performance, simple setup, and built-in support for TypeScript.
+    \item \textbf{Vercel AI SDK:} \nobreakcite{aiSdkHomepage} Standardised interface for communicating with LLM providers, hiding provider-specific interface differences behind a unified abstraction.
+    \item \textbf{Commander:} \nobreakcite{commanderGitHub} Lightweight framework for building CLI applications, used for parsing command-line arguments.
+    \item \textbf{fast-glob:} \nobreakcite{fastGlobGitHub} Performance-oriented library for traversing the file system and retrieving file paths based on “glob” patterns (e.g., \texttt{**/*.java}). Used to find relevant files in the directory of the analysed project.
+    \item \textbf{p-limit:} \nobreakcite{pLimitGitHub} Library for running multiple asynchronous functions with limited concurrency. Used to perform a limited number of parallel requests against the LLM provider.
+    \item \textbf{Zod:} \nobreakcite{zodHomepage} TypeScript-first library for schema validation. Used for defining schemas for configuration options and LLM responses, and for validating objects against their respective schemas.
 \end{itemize}
 
 \section{Configuration Interface}\label{sec:configurationOptions}

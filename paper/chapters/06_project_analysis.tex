@@ -12,11 +12,11 @@ For each of the seven targeted antipatterns, we calculated the following statist
     \item the number of detected occurrences per \num{100} jOOQ statements among all \num{602} projects.
 \end{itemize}
 
-For antipatterns, which have been studied by other works, we compared our results to theirs. Other works \nobreakcite{muse2020prevalence}, \nobreakcite{sharma2018smelly}, which detect SQL antipatterns by extracting SQL statements from source code and parsing them, receive the number of SQL statements in the project as a side product of the extraction step. However, since the jOOQ API allows SQL statements to be constructed dynamically, it is difficult to accurately estimate the number of SQL statements in the projects. 
+For antipatterns, which have been studied by other works, we compared our results to theirs. Other works \nobreakcite{muse2020prevalence,sharma2018smelly}, which detect SQL antipatterns by extracting SQL statements from source code and parsing them, receive the number of SQL statements in the project as a side product of the extraction step. However, since the jOOQ API allows SQL statements to be constructed dynamically, it is difficult to accurately estimate the number of SQL statements in the projects.
 
 Therefore, rather than estimating the number of SQL statements in the projects, we estimate the number of jOOQ statements as the number of references to jOOQ API methods that execute an SQL statement. It should be noted that because loop constructs and conditional query building can generate a vastly different number of actual SQL statements at runtime than static method references imply, this proxy measurement introduces a margin of error. As a result, the numbers between our study and others are not directly comparable. Despite this, they can be used as indications of broader trends.
 
-To study the co-occurrence patterns of SQL antipatterns, we calculated the Jaccard Indexes, Conditional Probabilities, and Spearman's correlations between the antipatterns, both at the project and file level. 
+To study the co-occurrence patterns of SQL antipatterns, we calculated the Jaccard Indexes, Conditional Probabilities, and Spearman's correlations between the antipatterns, both at the project and file level.
 
 The Jaccard Index measures the degree of co-occurrence between two SQL antipatterns, allowing us to identify “antipattern clusters”—groups of antipatterns that consistently occur together. A value of \num{1.0} indicates that two antipatterns always appear together, while \num{0.0} indicates that they never appear in the same project or file.
 

@@ -14,10 +14,10 @@ To assess the prompting strategies under varying conditions, we evaluated them a
 Based on this set of criteria, we settled on the following four models for our analysis:
 
 \begin{itemize}
-    \item \textbf{OpenAI GPT-5.2 \nobreakcite{gpt52} (reasoning):} Near-SotA proprietary weights model. The best-performing model offering point-in-time snapshots.
-    \item \textbf{Z.ai GLM-5 \nobreakcite{DBLP:journals/corr/abs-2602-15763} (reasoning):} SotA open-weights model.
-    \item \textbf{Anthropic Claude Opus 4.5 \nobreakcite{opus45Card} (non-reasoning):} Near-SotA in models, which allow reasoning to be disabled. Superseded by Opus 4.6, which did not offer point-in-time snapshots at the time.
-    \item \textbf{OpenAI gpt-oss-120B \nobreakcite{DBLP:journals/corr/abs-2508-10925} (reasoning):} Open-weights, SotA in models classified as medium language models (up to \num{150}B parameters).
+    \item \textbf{OpenAI GPT-5.2 (reasoning):} \nobreakcite{gpt52} Near-SotA proprietary weights model. The best-performing model offering point-in-time snapshots.
+    \item \textbf{Z.ai GLM-5 (reasoning):} \nobreakcite{DBLP:journals/corr/abs-2602-15763} SotA open-weights model.
+    \item \textbf{Anthropic Claude Opus 4.5 (non-reasoning):} \nobreakcite{opus45Card} Near-SotA in models, which allow reasoning to be disabled. Superseded by Opus 4.6, which did not offer point-in-time snapshots at the time.
+    \item \textbf{OpenAI gpt-oss-120B (reasoning):} \nobreakcite{DBLP:journals/corr/abs-2508-10925} Open-weights, SotA in models classified as medium language models (up to \num{150}B parameters).
 \end{itemize}
 
 Initially, we also planned to include Z.ai GLM-4.7-Flash \nobreakcite{DBLP:journals/corr/abs-2508-06471}, which was the best-performing small language model (up to \num{40}B parameters) at the time, but we were required to omit it due to vast stability issues with all providers offering the model.
@@ -26,7 +26,7 @@ We most notably omitted Google Gemini 3.1 Pro Preview \nobreakcite{gemini31ProPr
 
 We were also not able to include any purely non-reasoning models in the comparison: such models have become increasingly rare, and the most capable purely non-reasoning model at the time, Kwaipilot KAT-Coder-Pro V1 \nobreakcite{DBLP:journals/corr/abs-2510-18779}, did not offer point-in-time snapshots. However, many modern reasoning models allow that capability to be disabled; therefore, we substituted the model with Anthropic Claude Opus 4.5, with the reasoning capability disabled.
 
-We found that all selected models supported structured outputs with adequate reliability. In our preliminary experiments, some older models (e.g., Kimi K2 Thinking \nobreakcite{DBLP:journals/corr/abs-2507-20534}) did not adhere to the provided JSON Schema, causing client-side validation to fail in numerous cases, but such issues were much less common in the selected models. The complete set of models considered for the analysis, along with their inclusion and omission reasons, is available in Appendix~\ref{chapter:appendix-model-selection}.
+We found that all selected models supported structured outputs with adequate reliability. In our preliminary experiments, some older models (e.g., Kimi K2 Thinking; \citealp{DBLP:journals/corr/abs-2507-20534}) did not adhere to the provided JSON Schema, causing client-side validation to fail in numerous cases, but such issues were much less common in the selected models. The complete set of models considered for the analysis, along with their inclusion and omission reasons, is available in Appendix~\ref{chapter:appendix-model-selection}.
 
 \section{Designing Prompts}\label{sec:prompts}
 
@@ -34,7 +34,7 @@ We designed prompts based on the four prompting strategies listed in Section~\re
 
 We iteratively developed and fine-tuned prompts for each technique, comparing the results against the training set produced in Section~\ref{sec:dataSplit}. We tested each iteration of our prompts against all tested models until all models reached near-optimal performance. To simplify the experimental setup and the interpretation of results, we only developed universal, model-agnostic prompts, without fine-tuning them for individual models.
 
-Due to the high cost of LLM inference, we developed heuristics to target only the antipatterns that are potentially present in a given file. Firstly, we ignored files that did not contain any database-related code using the filters first mentioned in Section~\ref{sec:sampleGeneration}. Secondly, for each prompting strategy, we developed two prompts: 
+Due to the high cost of LLM inference, we developed heuristics to target only the antipatterns that are potentially present in a given file. Firstly, we ignored files that did not contain any database-related code using the filters first mentioned in Section~\ref{sec:sampleGeneration}. Secondly, for each prompting strategy, we developed two prompts:
 
 \begin{itemize}
     \item for detecting query antipatterns from non-generated source files,
@@ -51,7 +51,7 @@ We also applied the following pre-processing steps to the input files:
 
 We designed our prompts to detect the seven qualifying antipatterns present in the training, validation, and tests sets created in Section~\ref{sec:dataSplit}. Designing them, we started with broad instructions, allowing models to use their judgement and reasoning to a wide extent. As we identified instances where the model misinterpreted certain antipatterns or detected them incorrectly, we moved towards more concrete and specific instructions to eliminate ambiguity and ensure the model consistently adhered to our intended criteria.
 
-Ultimately, it was necessary to define all detected antipatterns explicitly and, in certain cases, to specify the exact method calls and coding patterns to look out for. When models were provided only with the names of antipatterns, they tended to construct their own definitions, which were at times inconsistent with those proposed by \nobreaktextcite{karwin2023sql}. We attribute this behaviour to the limited availability of literature on SQL antipatterns within the training data of LLMs, resulting in them “hallucinating” the definitions. 
+Ultimately, it was necessary to define all detected antipatterns explicitly and, in certain cases, to specify the exact method calls and coding patterns to look out for. When models were provided only with the names of antipatterns, they tended to construct their own definitions, which were at times inconsistent with those proposed by \nobreaktextcite{karwin2023sql}. We attribute this behaviour to the limited availability of literature on SQL antipatterns within the training data of LLMs, resulting in them “hallucinating” the definitions.
 
 Furthermore, for the “ID Required”, “31 Flavors”, “Poor Man's Search Engine”, and “Implicit Columns” antipatterns, it was necessary to provide explicit localisation rules to ensure consistent localisation behaviour.
 
@@ -65,10 +65,10 @@ We ultimately settled on the instructions detailed in Figures~\ref{fig:ddlInstru
 \phantomsection
 \captionlistentry[figure]{Detection instructions used in DDL prompts.}\label{fig:ddlInstructions}
 \begin{lstlisting}[
-    frame=none, 
-    basicstyle=\small, 
-    breaklines=true, 
-    breakatwhitespace=false, 
+    frame=none,
+    basicstyle=\small,
+    breaklines=true,
+    breakatwhitespace=false,
     breakindent=0pt
 ]
 - ID Required: Never identify this issue in classes representing views, as views cannot contain primary keys. If the class represents a table, always detect the antipattern, if the name of the primary key is just "id" (case-insensitive). Also detect the issue if a synthetic primary key column exists, even though another unique constraint exists, which is suitable as a primary key (the constraint is on columns, which are virtually immutable by nature), and which does not complicate foreign keys referencing the table too much. Only include the lines of the primary key column definition in the line range, do not include comments or anything else.
@@ -95,10 +95,10 @@ If the file does not contain any antipatterns, leave the list of occurrences emp
 \phantomsection
 \captionlistentry[figure]{Detection instructions used in DML/DQL prompts.}\label{fig:dmlDqlInstructions}
 \begin{lstlisting}[
-    frame=none, 
-    basicstyle=\small, 
-    breaklines=true, 
-    breakatwhitespace=true, 
+    frame=none,
+    basicstyle=\small,
+    breaklines=true,
+    breakatwhitespace=true,
     breakindent=0pt
 ]
 - Poor Man's Search Engine: Usage of LIKE, ILIKE or regular expressions to perform full-text search. Report the issue if it isn't obvious from the method input parameters, whether the patterns contain wildcards used for full-text search. Do not report the issue if LIKE, ILIKE or regex is used for prefix search. Only include the line(s) where the full-text search condition is created in the line range.
@@ -119,7 +119,7 @@ Only identify problems in code, which interacts directly with the jOOQ DSL or ge
 
 Following the finalisation of the prompt design, we analysed each project in the validation set created in Section~\ref{sec:dataSplit} using all combinations of models and prompting strategies. We subsequently evaluated the resulting outputs against the ground truth.
 
-We performed the analysis using the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub}, accessing the models through OpenRouter \nobreakcite{openRouter2026homepage} as a unified gateway for different LLM providers, using the following parameters for LLMs:
+We performed the analysis using the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub}, accessing the models through \nobreaktextcite{openRouter2026homepage} as a unified gateway for different LLM providers, using the following parameters for LLMs:
 
 \begin{itemize}
     \item \textbf{Temperature}: Used to control the randomness of the output, with higher values resulting in less deterministic results. Using a value of zero encourages the model to select the most likely token, reducing randomness and improving repeatability, making the output as deterministic as possible. We used the default value \num{1.0} for OpenAI gpt-oss-120B, since using near-zero values caused it to repeat tokens infinitely, and this issue did not resolve with any other parameter changes. We used the value \num{0.0} for all other models, except for OpenAI GPT-5.2, which did not support the parameter when being used as a reasoning model.

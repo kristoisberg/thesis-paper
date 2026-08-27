@@ -30,8 +30,8 @@
 \newcommand{\mediumModelNl}{OpenAI gpt-oss-120B\\(reasoning)}
 \newcommand{\appendixTitle}{Appendix}
 \newcommand{\textcite}[2][]{\citet[#1]{#2}}
-\newcommand{\nobreakcite}[2][]{\mbox{\cite[#1]{#2}}}
-\newcommand{\nobreaktextcite}[2][]{\mbox{\textcite[#1]{#2}}}
+\newcommand{\nobreakcite}[2][]{\citep[#1]{#2}}
+\newcommand{\nobreaktextcite}[2][]{\citet[#1]{#2}}
 \newcommand{\usd}[1]{\$\num[minimum-decimal-digits=2]{#1}}
 \providecommand{\zlabel}[1]{}
 
@@ -81,7 +81,7 @@
 \begin{abstract}
 Traditional static analysis tools struggle to detect SQL antipatterns in dynamically generated queries built with domain-specific languages like the Java library jOOQ. To address this limitation, this thesis develops an LLM-powered static analysis tool capable of identifying SQL antipatterns directly from jOOQ database access code.
 
-The methodology involved creating a human-annotated dataset of \num{1562} antipattern occurrences from 61 open-source projects. An evaluation of four contemporary LLMs and various prompting strategies revealed that the Claude Opus 4.5 model using a Zero-Shot prompt achieved near-optimal detection performance at a low runtime, whereas complex reasoning prompts proved costly. 
+The methodology involved creating a human-annotated dataset of \num{1562} antipattern occurrences from 61 open-source projects. An evaluation of four contemporary LLMs and various prompting strategies revealed that the Claude Opus 4.5 model using a Zero-Shot prompt achieved near-optimal detection performance at a low runtime, whereas complex reasoning prompts proved costly.
 
 Deploying the finalised tool across 602 projects flagged \num{15931} occurrences of seven distinct antipatterns. Results indicated that antipatterns frequently co-occur, with “Implicit Columns” and “ID Required” present in nearly \qty{90}{\percent} of the projects. Furthermore, the analysis revealed that the vast majority of the detected query antipattern occurrences were associated with a few specific jOOQ convenience methods, such as \texttt{selectFrom} and \texttt{Field.like}. Ultimately, this research demonstrates the potential of LLMs to address the parsing limitations of dynamic database frameworks, offering actionable insights for improving software quality and API usage patterns.
 
