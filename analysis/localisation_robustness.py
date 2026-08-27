@@ -48,6 +48,8 @@ def load_data(artifact_root: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def interval_iou(left: tuple[int, int], right: tuple[int, int]) -> float:
+    if left[0] > left[1] or right[0] > right[1]:
+        return 0.0
     overlap = max(0, min(left[1], right[1]) - max(left[0], right[0]) + 1)
     union = left[1] - left[0] + right[1] - right[0] + 2 - overlap
     return overlap / union
@@ -198,6 +200,7 @@ def bootstrap(
 
 
 def main() -> None:
+    assert interval_iou((2, 1), (1, 1)) == 0.0
     parser = argparse.ArgumentParser()
     parser.add_argument("artifact_root", type=Path)
     parser.add_argument("--bootstrap", type=int, default=10_000)

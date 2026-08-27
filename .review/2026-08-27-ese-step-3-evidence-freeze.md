@@ -58,7 +58,7 @@ The script resamples the 20 test projects with replacement for 10,000 iterations
 | Micro recall | 0.880 | 0.817 | 0.913 |
 | Micro F1 | 0.869 | 0.819 | 0.913 |
 
-These percentiles measure sensitivity to the composition of the 20 held-out projects. The split was selected from 1,000,001 label-informed seeds, so the interval is conditional on the study design. It does not quantify population sampling uncertainty or run-to-run model variation.
+These percentiles measure sensitivity to the composition of the 20 held-out projects. The split was selected from 1,000,000 label-informed seeds numbered 0 through 999,999, so the interval is conditional on the study design. It does not quantify population sampling uncertainty or run-to-run model variation.
 
 Class-level bootstrap intervals are too unstable for headline use. Reference support occurs in one test project for 31 Flavors, two for Rounding Errors, three each for Keyless Entry and Poor Man's Search Engine, and five for Fear of the Unknown. Many bootstrap samples omit all support for these classes. The script emits the class-level diagnostics and the number of defined replicates, but the planned manuscript will report only the aggregate interval and the observed per-class point estimates.
 

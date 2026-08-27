@@ -129,12 +129,12 @@ To validate the detection performance of the finalised tool, we performed an ana
 
 So far, we have treated the task as a localisation task, and validating it as such; however, there is not much comparison data available for such an approach. To compare our results against other works regarding detecting antipatterns and code smells using LLMs, we also evaluated it as a multi-label classification task.
 
-To achieve this, we re-analysed the projects in the test set, this time using the tool in the “classification” mode, and compared the results against the ground truth. In this case, a prediction was considered a TP, if the tool detected an antipattern within a file, and the ground truth also contained the same antipattern within that file.
+To achieve this, we re-analysed the projects in the test set, this time using the tool in the “classification” mode, and compared the results against the reference annotations. In this case, a prediction was considered a TP if the tool detected an antipattern within a file and the reference annotations also contained the same antipattern within that file.
 
 Based on the results of the quantitative analysis, we provide an answer to \textbf{RQ3} in Section~\ref{sec:resultsRQ3}. We compare our performance metrics against previous works regarding both SQL antipattern detection and LLM-based code smell detection in Section~\ref{sec:comparison}.
 
 \section{Qualitative Analysis}
 
-We manually inspected the differences between the tool's results and the ground truth, seeking patterns within the FPs and FNs and discussing their root causes in Section~\ref{sec:detectionErrors}.
+We manually inspected the differences between the tool's results and the reference annotations, seeking patterns within the FPs and FNs and discussing their possible causes in Section~\ref{sec:detectionErrors}.
 
 We also compared the outputs of the “localisation” and “classification” modes. The differences in the results were analysed to identify common localisation errors and their underlying causes, and to explain why classification metrics may yield stronger results than localisation metrics.

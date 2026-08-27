@@ -13,16 +13,16 @@ The primary goal of this research is the development of a static analysis tool b
 
 We focus our research on LLM-based static analysis, rather than alternatives, because of their advanced understanding of code semantics and context, which is highly desirable in these circumstances. Some SQL antipatterns are highly context-specific, and detecting them in jOOQ-based code may require analysing multiple files and understanding the relationships between them. The jOOQ API (Application Programming Interface) is also extensive, and its dynamic nature allows SQL antipatterns to occur in many different forms, making comprehensive coverage through traditional static analysis very difficult.
 
-Our secondary goal is to investigate the prevalence of SQL antipatterns in jOOQ-based code, as well as the ways in which these antipatterns manifest themselves. These results may help developers who use jOOQ become more aware of API usages that are strongly associated with antipatterns, thereby aiding them in \textit{avoiding the pitfalls of database programming} \nobreakcite{karwin2023sql}. Furthermore, these results can be used as input by the jOOQ maintainers when considering whether such APIs need clearer documentation or design changes in future versions.
+Our secondary goal is to describe the distribution of SQL-antipattern detector flags in jOOQ-based code, as well as the ways in which these flags manifest themselves. These results characterise the detector outputs in the identified repository corpus; they do not estimate the risk associated with individual jOOQ APIs.
 
 We aim to answer the following research questions:
 
 \begin{itemize}
     \item \textbf{RQ1:} How do different LLMs compare in identifying SQL antipatterns in Java code that uses jOOQ for database access?
     \item \textbf{RQ2:} How do different prompting strategies affect the detection performance of LLMs in identifying SQL antipatterns in Java code that uses jOOQ for database access?
-    \item \textbf{RQ3:} How accurately can the developed LLM-based tool detect SQL antipatterns in Java code that uses jOOQ for database access?
-    \item \textbf{RQ4:} What patterns can be observed in the occurrence of SQL antipatterns in Java code that uses jOOQ for database access?
-    \item \textbf{RQ5:} Which jOOQ API methods are most frequently associated with query antipattern occurrences?
+    \item \textbf{RQ3:} What occurrence-level agreement does one run of the developed tool achieve against the original reference annotations?
+    \item \textbf{RQ4:} What is the distribution of detector flags in the identified corpus of Java projects using jOOQ?
+    \item \textbf{RQ5:} Which post hoc API manifestation categories are most frequent among query-antipattern detector flags?
 \end{itemize}
 
 \section{Methodology and Contributions}
@@ -31,7 +31,7 @@ This research follows the principles of Design Science Research \nobreakcite{hev
 
 To establish this tool's foundation, we compared multiple state-of-the-art LLMs and prompt engineering strategies (Zero-Shot, Few-Shot, Chain-of-Thought, Tree-of-Thought) using both quantitative metrics and qualitative inspection.
 
-Additionally, we produced a human-labelled dataset of SQL antipattern occurrences in Java code, which uses jOOQ for database access, curated through repository mining and stratified random sampling. Moreover, we performed a large-scale analysis of the prevalence of SQL antipatterns in \num{602} existing Java software projects that use jOOQ.
+Additionally, we produced a human-labelled reference dataset of SQL antipattern occurrences in Java code, which uses jOOQ for database access, curated through repository mining and stratified random sampling. Moreover, we analysed the detector-output distribution in \num{602} identified Java software projects that use jOOQ.
 
 To the best of our knowledge, this study is the first to evaluate LLM-based antipattern detection as a localisation task rather than a pure classification task. Instead of merely determining whether a file contains an antipattern, the proposed tool identifies the precise boundaries of antipattern occurrences.
 
@@ -55,13 +55,13 @@ To ensure repeatability and facilitate future research, we open-sourced all arte
 
 Chapter~\ref{chapter:background} provides the theoretical background on SQL antipatterns and the jOOQ library. We also review existing static analysis approaches and prompt engineering techniques used with large language models.
 
-Chapter~\ref{chapter:datasetCreation} details the methodology for creating a human-annotated ground truth dataset, encompassing the repository mining process, project sampling, and manual annotation guidelines.
+Chapter~\ref{chapter:datasetCreation} details the methodology for creating a human-annotated reference dataset, encompassing the repository mining process, project sampling, and manual annotation guidelines.
 
 In Chapter~\ref{chapter:promptingStrategies}, we conduct an empirical evaluation of various prompting strategies, detailing how we measured the ability of several models to identify flawed database access code.
 
 In Chapter~\ref{chapter:development}, we provide an overview of the developed command-line application, covering the architectural design, internal workflow, and implementation technologies of the detection tool.
 
-Chapter~\ref{chapter:projectAnalysis} outlines a framework for a large-scale project analysis, where we describe the statistical methods utilised to examine the prevalence and co-occurrence of antipatterns across hundreds of open-source repositories.
+Chapter~\ref{chapter:projectAnalysis} outlines a framework for a large-scale project analysis, where we describe the measures used to summarise detector flags across hundreds of open-source repositories.
 
 We present the answers to the formulated research questions in Chapter~\ref{chapter:results}, highlighting the comparative performance of the evaluated models, the detection performance of our finalised tool, and the most common database missteps found in practice.
 

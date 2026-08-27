@@ -32,7 +32,7 @@ We found that all selected models supported structured outputs with adequate rel
 
 We designed prompts based on the four prompting strategies listed in Section~\ref{sec:promptEngineering}. We limited our experiments to prompting techniques that could be fully executed in the span of one prompt and one response to manage the scope of the thesis.
 
-We iteratively developed and fine-tuned prompts for each technique, comparing the results against the training set produced in Section~\ref{sec:dataSplit}. We tested each iteration of our prompts against all tested models until all models reached near-optimal performance. To simplify the experimental setup and the interpretation of results, we only developed universal, model-agnostic prompts, without fine-tuning them for individual models.
+We iteratively developed and refined prompts for each technique, comparing the results against the training set produced in Section~\ref{sec:dataSplit}. We tested each iteration against all evaluated models until further changes did not improve the observed training-set metrics. To simplify the experimental setup and the interpretation of results, we only developed universal, model-agnostic prompts, without tuning them for individual models.
 
 Due to the high cost of LLM inference, we developed heuristics to target only the antipatterns that are potentially present in a given file. Firstly, we ignored files that did not contain any database-related code using the filters first mentioned in Section~\ref{sec:sampleGeneration}. Secondly, for each prompting strategy, we developed two prompts:
 
@@ -117,7 +117,7 @@ Only identify problems in code, which interacts directly with the jOOQ DSL or ge
 
 \section{Quantitative Analysis}\label{sec:experimentsQuantitative}
 
-Following the finalisation of the prompt design, we analysed each project in the validation set created in Section~\ref{sec:dataSplit} using all combinations of models and prompting strategies. We subsequently evaluated the resulting outputs against the ground truth.
+Following the finalisation of the prompt design, we analysed each project in the validation set created in Section~\ref{sec:dataSplit} using all combinations of models and prompting strategies. We subsequently evaluated the resulting outputs against the reference annotations.
 
 We performed the analysis using the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub}, accessing the models through \nobreaktextcite{openRouter2026homepage} as a unified gateway for different LLM providers, using the following parameters for LLMs:
 
@@ -159,30 +159,35 @@ The first step involved quantifying the localisation performance using IoU. We d
 S = \{i \in \mathbb{N} \mid start \le i \le end\}
 \end{equation}
 
-For a predicted line span \(S_p\) and a ground truth line span \(S_g\), the IoU is defined as:
+For a predicted line span \(S_p\) and a reference line span \(S_g\), the IoU is defined as:
 \begin{equation}
 \text{IoU} = \frac{|S_p \cap S_g|}{|S_p \cup S_g|}
 \end{equation}
 
-This metric produces a value between \num{0} and \num{1}, where \num{1} represents an exact line-level match. In this methodology, the IoU serves as the qualification gate for all subsequent metrics. A prediction is classified as a true positive (TP) if its spatial overlap with the ground truth exceeds the threshold: \(\text{IoU} \geq 0.5\). If the IoU is below this threshold, the prediction is classified as a false positive (FP), while missed ground truth spans are considered false negatives (FN).
+This metric produces a value between \num{0} and \num{1}, where \num{1} represents an exact line-level match. In this methodology, the IoU serves as the qualification gate for all subsequent metrics. Candidate pairs are formed within the same repository, file, and antipattern class when \(\text{IoU} \geq 0.5\).
 
-Using this qualification gate, we classify the predictions into TPs, FPs, and FNs, employing Non-Maximum Suppression (NMS): in cases of multi-occurrence where multiple predictions overlap a single ground truth span, only the prediction with the highest spatial overlap is assigned as a TP, while subsequent overlaps are penalised as FPs.
+We obtain true positives from a maximum-cardinality one-to-one bipartite matching over these candidate pairs. Each reference occurrence's candidate list is ordered by descending IoU, followed by prediction span and source order, to make the selected pairing deterministic. This ordering affects only which pair is retained when several maximum-cardinality matchings exist, not the number of matches. Each unmatched prediction is a false positive (FP), and each unmatched reference span is a false negative (FN).
 
 Based on the classifications, we calculated the precision (\(P\)) and recall (\(R\)) of the model at the selected threshold, defined as:
 \begin{equation}
 P = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad R = \frac{\text{TP}}{\text{TP} + \text{FN}}
 \end{equation}
 
-Precision measures the exactness of the model by calculating the ratio of correctly identified detections to the total number of detections, thereby indicating the extent to which the model avoids FPs. Recall measures the completeness of the model by calculating the ratio of correctly identified detections to the total number of antipattern occurrences in the ground truth, reflecting the model's ability to minimize FNs.
+Precision measures exactness by calculating the ratio of matched predictions to all predictions, thereby indicating the extent to which the model avoids FPs. Recall measures completeness by calculating the ratio of matched reference spans to all reference spans, reflecting the model's ability to minimise FNs.
 
 Using these values, we calculated the F1-score, which provides a balanced assessment of model performance at the selected threshold by calculating the harmonic mean of precision and recall, serving as a single unified metric that penalizes extreme values in either component:
 \begin{equation}
 F_1 = 2 \cdot \frac{P \cdot R}{P + R}
 \end{equation}
 
-We calculated \(P\), \(R\) and \(F_1\) for each antipattern separately, and as a weighted average of all antipatterns:
+We calculated \(P\), \(R\), and \(F_1\) for each antipattern separately. For class \(c\), support is \(s_c=\text{TP}_c+\text{FN}_c\). We report micro averages from pooled TP, FP, and FN counts; macro averages as the unweighted mean across \(K\) classes; and reference-support-weighted averages:
 \begin{equation}
-\bar{x}_w = \frac{\sum_{i=1}^{n} w_i x_i}{\sum_{i=1}^{n} w_i}
+P_{\mathrm{micro}}=\frac{\sum_c \text{TP}_c}{\sum_c(\text{TP}_c+\text{FP}_c)}, \quad
+R_{\mathrm{micro}}=\frac{\sum_c \text{TP}_c}{\sum_c(\text{TP}_c+\text{FN}_c)}
+\end{equation}
+\begin{equation}
+M_{\mathrm{macro}}=\frac{1}{K}\sum_{c=1}^{K}M_c, \quad
+M_{\mathrm{weighted}}=\frac{\sum_{c=1}^{K}s_cM_c}{\sum_{c=1}^{K}s_c}
 \end{equation}
 
 This way, we were provided with an understanding of which models and prompts are the best in the detection of antipatterns in general, but we also had the opportunity to study the differences in further detail. Additionally, we recorded the cost and runtime of each analysis and the number of requests retried due to incorrectly formatted (e.g., empty or non-JSON) responses provided models.

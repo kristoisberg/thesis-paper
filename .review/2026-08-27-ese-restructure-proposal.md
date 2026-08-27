@@ -166,6 +166,8 @@ Completion check: the final evidence set is fixed, and every planned quantitativ
 
 ### Step 4: Correct the existing measurement and statistical analysis
 
+Status: completed on 2026-08-27. See `2026-08-27-ese-step-4-measurement-corrections.md`.
+
 Actions:
 
 - Rename annotations, event-matching tables, and aggregate measures correctly.
