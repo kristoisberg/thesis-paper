@@ -139,6 +139,8 @@ Completion check: every current section, figure, and table has a destination. No
 
 ### Step 2: Lock the paper's claim, scope, and research questions
 
+Status: completed on 2026-08-27. See `2026-08-27-ese-step-2-paper-identity.md`.
+
 Actions:
 
 - Adopt one title and the one-sentence central claim.
