@@ -32,9 +32,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: paper-build
-          path: |
-            paper/main.pdf
-            paper/supplementary.pdf
+          path: paper/main.pdf
           if-no-files-found: error
 
       - name: Prepare preview
@@ -42,12 +40,11 @@ jobs:
         run: |
           mkdir preview
           cp paper/main.pdf preview/paper.pdf
-          cp paper/supplementary.pdf preview/supplementary.pdf
           printf '%s\n' \
             '<!doctype html>' \
             '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Paper preview</title>' \
             '<style>body{font:16px sans-serif;margin:1rem}object{width:100%;height:calc(100vh - 6rem)}</style></head><body>' \
-            '<h1>Paper preview</h1><p><a href="paper.pdf">Paper PDF</a> · <a href="supplementary.pdf">Supplementary PDF</a></p>' \
+            '<h1>Paper preview</h1><p><a href="paper.pdf">Paper PDF</a></p>' \
             '<object data="paper.pdf" type="application/pdf" aria-label="Paper PDF preview"><p><a href="paper.pdf">Open the paper PDF</a></p></object></body></html>' \
             > preview/index.html
 
