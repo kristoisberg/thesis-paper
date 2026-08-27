@@ -153,6 +153,8 @@ Completion check: the title, claim, contribution list, and RQs fit on one page a
 
 ### Step 3: Decide and perform the feasible evidence upgrades
 
+Status: completed on 2026-08-27. See `2026-08-27-ese-step-3-evidence-freeze.md` and `../analysis/localisation_robustness.py`.
+
 Actions:
 
 - Decide whether an independent annotation audit, corpus transfer audit, deterministic baseline, repeated model runs, and project bootstrap are feasible.

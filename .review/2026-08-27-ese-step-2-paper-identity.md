@@ -2,7 +2,7 @@
 
 Date: 2026-08-27
 
-Status: completed. These decisions govern the later restructuring steps; no manuscript source was changed in this step.
+Status: completed and narrowed by the Step 3 evidence freeze. These decisions govern the later restructuring steps; no manuscript source was changed in this step.
 
 ## One-page decision sheet
 
@@ -12,7 +12,7 @@ Status: completed. These decisions govern the later restructuring steps; no manu
 
 ### Central claim
 
-Project-disjoint occurrence-level evaluation measures the selected detector's class-specific errors at the same granularity used for repository counting, so the 602-repository corpus supports class-specific claims about detector flags rather than estimates of true antipattern prevalence.
+Project-disjoint occurrence-level evaluation shows how closely one selected-detector run agrees with the original single-annotator reference spans at the same granularity used for repository counting, so the 602-repository corpus supports class-specific claims about detector flags rather than estimates of true antipattern prevalence.
 
 ### Target population and scope
 
@@ -22,7 +22,7 @@ The corpus is not presented as representative of all jOOQ, GitHub, open-source, 
 
 ### Research questions
 
-1. **RQ1:** How accurately does the selected LLM-based detector localise occurrences of seven operationalised SQL antipatterns in the 20-repository, project-disjoint test partition of jOOQ-based Java code?
+1. **RQ1:** What occurrence-level agreement does one run of the selected LLM-based detector achieve against the original single-annotator reference spans for seven operationalised SQL antipatterns in the 20-repository, project-disjoint test partition?
 2. **RQ2:** How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?
 3. **RQ3:** Which recurring jOOQ API or source-code patterns are most frequently associated with detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?
 
@@ -31,7 +31,7 @@ The four-model, four-prompt comparison configures the detector before RQ1; it is
 ### Contributions
 
 1. A source-level operationalisation and single-annotator reference dataset containing 1,562 line-localised occurrences of 19 SQL antipatterns in a stratified sample of 61 jOOQ repositories, with seven classes retained under explicit support criteria for detector experiments.
-2. A project-disjoint, occurrence-level evaluation of the selected detector for multi-label, multi-occurrence line-span localisation, with class-specific event counts, precision, recall, F1, and error mechanisms against the original reference annotations.
+2. A project-disjoint, occurrence-level agreement evaluation of one selected-detector run for multi-label, multi-occurrence line-span localisation, with class-specific event counts, precision, recall, F1, and error mechanisms against the original single-annotator reference spans.
 3. Detector-output measurements for seven SQL antipatterns across the identified corpus of 602 public GitHub repositories, comprising 15,931 flags in 17,450 relevant Java files and reporting class-level counts and repository coverage.
 4. An empirical characterisation of recurring jOOQ API and source-code patterns associated with detected Implicit Columns and Poor Man's Search Engine occurrences.
 
@@ -43,7 +43,7 @@ The detector implementation and replication package are supporting artefacts rat
 |---|---|---|---|
 | Reference annotation | 61 repositories sampled from the preliminary 603-repository corpus | Line-span occurrence in a Java file | The reference dataset contains 1,562 occurrences across 19 classes; seven classes satisfy the support criteria. |
 | Detector configuration | Validation partition from the project-disjoint split | Same-file, same-class occurrence match | The model and prompt results justify selecting one configuration for held-out evaluation within this experiment. |
-| RQ1 evaluation | 20 test repositories, 502 relevant Java files, and 523 original-reference occurrences in the seven retained classes | One-to-one same-file, same-class line-span match at IoU >= 0.5 | Accuracy and error patterns differ by class; aggregate performance does not apply uniformly to every class. |
+| RQ1 evaluation | 20 test repositories, 502 relevant Java files, and 523 original-reference occurrences in the seven retained classes | One-to-one same-file, same-class line-span match at IoU >= 0.5 | Agreement with the original reference and observed errors differ by class; aggregate performance does not apply uniformly to every class. |
 | RQ2 corpus study | 602 repositories and 17,450 relevant Java files | Detector flag, aggregated by class and repository | The selected detector produced 15,931 flags in 601 repositories; these are detector outputs, not verified population prevalence. |
 | RQ3 pattern study | Detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus | Detector flag assigned post hoc to an API or source-code pattern | The reported patterns describe how these two classes appear among detector flags; they do not estimate API risk or causality. |
 
@@ -55,6 +55,8 @@ The project split contains 21 training, 20 validation, and 20 test repositories.
 - Use **evaluated detector**, not **validated detector**.
 - Describe corpus results as **flags**, **detections**, or **detector outputs**, not true prevalence, incidence, or rates.
 - Use the original reference annotations for the primary RQ1 result. Present corrected annotations only as an optimistic sensitivity analysis because detector disagreements initiated the corrections.
+- Identify all RQ1 metrics as results from one selected-detector run.
+- Treat the project bootstrap as conditional project-composition sensitivity, not as a population confidence interval.
 - Report class-specific results alongside aggregates. Under the original reference, the per-class F1 range is 0.48 to 0.97.
 - Distinguish micro, macro, and weighted measures. The primary original-reference event totals are 460 TP, 76 FP, and 63 FN, which yield micro precision 0.858, micro recall 0.880, and micro F1 0.869.
 - Do not infer developer benefit, production readiness, CI suitability, improved code quality, or superiority over static analysis.
