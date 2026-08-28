@@ -35,6 +35,7 @@ The per-section planning counts are the included-file values from the canonical 
 
 | Section | Included-file baseline | Current net addition | Current count |
 |---|---:|---:|---:|
+| Front matter and declarations | 435 | 8 | 443 |
 | Introduction | 384 | 68 | 452 |
 | Background and Related Work | 789 | 818 | 1,607 |
 | Study Design | 2,287 | 1,390 | 3,677 |
@@ -42,11 +43,11 @@ The per-section planning counts are the included-file values from the canonical 
 | Discussion | 777 | 261 | 1,038 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Current execution budget** |  | **3,138** |  |
+| **Current execution budget** |  | **3,146** |  |
 
 The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section covers manifest-search coverage, the GitHub result cap, single-run uncertainty, bounded gateway/provider change, missing metadata, and replay limits. It does not assert a caching effect because the evidence does not show that caching affected the single-pass runs. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
 
-The current clean logs contain zero LaTeX errors, undefined citations, undefined references, overfull boxes, or BibTeX warnings. The main log contains 20 underfull-box notices and the supplement contains one. These are harmless table-cell, URL, and page-breaking notices. Both frozen analysis scripts also reran successfully. They reproduced the 536 predictions, 523 references, 460/76/63 primary totals, IoU grid, 10,000-replicate bootstrap ranges, 15,931 corpus flags, 601 flagged repositories, all class totals, and the 59.1% overall top-decile concentration.
+The current clean logs contain zero LaTeX errors, undefined citations, undefined references, overfull boxes, or BibTeX warnings. The main log contains 21 underfull-box notices and the supplement contains one. These are harmless table-cell, URL, and page-breaking notices. Both frozen analysis scripts also reran successfully. They reproduced the 536 predictions, 523 references, 460/76/63 primary totals, IoU grid, 10,000-replicate bootstrap ranges, 15,931 corpus flags, 601 flagged repositories, all class totals, and the 59.1% overall top-decile concentration.
 
 ## Protected article identity
 
@@ -158,7 +159,7 @@ Each row defines one candidate restored paragraph. The destination names an exis
 | D02 | Discussion, end of the implications subsection | `paper/chapters/08_analysis.tex:187,193,197,199` | Define bounded follow-up studies. | 187 | Completed in Step 6. Framed broader taxonomies, smaller or self-hosted models, other query builders, and preserved-flag analysis as experiments with specified measurements and no predicted gain. |
 |  |  |  | **Pre-reconciliation row total** | **2,945** |  |
 
-The row values record each restoration step's standalone delta before the cross-section reconciliation. Step 8 preserved every row's source mapping but edited boundaries shared with existing prose. The current section deltas and 3,138-word execution budget above also include the later four-float restoration.
+The row values record each restoration step's standalone delta before the cross-section reconciliation. Step 8 preserved every row's source mapping but edited boundaries shared with existing prose. The current section deltas and 3,146-word execution budget above also include the later four-float restoration and completed declarations.
 
 ## Fixed exclusions
 
@@ -199,4 +200,4 @@ Step 8 reconciled the 19 restored paragraph units in place. It removed 159 TeXCo
 
 Step 9 expanded TP, FP, and FN in the occurrence-agreement caption and aligned the RQ3 caption and header with `source-fragment category`. The final paper contains 9,777 TeXCount words, a 2,792-word net restoration, 12,399 layout-extracted PDF words, and 31 pages. All clean-build, layout, consistency, frozen-analysis, and Step 13 repository-local checks pass. The net addition remains 58 words below the plan's lower tolerance; no threshold-driven prose was added.
 
-After Step 9, the four visual elements removed in `07a81e5` were restored to the main article at the user's request. The current paper contains 10,123 TeXCount words, a 3,138-word net increase over the baseline, 12,878 layout-extracted PDF words, and 32 pages. The clean build and float-page layout audit pass; `2026-08-28-ese-main-float-restoration.md` records the superseding evidence.
+After Step 9, the four visual elements removed in `07a81e5` were restored to the main article at the user's request. The four declaration placeholders were subsequently completed as `Not applicable.` The current paper contains 10,131 TeXCount words, a 3,146-word net increase over the baseline, 12,836 layout-extracted PDF words, and 32 pages. The clean build and float-page layout audit pass; `2026-08-28-ese-main-float-restoration.md` records the float evidence.

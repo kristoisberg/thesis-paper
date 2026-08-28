@@ -275,7 +275,7 @@ Completion check: each retained float supports one claim, and the main PDF no lo
 
 ### Step 12: Complete reproducibility and journal declarations
 
-Status: partially completed on 2026-08-28. Verifiable metadata and the surviving reproducibility record are complete. DOI deposition and author confirmation of funding, competing interests, ethics, consent, author metadata, and final approval remain required. See `2026-08-28-ese-step-12-reproducibility-declarations.md`.
+Status: partially completed on 2026-08-28. Verifiable metadata and the surviving reproducibility record are complete. Funding, competing interests, ethics approval, and consent to participate have been confirmed as not applicable. DOI deposition, remaining author metadata, and final approval remain required. See `2026-08-28-ese-step-12-reproducibility-declarations.md`.
 
 Actions:
 
@@ -287,7 +287,7 @@ Completion check: all ESE submission fields can be completed from the manuscript
 
 ### Step 13: Run the submission-readiness pass
 
-Status: partially completed on 2026-08-28. The manuscript, supplement, evidence checks, and reviewer audits pass; DOI deposition, author-confirmed declarations, and the unavailable exact validation-run outputs prevent the full ESE completion check from passing. See `2026-08-28-ese-step-13-submission-readiness.md`.
+Status: partially completed on 2026-08-28. The manuscript, supplement, evidence checks, reviewer audits, and declaration fields pass; DOI deposition, remaining author metadata, and the unavailable exact validation-run outputs prevent the full ESE completion check from passing. See `2026-08-28-ese-step-13-submission-readiness.md`.
 
 Actions:
 

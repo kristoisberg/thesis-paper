@@ -95,4 +95,4 @@ They reproduce 536 predictions, 523 references, the 460/76/63 primary totals, mi
 
 The three RQs remain text-identical between Introduction and Results. Title, Abstract, direct answers, Discussion, Threats to Validity, and Conclusion retain consistent values and evidence boundaries. Searches found no duplicate labels, unsupported ground-truth or prevalence wording, model-reasoning claims, novelty or superiority language, conspicuous generated-prose markers, or negation-contrast patterns.
 
-All Step 13 repository-local checks pass. The external Step 13 submission blockers remain unchanged: DOI-backed package deposit, author-confirmed declarations, author metadata and approval, and the unavailable exact validation-run outputs already disclosed in the paper and supplement.
+All Step 13 repository-local checks pass. This report's historical blocker list included author-confirmed declarations; those four fields were later confirmed as not applicable. The remaining blockers are the DOI-backed package deposit, author metadata and approval, and the unavailable exact validation-run outputs already disclosed in the paper and supplement.

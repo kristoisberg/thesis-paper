@@ -2,7 +2,7 @@
 
 ## Status
 
-Step 12 is partially complete. The repository now records every reproducibility field supported by the surviving evidence. Completion still requires a DOI deposit and declarations that only the authors or their institution can confirm.
+Step 12 is partially complete. The repository records every reproducibility field supported by the surviving evidence. The author has confirmed that competing interests, funding, ethics approval, and consent to participate are not applicable. Completion still requires a DOI deposit and confirmation of the remaining author metadata and final approval.
 
 ## Applied
 
@@ -15,6 +15,7 @@ Step 12 is partially complete. The repository now records every reproducibility 
 - Corrected the validation-method account to match the archived notebooks: GPT-5.2 requests include temperature `0.0`; gpt-oss-120B omits the parameter and preserved responses report `1.0`; only the GLM-5 notebooks record a fixed backend and disabled fallbacks.
 - Converted declaration headings from run-in paragraphs to unnumbered subsections, keeping the manuscript within three decimal heading levels and removing the declaration overflow.
 - Preserved the existing contribution roles without adding unsupported roles.
+- Replaced the competing-interests, funding, ethics-approval, and consent placeholders with the author-confirmed statement `Not applicable.`
 
 ## Verified
 
@@ -25,13 +26,10 @@ Step 12 is partially complete. The repository now records every reproducibility 
 - Numbered body headings stop at `subsubsection`, the third decimal level.
 - The TalTech Digital Collection identifies Kristo Isberg as author, Erki Eessaar as supervisor, Tallinn University of Technology and the School of Information Technologies as the institution and faculty, and 25 May 2026 as the thesis defence date.
 
-## External and author-confirmation blockers
+## Remaining external and author-confirmation blockers
 
 1. Deposit the final replication package in a repository that issues a DOI. Include the frozen study artefacts, both article reconstruction scripts, dependency file, and this reproducibility record. Add the DOI to the data-availability statement and cite the dataset in `paper/references.bib`.
-2. Confirm the funding statement, including grant numbers or the absence of funding.
-3. Confirm all financial and non-financial competing interests for both authors.
-4. Confirm whether institutional ethics approval was required for the public-repository study and whether consent to participate is inapplicable.
-5. Confirm author order, current affiliations, corresponding email, contribution roles, and both authors' approval of the submitted manuscript.
+2. Confirm author order, current affiliations, corresponding email, contribution roles, and both authors' approval of the submitted manuscript.
 
 The original source-repository revisions, detector run revision, raw API responses, request identifiers, full request metadata, per-request retry histories, complete provider routing metadata, negative-file outputs, and the full no-flag corpus frame cannot be reconstructed. The manuscript and supplement state these limits.
 

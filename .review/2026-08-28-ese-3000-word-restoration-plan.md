@@ -16,6 +16,7 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 
 | Section | Baseline TeXCount | Pre-reconciliation addition | Step 9 addition | Float-restoration delta | Current addition | Current count |
 |---|---:|---:|---:|---:|---:|---:|
+| Front matter and declarations | 435 | 0 | 0 | +8 | 8 | 443 |
 | Introduction | 384 | 68 | 68 | 0 | 68 | 452 |
 | Background and Related Work | 789 | 599 | 556 | +262 | 818 | 1,607 |
 | Study Design | 2,287 | 1,388 | 1,336 | +54 | 1,390 | 3,677 |
@@ -23,9 +24,9 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 | Discussion | 777 | 340 | 267 | -6 | 261 | 1,038 |
 | Threats to Validity | 926 | 0 | 0 | 0 | 0 | 926 |
 | Conclusion | 163 | 0 | 0 | 0 | 0 | 163 |
-| **Net change** |  | **2,945** | **2,792** | **+346** | **3,138** |  |
+| **Net change** |  | **2,945** | **2,792** | **+354** | **3,146** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. Step 9 added six caption words to expand abbreviations and align terminology. The later user-directed restoration of four existing floats added 346 TeXCount words, including captions and adjacent interpretation, without adding a new analytical claim. The current 3,138-word increase is inside the 2,850--3,150 tolerance. The compiled paper contains 12,878 layout-extracted words across 32 pages.
+The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. Step 9 added six caption words to expand abbreviations and align terminology. The later user-directed restoration of four existing floats added 346 TeXCount words, including captions and adjacent interpretation, without adding a new analytical claim. Replacing four uncounted declaration placeholders with `Not applicable.` added eight TeXCount words. The current 3,146-word increase is inside the 2,850--3,150 tolerance. The compiled paper contains 12,836 layout-extracted words across 32 pages.
 
 ## Source-reuse protocol
 
@@ -212,7 +213,7 @@ Actions:
 - Compare section deltas against the budget table and explain any movement greater than 10%.
 - Produce a final report containing the reuse ledger, exact net count, final PDF-extracted count, page count, build status, and any deviations from this plan.
 
-Completion check at Step 9: the compiled main PDF contained 12,399 layout-extracted words across 31 pages, and all Step 13 repository-local checks passed. The 2,792-word TeXCount increase was 58 words below the planned tolerance, so the audit recorded the deviation rather than adding threshold-driven prose. The subsequent four-float restoration raised the current values to 12,878 layout-extracted words, 32 pages, and a 3,138-word TeXCount increase.
+Completion check at Step 9: the compiled main PDF contained 12,399 layout-extracted words across 31 pages, and all Step 13 repository-local checks passed. The 2,792-word TeXCount increase was 58 words below the planned tolerance, so the audit recorded the deviation rather than adding threshold-driven prose. The subsequent float and declaration updates raised the current values to 12,836 layout-extracted words, 32 pages, and a 3,146-word TeXCount increase.
 
 ## Material that remains excluded
 

@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: partially completed. All repository-local manuscript checks pass. The package still requires a DOI-backed deposit and author-confirmed declarations. The exact validation-run outputs underlying the originally reported configuration table are unavailable and are now disclosed as a preservation limitation.
+Status: partially completed. All repository-local manuscript checks pass. The author has confirmed that competing interests, funding, ethics approval, and consent to participate are not applicable. The package still requires a DOI-backed deposit and confirmation of the remaining author metadata and final approval. The exact validation-run outputs underlying the originally reported configuration table are unavailable and are disclosed as a preservation limitation.
 
 ## Applied changes
 
@@ -16,6 +16,7 @@ Status: partially completed. All repository-local manuscript checks pass. The pa
 - Removed residual causal wording, internal restructuring comments, undefined abstract terminology, and inconsistent domain-specific-language spelling.
 - Completed cited bibliography metadata, protected product-name capitalization, and added standalone citations to Online Resource 1.
 - Extended `make clean` to remove the obsolete `paper/supplementary.pdf` build products, leaving `paper/ESM_1.pdf` as the single supplement submission file.
+- Replaced the four unresolved declaration placeholders with the author-confirmed statement `Not applicable.`
 
 ## Verification
 
@@ -31,10 +32,9 @@ Status: partially completed. All repository-local manuscript checks pass. The pa
 ## Remaining submission blockers
 
 1. Deposit the replication package in a DOI-issuing repository, cite the dataset, and replace the supplement's DOI warning.
-2. Replace the competing-interests, funding, ethics-approval, and consent placeholders with author-confirmed statements.
-3. Confirm author order, affiliations, corresponding email, contribution roles, and both authors' approval of the submitted manuscript.
-4. The exact outputs behind the originally reported validation configuration table cannot be recovered from the surviving notebooks. The manuscript and supplement now state this limitation; recovering those outputs would require an external copy of the original run artefacts.
+2. Confirm author order, affiliations, corresponding email, contribution roles, and both authors' approval of the submitted manuscript.
+3. The exact outputs behind the originally reported validation configuration table cannot be recovered from the surviving notebooks. The manuscript and supplement state this limitation; recovering those outputs would require an external copy of the original run artefacts.
 
-The first three items are the same external and author-confirmation blockers recorded in Step 12. Until they are resolved, the ESE checklist and Step 13 completion check remain partial.
+The first two items are the remaining actionable blockers recorded in Step 12. Until they are resolved, the ESE checklist and Step 13 completion check remain partial.
 
 Guideline basis: Empirical Software Engineering submission guidelines, checked 28 August 2026: https://link.springer.com/journal/10664/submission-guidelines
