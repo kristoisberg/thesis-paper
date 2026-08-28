@@ -35,9 +35,9 @@ The per-section planning counts are the included-file values from the canonical 
 
 | Section | Included-file TeXCount | Planned net addition | Target |
 |---|---:|---:|---:|
-| Introduction | 384 | 180 | 564 |
+| Introduction | 384 | 68 | 452 |
 | Background and Related Work | 789 | 660 | 1,449 |
-| Study Design | 2,287 | 1,440 | 3,727 |
+| Study Design | 2,287 | 1,552 | 3,839 |
 | Results | 1,224 | 400 | 1,624 |
 | Discussion | 777 | 320 | 1,097 |
 | Threats to Validity | 926 | 0 | 926 |
@@ -133,13 +133,13 @@ Each row defines one candidate restored paragraph. The destination names an exis
 
 | ID | Destination in current article | Legacy source | Paragraph job | Budget | Required factual adaptation |
 |---|---|---|---|---:|---|
-| I01 | Introduction, after the opening paragraph | `paper/chapters/01_introduction.tex:5-6`; `paper/chapters/02_background.tex:25-27` | Add attributed evidence about persistence and remediation priority. | 180 | Omit duplicated prevalence and impact figures, developer-education claims, and tooling causality. Preserve the current move into jOOQ. |
+| I01 | Introduction, after the opening paragraph | `paper/chapters/01_introduction.tex:5-6`; `paper/chapters/02_background.tex:25-27` | Add attributed evidence about persistence and remediation priority. | 68 | Completed in Step 2. Omitted duplicated prevalence and impact figures, developer-education claims, tooling causality, and a redundant representation bridge; preserved the current move into jOOQ. |
 | B01 | Background, after the opening definition | `paper/chapters/02_background.tex:5,7` | Distinguish antipatterns from code smells. | 90 | Do not repeat the operational definition or restore unused history. Keep each citation attached to its claim. |
 | B02 | Background, before the operational-definition table | `paper/chapters/02_background.tex:11-13` | Explain the Implicit Columns maintenance mechanism. | 100 | Omit the existing 27%/29% result and the unevaluated `INSERT` form. |
 | B03 | Background, after the opening jOOQ paragraph | `paper/chapters/02_background.tex:85` | Explain DSL, code-generation, generated-schema, and JDBC roles. | 150 | Omit adoption, ORM-superiority, GitHub-star, and customer claims. Use current jOOQ citations. |
 | B04 | Background, expand the first detection-approaches paragraph | `paper/chapters/02_background.tex:104-112` | Restore the metric-, rule-, and learned-analysis progression. | 140 | Remove product inventories, extended smell examples, universal rigidity claims, and uncited real-world adoption statements. |
 | B05 | Background, expand the existing SQL-detector comparison | `paper/chapters/02_background.tex:135-145` | Compare representations, analysis methods, class scope, and output units. | 180 | Remove "only two," "incapable," and cross-tool performance rankings. Avoid four independent inventory paragraphs; the existing gap paragraph remains the synthesis. |
-| S01 | Study Design, repository mining after the dated-search paragraph | `paper/chapters/03_dataset_creation.tex:11-15` | Explain the generated-class requirement and manifest-search rationale. | 180 | Preserve target-population limits. Avoid claims of exhaustive coverage, measured import-search saturation, or universal build failure. |
+| S01 | Study Design, repository mining after the dated-search paragraph | `paper/chapters/03_dataset_creation.tex:11-15` | Explain the generated-class requirement and manifest-search rationale. | 292 | Includes the 112-word Step 2 remainder. Preserve target-population limits. Avoid claims of exhaustive coverage, measured import-search saturation, or universal build failure. |
 | S02 | Study Design, repository mining before the funnel figure | `paper/chapters/03_dataset_creation.tex:21-27` | Explain content filtering and human-reviewed duplicate removal. | 120 | Omit the 21% speculation, model praise, and named tutorial/course anecdotes kept online. Preserve the 645/603/602 boundaries. |
 | S03 | Study Design, sampling around the current count paragraph | `paper/chapters/03_dataset_creation.tex:64-71,89-113` | Define relevant files and explain the skewed size distribution and stratum sampling. | 230 | Avoid representativeness claims, the uncited Head-Tail Breaks name, restored equations, and corrected-distribution detours. Use current counts. |
 | S04 | Study Design, operational scope after the current codebook paragraph | `paper/chapters/03_dataset_creation.tex:117-131` | Give at most two concrete examples of evidence-based inclusion or exclusion decisions. | 100 | Keep the full codebook online. Do not claim jOOQ mitigates an antipattern or that frameworks usually handle errors in one way. |
@@ -177,4 +177,4 @@ The following sources are not candidates for later restoration:
 - Paragraph-level source ledger complete: **yes**. Nineteen candidate paragraph units have legacy sources, stable destinations, argumentative jobs, budgets, and factual adaptations. Their budgets total 3,000 words.
 - Manuscript changed: **no**.
 
-Step 2 may begin from row I01. If the source cannot support an accurate paragraph after the required deletions, its budget should move to another source-led paragraph rather than being replaced with newly generated filler.
+Step 2 completed row I01 at 68 words. Its unsupported 112-word remainder moved to S01 rather than being replaced with generated filler; the ledger still totals 3,000 words.

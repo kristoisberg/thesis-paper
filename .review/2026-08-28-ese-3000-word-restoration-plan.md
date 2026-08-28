@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Step 1 was completed on 2026-08-28; see `2026-08-28-ese-word-restoration-step-1-baseline-ledger.md`. No manuscript text has been changed.
+Status: in progress. Steps 1 and 2 were completed on 2026-08-28; see `2026-08-28-ese-word-restoration-step-1-baseline-ledger.md` and `2026-08-28-ese-word-restoration-step-2-introduction.md`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -14,11 +14,11 @@ The current main article is 25 pages. TeXCount reports 6,985 words when text, he
 
 The implementation target is a **net addition of 3,000 TeXCount-visible manuscript words**, with an acceptable range of 2,850--3,150. That should produce approximately 9,985 TeXCount words and 12,300 PDF-extracted words, subject to LaTeX tokenisation. The expected page range is 30--32 pages, which reaches the lower end of the 30--40-page practical target.
 
-| Section | Current TeXCount | Planned net addition | Approximate target |
+| Section | Baseline TeXCount | Planned net addition | Approximate target |
 |---|---:|---:|---:|
-| Introduction | 384 | 180 | 564 |
+| Introduction | 384 | 68 | 452 |
 | Background and Related Work | 789 | 660 | 1,449 |
-| Study Design | 2,287 | 1,440 | 3,727 |
+| Study Design | 2,287 | 1,552 | 3,839 |
 | Results | 1,224 | 400 | 1,624 |
 | Discussion | 777 | 320 | 1,097 |
 | Threats to Validity | 926 | 0 | 926 |
@@ -54,7 +54,9 @@ Actions:
 
 Completion check: the baseline reproduces 6,985 TeXCount words, 9,332 PDF-extracted words, and 25 pages; every planned paragraph has a legacy source before prose editing starts.
 
-### Step 2: Restore the Introduction's problem progression (+180 words)
+### Step 2: Restore the Introduction's problem progression (+68 words)
+
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-2-introduction.md`.
 
 Primary sources:
 
@@ -69,7 +71,7 @@ Actions:
 
 Do not restore the old five RQs, thesis outline, broad Design Science Research framing, first-of-its-kind claim, claims that tool scarcity causes antipattern persistence, or claims that deterministic analysis is inherently infeasible.
 
-Completion check: the Introduction gains 160--200 words, reaches the measurement problem by its third conceptual move, and introduces no claim absent from Background or Study Design.
+Completion check: the Introduction gained 68 words and reaches the measurement problem by its third conceptual move. The original 180-word allocation could not be supported without duplicating existing motivation or adding connective filler, so the remaining 112 words were reassigned to Step 4's source-rich repository-mining material.
 
 ### Step 3: Restore the related-work argument (+660 words)
 
@@ -91,13 +93,13 @@ Do not restore the full 19-class taxonomy, prompt-engineering tutorial, promotio
 
 Completion check: Background gains 594--726 words; its final paragraph still identifies the output-unit gap; every restored tool description has a citation and is used by the synthesis.
 
-### Step 4: Restore procedural depth in Study Design (+1,440 words)
+### Step 4: Restore procedural depth in Study Design (+1,552 words)
 
 Primary sources and sub-budgets:
 
 | Topic | Legacy source | Net addition |
 |---|---|---:|
-| Generated-class requirement and manifest-search rationale | `paper/chapters/03_dataset_creation.tex:11-15` | 180 |
+| Generated-class requirement and manifest-search rationale | `paper/chapters/03_dataset_creation.tex:11-15` | 292 |
 | Filtering and duplicate-review rationale | `paper/chapters/03_dataset_creation.tex:21-27` | 120 |
 | Relevant-file definition and size-stratum rationale | `paper/chapters/03_dataset_creation.tex:64-71,89-113` | 230 |
 | Selected operational-scope examples | `paper/chapters/03_dataset_creation.tex:117-131` | 100 |
@@ -118,7 +120,7 @@ Actions:
 
 Do not restore implementation architecture, CLI options, complete prompts, the complete 19-class codebook, the full split table, obsolete model parameters, or unpreserved validation-run details. The Step 13 disclosure about missing exact validation outputs remains unchanged.
 
-Completion check: Study Design gains 1,296--1,584 words; each addition lets a reader reconstruct or evaluate a decision; no detail is restored solely because it existed in the thesis.
+Completion check: Study Design gains 1,397--1,707 words; each addition lets a reader reconstruct or evaluate a decision; no detail is restored solely because it existed in the thesis.
 
 ### Step 5: Restore concrete result detail (+400 words)
 
