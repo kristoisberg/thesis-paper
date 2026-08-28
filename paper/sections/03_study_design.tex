@@ -1,0 +1,820 @@
+\section{Study Design}\label{sec:studyDesign}
+
+% Source: chapters/03_dataset_creation.tex, Repository Mining.
+
+\subsection{Repository Mining}\label{sec:mining}
+
+We started by mining software repositories for projects, which we would later use for evaluation and analysis purposes. We wanted to collect as many projects as possible within reason, matching the following criteria:
+\begin{itemize}
+    \item the project contains Java code that uses jOOQ for database access,
+    \item the project stores jOOQ-generated classes as part of the source code, rather than treating them as derived artefacts, which are not put under version control \nobreakcite{jooq2025code}.
+\end{itemize}
+
+The latter criterion was required to exclude projects that would otherwise have needed to be compiled in order to detect database design antipatterns. Due to the wide variety of Java versions, build tools, and configurations used in the projects, this would have required a large amount of manual effort on a project-by-project basis, which we opted against. For a considerable number of projects, this would have also been impossible for reasons such as private or otherwise unavailable dependencies, as well as jOOQ code generator configurations only capable of working on the original developer's machine.
+
+To achieve this goal, we used the GitHub code search API \nobreakcite{githubSearchApi}, to search for projects that use jOOQ. The GitHub search API has a hard limit of \num{1000} results for each search term \nobreakcite{githubSearchApi}, which required us to minimise the number of duplicated results for each search term. For example, this meant that we could not search for import statements for jOOQ classes within Java files, since a few large projects could saturate the result list.
+
+To find the largest number of unique projects possible, we limited our search to the manifest files of projects, looking for statements, which declare a dependency on jOOQ for the project. We limited the search to the manifest file formats of the two most popular build tools for Java \nobreakcite{stackOverflowSurvey}: \nobreaktextcite{maven2026homepage} (e.g., \texttt{pom.xml}) and \nobreaktextcite{gradle2026homepage} (e.g., \texttt{build.gradle} and \texttt{build.gradle.kts}). We designed the search terms to be as specific as possible to keep the number of results below \num{1000} when possible. For some search terms, the number of matching results exceeded the limit of \num{1000}. In these cases, we retrieved the \num{1000} results that had been indexed most recently by GitHub’s search infrastructure. The list of search terms used in the GitHub search API is provided in the Online Resources.
+
+By performing the search on 10 January 2026, we identified \textbf{\num{3829}} projects that declared a dependency on jOOQ. We further filtered the gathered repositories by checking that the previously set criteria are met by making sure that the repositories contain jOOQ-generated classes as well as other Java files with references to jOOQ classes.
+
+After excluding projects that did not store generated classes as part of their source code, we were left with \textbf{\num{802}} projects. Although not relevant to our research, an interesting observation can be made here: while both storing generated classes as part of the source code and treating them as derived artefacts are valid approaches with their merits and drawbacks \nobreakcite{jooq2025code}, only \qty{21}{\percent} of projects store them as part of the source code. We suspect that this is largely because the jOOQ code generator treats them as derived artefacts by default.
+
+After excluding projects that did not contain any non-generated Java classes referencing jOOQ, we were left with \textbf{\num{645}} projects. The projects omitted by this step were mostly projects written in other programming languages running on the Java Virtual Machine (JVM), such as Kotlin and Scala.
+
+Finally, we performed manual, LLM-assisted cleaning, with the aim of removing duplicate projects, which could later cause cross-contamination between training, validation, and test sets. We performed the analysis of duplicates with the Google Gemini 3 Pro Preview \nobreakcite{gemini3ProPreview} model from its web interface. We provided the LLM with the file trees of the \num{645} remaining projects, prompting it to find potential clones and forks. We selected the model for its large context window, which was required to process the large collection of file trees, combined with its high reasoning capabilities. Although the LLM did a remarkable job with the task, we manually reviewed the findings before any omissions.
+
+For various reasons documented in the Online Resources, we omitted \num{42} projects. Most importantly, we found and removed \num{24} copies of a repository containing numerous Java- and Spring-related tutorials created by Baeldung \nobreakcite{baeldungHomepage}. While we also found a similarly sized cluster of projects created as part of a Java course by the Tinkoff bank in Russia, all of which had a similar structure and database schema, we decided to keep these projects, since each of them was created by a different author and had a distinct implementation and contained varying antipatterns. After the clean-up, we were left with \textbf{603} projects.
+
+Later in the research process, preparing for the large-scale project analysis (Section~\ref{sec:corpusMeasures}), we discovered another large duplicated project, which would have skewed our analysis results. Hence, we later omitted that project from the analysis dataset, leaving us with \textbf{602} projects. The stages of mining and filtering projects are visualised in Figure~\ref{fig:dataFunnel}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=200pt]{figures/data_funnel_diagram.png}
+    \caption{Project mining and filtering stages.}
+    \label{fig:dataFunnel}
+\end{figure}
+
+
+% Source: chapters/02_background.tex, SQL Antipatterns (operational scope).
+
+Although more extensive catalogues of SQL antipatterns have been produced, we limited our efforts to the antipatterns defined by \nobreaktextcite{karwin2023sql}, which is considered a seminal work on the subject \nobreakcite[p. 336]{muse2020prevalence} and have the most data available for comparison. \nobreaktextcite{karwin2026more} is also working on a follow-up to his original book, containing \num{13} additional SQL antipatterns, expected to be published in June 2026 \nobreakcite{moreSqlAntipatternsGoogleBooks}.
+
+% Source: chapters/03_dataset_creation.tex, Antipattern Selection.
+
+\subsubsection{Antipattern Selection}\label{sec:antipatternSelection}
+
+We limited the annotated antipatterns to the ones defined by \nobreaktextcite{karwin2023sql}. Although we attempted to maximise the number of antipatterns included in our analysis and to interpret them as closely as possible to Karwin’s definitions, we made several notable exclusions and interpretational deviations.
+
+We excluded the “Index Shotgun” antipattern from our analysis. \nobreaktextcite[pp. 147--152]{karwin2023sql} recommends using the MENTOR (Measure, Explain, Nominate, Test, Optimize, and Rebuild) framework to choose optimal indexes. The framework involves measuring the runtime performance of SQL queries—a step that cannot be replaced by static analysis. Although other practitioners, such as \nobreaktextcite[pp. vi--vii]{Winand2012}, recommend creating optimal indexes during the development process, which could be aided by static analysis, choosing optimal indexes for a table can be a complex process with many trade-offs and deserves more dedicated research to be addressed appropriately.
+
+We restricted our definition of the “Fear of the Unknown” antipattern to only include occurrences that are caused by flawed database design, as well as query conditions, which do not contain values passed in from Java code. As the type system of Java is not null-safe, Java code can contain many potential nullability errors, but detecting them would have caused a large additional annotation burden. Furthermore, specialised tools, such as NullAway, exist for detecting nullability errors in Java more efficiently and accurately \nobreakcite{DBLP:conf/sigsoft/BanerjeeCS19}.
+
+\nobreaktextcite[p. 151]{nagy2017static} excluded the “Spaghetti Query” antipattern from their analysis, arguing that there is no objective definition to determine whether a query is a spaghetti query or not. They considered metrics, such as the length of a query in lines or characters, and counts of joins and subqueries, but found them too subjective.
+
+Such metrics also do not tell the full picture, since one large query can often outperform multiple small queries due to optimisations in the database engine, and two queries with a similar length, involving the same number of tables, can differ vastly in their readability and performance. For example, \nobreaktextcite{Dombrovskaya2024} describe several techniques for factoring large queries to improve their performance, readability, or reusability. Furthermore, the use of jOOQ DSL makes it possible to factor the source code of queries using object-oriented principles, further aiding with readability and reusability. For these reasons, we excluded the “Spaghetti Query” antipattern from our analysis.
+
+We extended our definition of “Implicit Columns” to also include other types of blind projections, which select every column from a table, such as API methods, which fetch generated records from the database \nobreakcite{jooq2025select}. Such blind projections are considered a bad practice according to the jOOQ documentation, having similar negative effects to the cases described by Karwin \nobreakcite{jooq2025select}.
+
+We also excluded “Pseudokey Neat-Freak” and “Diplomatic Immunity” from our analysis, since they are rooted in organisational culture and cannot be detected from source code. Additionally, the use of jOOQ DSL largely mitigates the “Diplomatic Immunity” antipattern because SQL statements become first-class citizens of Java code.
+
+Finally, we excluded the “See No Evil” antipattern due to difficulties in detecting it without performing runtime analysis. Unlike the Python examples provided by \nobreaktextcite[p. 270]{karwin2023sql}, Java projects using modern application frameworks do not usually perform fine-grained database exception handling for each database-related statement, but apply a retry mechanism at a transaction boundary, or use global exception handlers (e.g., in \citealp{spring2026exceptionHandler} and \citealp{micronaut2026exceptionHandler}), which could be implicitly installed by the framework. This makes accurate detection of the antipattern difficult for both human annotators and static analysis tools.
+
+In total, we selected 19 antipatterns for annotation, including 8 logical design antipatterns, 3 physical design antipatterns, 5 query antipatterns, and 3 application development antipatterns. The list of included antipatterns by category is provided in the Online Resources.
+
+
+% Source: chapters/03_dataset_creation.tex, Establishment of Reference Annotations and Sample Generation.
+
+\subsection{Establishment of Reference Annotations}\label{sec:referenceAnnotations}
+
+To evaluate the detection performance of the prompting strategies and our later developed tool, we required reference annotations. As SQL antipatterns in jOOQ represent an unexplored area, to the best of our knowledge, no publicly available datasets of SQL antipatterns in jOOQ currently exist. Furthermore, the scientific literature provides no examples of how SQL antipatterns may occur in jOOQ, and such examples are also scarce elsewhere. For example, a remark in the jOOQ manual \nobreakcite{jooq2025select} shows that the “Implicit Columns” antipattern \nobreakcite[Ch. 19]{karwin2023sql} can occur in jOOQ in unexpected ways. Therefore, examples of antipatterns in plain SQL alone are insufficient for detecting SQL antipatterns in jOOQ.
+
+To establish the reference dataset, we manually annotated a subset of the projects gathered in Section~\ref{sec:mining}.
+
+\subsubsection{Sample Generation}\label{sec:sampleGeneration}
+
+As the projects are of varying size, we wanted the subset to be representative of the complete set of projects regarding size distribution, avoiding bias towards small or large projects. Figure~\ref{fig:distribution} displays the distribution of the number of relevant database access files per project across our dataset of \num{603} projects (still including the duplicated project that was filtered out at a later stage). We consider a Java source file to be a relevant database access file if both of the following conditions are met:
+
+\begin{itemize}
+  \item it is a jOOQ-generated file or contains references to jOOQ or a generated file,
+  \item it is not considered “irrelevant” by a manually compiled path list.
+\end{itemize}
+
+ The path list consisted of jOOQ-generated files that were not useful for antipattern detection (e.g., records and POJOs), and files generated based on database entities not part of the project, such as system schemas of databases and tables managed by database extensions.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/distribution_of_files.png}
+    \caption{Distribution of relevant database access files per project.}
+    \label{fig:distribution}
+\end{figure}
+
+It should be noted that at this stage of the study, the list of “irrelevant” files was inconclusive and had some omissions, which we only discovered later. In Figure~\ref{fig:distributionCorrected}, we show the file distribution of 602 projects, omitting the later-discovered duplicated project, as well as using the final file list from a later stage of the study. It can be seen that, while the graph shifts slightly, the overall distribution remains similar.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/distribution_of_files_corrected.png}
+    \caption{Distribution of relevant database access files per project (corrected).}
+    \label{fig:distributionCorrected}
+\end{figure}
+
+As illustrated in the figures, the project distribution is positively skewed, with most projects clustered near zero (the “head”) and a small number of substantially larger projects forming the “long tail”. To ensure that small, medium, and large projects are adequately represented, we employed a stratified random sampling approach, selecting an equal percentage of projects from each group. Our initial plan was to select \qty{5}{\percent} of the projects, but we later increased it to \textbf{\qty{10}{\percent}} due to an insufficient number of antipattern samples.
+
+We divided the projects into size groups using the Head-Tail Breaks method. Given the set of projects as \(S\) and an individual project \(x\), we calculated the two breakpoints, \(\mu_1\) and \(\mu_2\), which represent the upper file limits for small and medium projects:
+\begin{equation}
+\mu_1 = \frac{1}{|S|} \sum_{x \in S} x
+\end{equation}
+\begin{equation}
+S_{head} = \{ x \in S \mid x > \mu_1 \}
+\end{equation}
+\begin{equation}
+\mu_2 = \frac{1}{|S_{head}|} \sum_{x \in S_{head}} x
+\end{equation}
+
+Based on these breakpoints, we classified the projects as:
+\begin{equation}
+\text{Class} = \begin{cases}
+      \text{Small} & x \le \mu_1 \\
+      \text{Medium} & \mu_1 < x \le \mu_2 \\
+      \text{Large} & x > \mu_2
+   \end{cases}
+\end{equation}
+
+We found the breakpoints to be \textbf{\num{31}} and \textbf{\num{94}}. Using these breakpoints, we classified \num{467} projects as small, \num{100} projects as medium, and \num{36} projects as large. Using the distribution from Figure~\ref{fig:distributionCorrected}, the numbers would have been slightly altered: the breakpoints would have been \num{29} and \num{91}, and the class sizes would have been \num{468}, \num{98}, and \num{36}.
+
+Using the former classifications, we sampled \qty{10}{\percent} of projects from each size class, resulting in \num{47} small, ten medium, and four large projects. In total, the sample of projects selected for annotation contained \textbf{61} projects. We used the fixed seed \num{123456} for the pseudo-random number generator used for sampling, which ensures that the sampling process is consistent and reproducible.
+
+
+% Source: chapters/03_dataset_creation.tex, Annotation Process and Results.
+
+\subsubsection{Annotation Process}
+
+Based on prior experience with jOOQ and SQL antipatterns, we manually assigned labels to antipattern occurrences found in the 61 sampled projects by carefully manually reviewing their source code. We tracked the labels in a LibreOffice spreadsheet, which we later converted into a comma-separated values (CSV) file. For each antipattern occurrence, we marked down the following information:
+\begin{itemize}
+    \item the type of antipattern,
+    \item the project containing it,
+    \item the path of the file containing it, relative to the root directory of the project,
+    \item the start and end of the line span of the occurrence,
+    \item a brief remark about the occurrence.
+\end{itemize}
+
+Due to the wide variety of Java versions, build tools, and local deployment methods used in the projects, along with occasional unavailable dependencies, we did not perform any runtime analysis on the projects.
+
+As we studied a novel intersection between jOOQ and SQL antipatterns, not enough annotators sufficiently qualified in both domains were available to achieve a multi-annotator setup. Consequently, we employed a single-annotator setup, utilising the following means to maximise internal consistency.
+
+\paragraph*{Iterative Guideline Development}
+
+During the annotation process, we created a codebook for the annotation process in the form of flowcharts available in the Online Resources.
+
+During the annotation process, we followed the flowcharts for each antipattern, annotating their occurrences based on the visualised decision trees. When we spotted a variation of an antipattern or a non-antipattern edge case not yet covered by the corresponding decision tree, we adjusted the tree and re-reviewed previously, potentially incorrectly annotated files for consistency. This ensured that annotation decisions were made according to a consistent set of rules, rather than gut feeling.
+
+\paragraph*{Intra-Annotator Agreement}
+
+After a 30-day washout period, we re-annotated a subset of the previously reviewed files to verify the stability of the annotation logic over time. We sampled \qty{10}{\percent} of the files containing at least one antipattern occurrence, and added an equivalent number of random files without antipattern occurrences to them. In total, we re-annotated \num{128} files using the same annotation guidelines. We used the fixed seed \num{123456} for the pseudo-random number generator used for sampling, which ensures that the sampling process is consistent and reproducible.
+
+We compared occurrences by antipattern class and exact line span. Across the \num{128} re-annotated files, the original and repeated passes contained \num{158} and \num{149} occurrences, respectively, and agreed on \num{142} occurrences. Treating the original pass as the reference yields exact-match precision of \num{0.953}, recall of \num{0.899}, and F1-score of \num{0.925}. These values measure temporal repeatability under exact-span matching, not annotation correctness. The lack of an independent second annotator leaves the reference dataset vulnerable to the systematic blind spots of a single annotator. The class-level event counts are provided in the Online Resources.
+
+\paragraph*{Results}
+
+In total, we annotated \textbf{\num{1562}} occurrences of 19 distinct SQL antipatterns within the \num{61} sampled projects. At least one occurrence of each antipattern was found in the sample, and every project in the sample contained at least one reference occurrence. The most common annotations were Implicit Columns, with \num{795} occurrences in 59 projects, and ID Required, with \num{259} occurrences in \num{49} projects. Table~\ref{tab:prevalenceInSample} shows the distribution of the reference annotations.
+
+\begin{longtable}[hp]{|p{3.5cm}|S[table-format=3, table-column-width=2cm]|S[table-format=2, table-column-width=2.5cm]|S[table-format=2.2, table-column-width=2.5cm]|S[table-format=2.2, table-column-width=3cm]|}
+	\caption{Distribution of reference annotations in sampled projects.}
+	\label{tab:prevalenceInSample}\\ \hline
+	{\thead[l]{Antipattern}} & {\thead{Occurrence\\Count}} & {\thead{Containing\\Project Count}} & {\thead{Occurrences\\per Project}} & {\thead{Occurrences per\\Containing Project}}  \\
+	\hline
+	\endfirsthead
+	\multicolumn{5}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Antipattern}} & {\thead{Occurrence\\Count}} & {\thead{Containing\\Project Count}} & {\thead{Occurrences\\per Project}} & {\thead{Occurrences per\\Containing Project}}  \\
+	\hline
+	\endhead
+	\hline \multicolumn{5}{l}{\textit{Continues...}} \\
+	\endfoot
+	\hline
+	\endlastfoot
+    Implicit Columns & 795 & 59 & 13.03 & 13.47 \\ \hline
+    ID Required & 259 & 49 & 4.25 & 5.29 \\ \hline
+    Keyless Entry & 122 & 11 & 2.00 & 11.09 \\ \hline
+    Fear of the Unknown & 95 & 19 & 1.56 & 5.00 \\ \hline
+    31 Flavors & 71 & 11 & 1.16 & 6.45 \\ \hline
+    \makecell[l]{Poor Man's\\Search Engine} & 55 & 12 & 0.90 & 4.58 \\ \hline
+    \makecell[l]{Polymorphic\\Associations} & 40 & 1 & 0.66 & 40.00 \\ \hline
+    Rounding Errors & 39 & 7 & 0.64 & 5.57 \\ \hline
+    Ambiguous Groups & 24 & 2 & 0.39 & 12.00 \\ \hline
+    Readable Passwords & 14 & 9 & 0.23 & 1.56 \\ \hline
+    Phantom Files & 10 & 8 & 0.16 & 1.25 \\ \hline
+    Naive Trees & 10 & 4 & 0.16 & 2.50 \\ \hline
+    \makecell[l]{Standard Operating\\Procedures} & 8 & 1 & 0.13 & 8.00 \\ \hline
+    Jaywalking & 6 & 2 & 0.10 & 3.00 \\ \hline
+    Metadata Tribbles & 5 & 3 & 0.08 & 1.67 \\ \hline
+    Entity-Attribute-Value & 3 & 3 & 0.05 & 1.00 \\ \hline
+    SQL Injection & 3 & 1 & 0.05 & 3.00 \\ \hline
+    Random Selection & 2 & 1 & 0.03 & 2.00 \\ \hline
+    \makecell[l]{Multicolumn\\Attributes} & 1 & 1 & 0.02 & 1.00 \\
+\end{longtable}
+
+
+% Source: chapters/03_dataset_creation.tex, Training-Validation-Test Split.
+
+\subsubsection{Training-Validation-Test Split}\label{sec:dataSplit}
+
+We divided the set of annotated projects into the following three subsets:
+
+\begin{itemize}
+    \item \textbf{Training set:} Used to continuously evaluate prompts during their development in Section~\ref{sec:prompts}. Also used as a source of examples for Few-Shot prompts.
+    \item \textbf{Validation set:} Used to evaluate the detection performance of models and prompting strategies in Section~\ref{sec:experimentsQuantitative}.
+    \item \textbf{Test set:} Used to evaluate the detection performance of the final tool in Section~\ref{sec:developmentQuantitative}.
+\end{itemize}
+
+To avoid developing our prompts and evaluating them on files obtained from the same projects, we assigned projects to subsets as wholes, rather than splitting their files between different subsets.
+
+We fixed the seed of the pseudo-random number generator used for splitting to ensure that the splitting process was consistent and reproducible, but we were unable to use the previously used fixed seed \num{123456}, since the produced splits were heavily unbalanced.
+
+To balance the data split, we exhaustively evaluated the \num{1000000} integer seeds from \num{0} through \num{999999}. Each seed assigned the \num{61} projects, as whole units, to a \num{34}/\num{33}/\num{33} training/validation/test split of \num{21}, \num{20}, and \num{20} projects. For each candidate split, we calculated the sum of squared Coefficients of Variation (\(CV\)) and selected the seed with the lowest value. This was a label-informed selection because the objective used the annotated class counts.
+
+Given an individual antipattern \(x\), a split \(i\) (assuming three splits), and the count of antipattern \(x\) occurrences in split \(i\) as \(C_{i,x}\), we define \(CV\) for an individual antipattern as:
+\begin{equation}
+\mu_x = \frac{1}{3} \sum_{i=1}^{3} C_{i,x}
+\end{equation}
+\begin{equation}
+\sigma_x = \sqrt{\frac{1}{3} \sum_{i=1}^{3} (C_{i,x} - \mu_x)^2}
+\end{equation}
+\begin{equation}
+CV_x = \frac{\sigma_x}{\mu_x}
+\end{equation}
+
+Then, given the set of antipatterns \(\mathcal{M}\), we performed the optimisation:
+\begin{equation}
+\Phi = \sum_{x \in \mathcal{M}} \left( \frac{\sigma_x}{\mu_x} \right)^2
+\end{equation}
+
+Before performing the search, we used the complete annotated sample to exclude antipatterns that appeared in fewer than three projects or had fewer than \num{25} total occurrences. Consequently, 12 of the initially annotated 19 antipatterns were excluded due to insufficient data. All subsequent experiments, tool development, and large-scale analyses in this thesis focus exclusively on the remaining seven qualifying antipatterns (listed in Table~\ref{tab:trainingTestValidationSplit}). The class selection and split selection were therefore data-dependent rather than fixed independently of the annotations.
+
+During this step, we also reconsidered the sample size for Section~\ref{sec:sampleGeneration}, first increasing it from \qty{5}{\percent} to \qty{7}{\percent}, and then to \qty{10}{\percent} of all projects, providing the search with a larger number of distinct project combinations and achieving a more balanced split.
+
+The exhaustive seed search selected seed \num{767573}, which achieved a balance score of \num{0.52}. The distribution of antipattern occurrences between the datasets can be seen in Table~\ref{tab:trainingTestValidationSplit}.
+
+\begin{longtable}[hp]{|p{4cm}|S[table-format=3, table-column-width=1.5cm]|p{2.3cm}|p{2.3cm}|p{2.3cm}|}
+	\caption{Occurrence and project support by dataset split.}
+	\label{tab:trainingTestValidationSplit} \\ \hline
+	{\thead[l]{Antipattern}} & {\thead{Total}} & {\thead{Training\\occurrences\\(projects)}} & {\thead{Validation\\occurrences\\(projects)}} & {\thead{Test\\occurrences\\(projects)}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{5}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Antipattern}} & {\thead{Total}} & {\thead{Training\\occurrences\\(projects)}} & {\thead{Validation\\occurrences\\(projects)}} & {\thead{Test\\occurrences\\(projects)}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{5}{l}{\textit{Continues...}} \\
+	\endfoot
+	\hline
+	\endlastfoot
+    Implicit Columns          & 795 & 175 (20) & 350 (19) & 270 (20) \\ \hline
+    ID Required               & 259 & 55 (18)  & 99 (15)  & 105 (16) \\ \hline
+    Keyless Entry             & 122 & 30 (7)   & 56 (1)   & 36 (3)  \\ \hline
+    Fear of the Unknown       & 95  & 23 (6)   & 36 (8)   & 36 (5)  \\ \hline
+    31 Flavors                & 71  & 17 (6)   & 15 (4)   & 39 (1)  \\ \hline
+    Poor Man's Search Engine  & 55  & 19 (5)   & 15 (4)   & 21 (3)  \\ \hline
+    Rounding Errors           & 39  & 13 (4)   & 10 (1)   & 16 (2)  \\
+\end{longtable}
+
+All produced datasets, along with their intended use cases later in the study, are visualised in Figure~\ref{fig:dataSets}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/data_sets_diagram.png}
+    \caption{All created datasets with their intended uses.}
+    \label{fig:dataSets}
+\end{figure}
+
+% Source: chapters/04_evaluation.tex, detector configuration and evaluation methods.
+
+\subsection{Selecting Models}\label{sec:models}
+
+To assess the prompting strategies under varying conditions, we evaluated them against multiple models. We chose the language models based on criteria selected to aid us in the development and analysis process, while keeping the selection of models diverse. In particular, we searched for the following characteristics in the models:
+
+\begin{itemize}
+    \item \textbf{Architectural diversity:} We aimed to include models with a diverse set of characteristics, such as different model sizes, reasoning vs non-reasoning models, and open vs closed-weight models.
+    \item \textbf{Performance:} For a given architecture, the model should demonstrate near-state-of-the-art (SotA) performance on public benchmarks \nobreakcite{artificialAnalysis}.
+    \item \textbf{Repeatability:} The weights of the model should be stable, allowing the evaluation and analysis to be repeated in the future. Ideally, the model should have open weights. Alternatively, the model provider should provide point-in-time snapshots of the model.
+    \item \textbf{Structured outputs:} The model should reliably support structured outputs, providing responses that reliably adhere to expected JSON Schema. This was desired to avoid the complexity of parsing non-structured outputs and handling of malformed responses. Structured output also increases determinism in responses by constraining decoding to outputs that satisfy the schema \nobreakcite{structuredOutputs}.
+\end{itemize}
+
+Based on this set of criteria, we settled on the following four models for our analysis:
+
+\begin{itemize}
+    \item \textbf{OpenAI GPT-5.2 (reasoning):} \nobreakcite{gpt52} Near-SotA proprietary weights model. The best-performing model offering point-in-time snapshots.
+    \item \textbf{Z.ai GLM-5 (reasoning):} \nobreakcite{DBLP:journals/corr/abs-2602-15763} SotA open-weights model.
+    \item \textbf{Anthropic Claude Opus 4.5 (non-reasoning):} \nobreakcite{opus45Card} Near-SotA in models, which allow reasoning to be disabled. Superseded by Opus 4.6, which did not offer point-in-time snapshots at the time.
+    \item \textbf{OpenAI gpt-oss-120B (reasoning):} \nobreakcite{DBLP:journals/corr/abs-2508-10925} Open-weights, SotA in models classified as medium language models (up to \num{150}B parameters).
+\end{itemize}
+
+Initially, we also planned to include Z.ai GLM-4.7-Flash \nobreakcite{DBLP:journals/corr/abs-2508-06471}, which was the best-performing small language model (up to \num{40}B parameters) at the time, but we were required to omit it due to vast stability issues with all providers offering the model.
+
+We most notably omitted Google Gemini 3.1 Pro Preview \nobreakcite{gemini31ProPreview} and Anthropic Claude Opus 4.6 \nobreakcite{opus46Card}, which outperformed all the selected models, but due to their recent releases, did not have point-in-time snapshots available.
+
+We were also not able to include any purely non-reasoning models in the comparison: such models have become increasingly rare, and the most capable purely non-reasoning model at the time, Kwaipilot KAT-Coder-Pro V1 \nobreakcite{DBLP:journals/corr/abs-2510-18779}, did not offer point-in-time snapshots. However, many modern reasoning models allow that capability to be disabled; therefore, we substituted the model with Anthropic Claude Opus 4.5, with the reasoning capability disabled.
+
+We found that all selected models supported structured outputs with adequate reliability. In our preliminary experiments, some older models (e.g., Kimi K2 Thinking; \citealp{DBLP:journals/corr/abs-2507-20534}) did not adhere to the provided JSON Schema, causing client-side validation to fail in numerous cases, but such issues were much less common in the selected models. The complete set of models considered for the analysis, along with their inclusion and omission reasons, is available in the Online Resources.
+
+\subsection{Designing Prompts}\label{sec:prompts}
+
+We designed prompts based on the four prompting strategies listed in Section~\ref{sec:promptEngineering}. We limited our experiments to prompting techniques that could be fully executed in the span of one prompt and one response to manage the scope of the thesis.
+
+We iteratively developed and refined prompts for each technique, comparing the results against the training set produced in Section~\ref{sec:dataSplit}. We tested each iteration against all evaluated models until further changes did not improve the observed training-set metrics. To simplify the experimental setup and the interpretation of results, we only developed universal, model-agnostic prompts, without tuning them for individual models.
+
+Due to the high cost of LLM inference, we developed heuristics to target only the antipatterns that are potentially present in a given file. Firstly, we ignored files that did not contain any database-related code using the filters first mentioned in Section~\ref{sec:sampleGeneration}. Secondly, for each prompting strategy, we developed two prompts:
+
+\begin{itemize}
+    \item for detecting query antipatterns from non-generated source files,
+    \item for detecting (mostly) design antipatterns from files generated by jOOQ.
+\end{itemize}
+
+In addition to the file being analysed, we provided the design antipattern detection prompts with additional context by supplying them with a jOOQ-generated class containing the definitions of all primary, unique, and foreign key constraints present in that database schema. This additional context is used in the detection of the “Keyless Entry” antipattern to verify if there is an appropriate primary or unique key present, which the missing foreign key could reference.
+
+We also applied the following pre-processing steps to the input files:
+\begin{itemize}
+    \item To reduce the number of input tokens, and subsequently costs, we removed all leading and trailing whitespace from each line in the input files (including indentation).
+    \item We noticed that the models consistently miscalculated the row spans of antipattern occurrences, if the analysed file contained two or more consecutive line breaks anywhere in the file before the antipattern occurrence. The models also often mislocated antipattern occurrences in large source files. To resolve these issues, we prefixed each line in the input file with the correct line number.
+\end{itemize}
+
+We designed our prompts to detect the seven qualifying antipatterns present in the training, validation, and tests sets created in Section~\ref{sec:dataSplit}. Designing them, we started with broad instructions, allowing models to use their judgement and reasoning to a wide extent. As we identified instances where the model misinterpreted certain antipatterns or detected them incorrectly, we moved towards more concrete and specific instructions to eliminate ambiguity and ensure the model consistently adhered to our intended criteria.
+
+Ultimately, it was necessary to define all detected antipatterns explicitly and, in certain cases, to specify the exact method calls and coding patterns to look out for. When models were provided only with the names of antipatterns, they tended to construct their own definitions, which were at times inconsistent with those proposed by \nobreaktextcite{karwin2023sql}. We attribute this behaviour to the limited availability of literature on SQL antipatterns within the training data of LLMs, resulting in them “hallucinating” the definitions.
+
+Furthermore, for the “ID Required”, “31 Flavors”, “Poor Man's Search Engine”, and “Implicit Columns” antipatterns, it was necessary to provide explicit localisation rules to ensure consistent localisation behaviour.
+
+For the Few-Shot Prompting technique, which required concrete examples, we acquired the examples from the training set produced in Section~\ref{sec:dataSplit} by default. For antipattern variants and edge cases, which we were unable to find representative examples for from the training set, we created the examples synthetically.
+
+We ultimately settled on the instructions detailed in Figures~\ref{fig:ddlInstructions} and~\ref{fig:dmlDqlInstructions} for detecting antipatterns in generated and non-generated source files, respectively, consistent between all prompting strategies listed in Section~\ref{sec:promptEngineering}. The complete prompts for all prompting strategies, containing sample input files, are shown in the Online Resources.
+
+\bigskip % Add space before the figure
+\begingroup % Start a local scope
+\captionsetup{type=figure}
+\phantomsection
+\captionlistentry[figure]{Detection instructions used in DDL prompts.}\label{fig:ddlInstructions}
+\begin{lstlisting}[
+    frame=none,
+    basicstyle=\small,
+    breaklines=true,
+    breakatwhitespace=false,
+    breakindent=0pt
+]
+- ID Required: Never identify this issue in classes representing views, as views cannot contain primary keys. If the class represents a table, always detect the antipattern, if the name of the primary key is just "id" (case-insensitive). Also detect the issue if a synthetic primary key column exists, even though another unique constraint exists, which is suitable as a primary key (the constraint is on columns, which are virtually immutable by nature), and which does not complicate foreign keys referencing the table too much. Only include the lines of the primary key column definition in the line range, do not include comments or anything else.
+- Keyless Entry: A column, which refers to another table, is missing its foreign key. Never identify this issue in classes representing views, as views cannot contain foreign keys. Only report this issue if the "Keys" class provided at the end contains a primary key that this is appropriate for this column to refer to.
+- Rounding Errors: Storing fixed-precision values in floating-point type columns, such as FLOAT and REAL, rather than using fixed-precision types like DECIMAL and NUMERIC.
+- 31 Flavors: Specifying allowed values in the column definition, i.e. with a CHECK constraint or an ENUM type, rather than using a lookup table. Only include the lines of the column definition in the line range, do not include comments or anything else. Do not report the issue if the CHECK constraint is used to check the value for emptiness or against a range of values (including greater/lesser than comparisons).
+- Fear of the Unknown: A special default value, such as an empty string, is used to mark a missing value, rather than NULL, and the special value does not hold a semantic meaning. A column, which can never be NULL in practice (e.g. it has a default value), is marked as NULLABLE.
+
+If the file does not contain any antipatterns, leave the list of occurrences empty.
+\end{lstlisting}
+
+\nopagebreak
+\begin{minipage}{\linewidth}
+    \captionof*{figure}{Figure \thefigure. Detection instructions used in DDL prompts.}
+\end{minipage}
+\par % Apply the paragraph settings *inside* the group
+\endgroup % Revert to global normalsize and paragraph spacing
+
+\bigskip % TODO: verify before submitting
+\bigskip % these are here to make sure the caption for figure 8 is not on a new page alone
+
+\begingroup % Start a local scope
+\captionsetup{type=figure}
+\phantomsection
+\captionlistentry[figure]{Detection instructions used in DML/DQL prompts.}\label{fig:dmlDqlInstructions}
+\begin{lstlisting}[
+    frame=none,
+    basicstyle=\small,
+    breaklines=true,
+    breakatwhitespace=true,
+    breakindent=0pt
+]
+- Poor Man's Search Engine: Usage of LIKE, ILIKE or regular expressions to perform full-text search. Report the issue if it isn't obvious from the method input parameters, whether the patterns contain wildcards used for full-text search. Do not report the issue if LIKE, ILIKE or regex is used for prefix search. Only include the line(s) where the full-text search condition is created in the line range.
+- Implicit Columns: A query fetching all columns from a database table. In addition to obvious violations, report cases where jOOQ fetches all columns of a table into records or generated DAOs (located in a package ending with `tables.daos`). Do not report this issue if it occurs within a `fetchCount` or `fetchExists` call. Only include the line(s) where the blind projection is selected in the line range, do not include the rest of the query.
+- Fear of the Unknown: Query logic uses a NULLABLE column in a way that produces incorrect results with NULL. Do not report issues that arise from insufficient null-handling in Java code. Also do not report the issue if you're unsure if the column is NULLABLE.
+
+Only identify problems in code, which interacts directly with the jOOQ DSL or generated DAOs (located in a package ending with `tables.daos`). Do not identify problems in code, which interacts with higher level abstractions. In case of multiple consecutive issues, report them separately, even if they are on consecutive lines. If the file does not contain any antipatterns, leave the list of occurrences empty.
+\end{lstlisting}
+
+\nopagebreak
+\begin{minipage}{\linewidth}
+    \captionof*{figure}{Figure \thefigure. Detection instructions used in DML/DQL prompts.}
+\end{minipage}
+\par % Apply the paragraph settings *inside* the group
+\endgroup % Revert to global normalsize and paragraph spacing
+
+\subsection{Quantitative Analysis}\label{sec:experimentsQuantitative}
+
+Following the finalisation of the prompt design, we analysed each project in the validation set created in Section~\ref{sec:dataSplit} using all combinations of models and prompting strategies. We subsequently evaluated the resulting outputs against the reference annotations.
+
+We performed the analysis using the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub}, accessing the models through \nobreaktextcite{openRouter2026homepage} as a unified gateway for different LLM providers, using the following parameters for LLMs:
+
+\begin{itemize}
+    \item \textbf{Temperature}: Used to control the randomness of the output, with higher values resulting in less deterministic results. Using a value of zero encourages the model to select the most likely token, reducing randomness and improving repeatability, making the output as deterministic as possible. We used the default value \num{1.0} for OpenAI gpt-oss-120B, since using near-zero values caused it to repeat tokens infinitely, and this issue did not resolve with any other parameter changes. We used the value \num{0.0} for all other models, except for OpenAI GPT-5.2, which did not support the parameter when being used as a reasoning model.
+    \item \textbf{Effort}: Used to control how much internal reasoning the model performs before generating a response. Higher effort levels enable deeper, multi‑step analysis, generally improving reliability, while being slower, costlier, and less deterministic. We used the highest supported value for each reasoning model to leverage improved reliability, while compensating for decreased determinism with other techniques.
+\end{itemize}
+
+In Table~\ref{tab:modelParameters} we show the selected parameter combinations for each model used for analysis.
+
+\begin{longtable}[hp]{|p{7.5cm}|S[table-format=1.1, table-column-width=3cm]|p{3cm}|}
+	\caption{Model parameters used for analysis.}
+	\label{tab:modelParameters}\\ \hline
+	{\thead[l]{Model}} & {\thead{Temperature}} & {\thead{Effort}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{3}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Model}} & {\thead{Temperature}} & {\thead{Effort}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{3}{l}{\textit{Continues...}} \\
+	\endfoot
+	\hline
+	\endlastfoot
+    \sotaModel & {Unsupported} & xhigh \\ \hline
+    \openModel & 0.0 & Unsupported \\ \hline
+    \nonReasoningModel & 0.0 & none \\ \hline
+    \mediumModel & 1.0 & high \\
+\end{longtable}
+
+While OpenRouter provides a convenient unified API, it acts as an abstraction layer where internal routing and caching semantics can vary. To maintain strict control over the experimental environment, we explicitly disabled OpenRouter's automatic model fallbacks. This ensured that requests were evaluated exclusively by the requested model or failed outright, triggering our local retry mechanism. We also considered OpenRouter's default request caching; however, because each analysed source file generated a strictly unique prompt and the evaluation was executed in a single pass, gateway-level caching could not artificially influence our results.
+
+In essence, we were evaluating the performance of the models and prompts in performing a \textbf{multi-label} (there were multiple antipatterns that could be detected) \textbf{multi-occurrence} (each antipattern could occur multiple times within each file) \textbf{localisation} (in addition to classification, we aimed to detect the location of the antipattern occurrences) task. For this reason, we employed a combination of spatial overlap criteria and classification metrics for evaluation, using Intersection over Union (IoU) and F1-score.
+
+The first step involved quantifying the localisation performance using IoU. We define a line span \(S\) as the set of line indices within an inclusive range in a source code file.
+\begin{equation}
+S = \{i \in \mathbb{N} \mid start \le i \le end\}
+\end{equation}
+
+For a predicted line span \(S_p\) and a reference line span \(S_g\), the IoU is defined as:
+\begin{equation}
+\text{IoU} = \frac{|S_p \cap S_g|}{|S_p \cup S_g|}
+\end{equation}
+
+This metric produces a value between \num{0} and \num{1}, where \num{1} represents an exact line-level match. In this methodology, the IoU serves as the qualification gate for all subsequent metrics. Candidate pairs are formed within the same repository, file, and antipattern class when \(\text{IoU} \geq 0.5\).
+
+We obtain true positives from a maximum-cardinality one-to-one bipartite matching over these candidate pairs. Each reference occurrence's candidate list is ordered by descending IoU, followed by prediction span and source order, to make the selected pairing deterministic. This ordering affects only which pair is retained when several maximum-cardinality matchings exist, not the number of matches. Each unmatched prediction is a false positive (FP), and each unmatched reference span is a false negative (FN).
+
+Based on the classifications, we calculated the precision (\(P\)) and recall (\(R\)) of the model at the selected threshold, defined as:
+\begin{equation}
+P = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad R = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\end{equation}
+
+Precision measures exactness by calculating the ratio of matched predictions to all predictions, thereby indicating the extent to which the model avoids FPs. Recall measures completeness by calculating the ratio of matched reference spans to all reference spans, reflecting the model's ability to minimise FNs.
+
+Using these values, we calculated the F1-score, which provides a balanced assessment of model performance at the selected threshold by calculating the harmonic mean of precision and recall, serving as a single unified metric that penalizes extreme values in either component:
+\begin{equation}
+F_1 = 2 \cdot \frac{P \cdot R}{P + R}
+\end{equation}
+
+We calculated \(P\), \(R\), and \(F_1\) for each antipattern separately. For class \(c\), support is \(s_c=\text{TP}_c+\text{FN}_c\). We report micro averages from pooled TP, FP, and FN counts; macro averages as the unweighted mean across \(K\) classes; and reference-support-weighted averages:
+\begin{equation}
+P_{\mathrm{micro}}=\frac{\sum_c \text{TP}_c}{\sum_c(\text{TP}_c+\text{FP}_c)}, \quad
+R_{\mathrm{micro}}=\frac{\sum_c \text{TP}_c}{\sum_c(\text{TP}_c+\text{FN}_c)}
+\end{equation}
+\begin{equation}
+M_{\mathrm{macro}}=\frac{1}{K}\sum_{c=1}^{K}M_c, \quad
+M_{\mathrm{weighted}}=\frac{\sum_{c=1}^{K}s_cM_c}{\sum_{c=1}^{K}s_c}
+\end{equation}
+
+This way, we were provided with an understanding of which models and prompts are the best in the detection of antipatterns in general, but we also had the opportunity to study the differences in further detail. Additionally, we recorded the cost and runtime of each analysis and the number of requests retried due to incorrectly formatted (e.g., empty or non-JSON) responses provided models.
+
+We acquired the data about costs from the OpenRouter dashboard due to a subtlety in the OpenAI Python SDK's API for structured outputs: if the client-side validation for the output fails, the request, including its usage data, cannot be obtained from the client code, making accurate cost calculations impossible. We represent the cost in USD including VAT, and the runtime in seconds.
+
+Based on this analysis, we compared model and prompting-strategy configurations in Sections~\ref{sec:detectorConfigurationModels} and~\ref{sec:detectorConfigurationPrompts} and selected the configuration used by the antipattern detection tool.
+
+\subsection{Qualitative Analysis}
+
+We manually inspected the results produced by each combination of model and prompting strategy. Where possible, we also inspected the reasoning data to identify behavioural patterns that could explain the frequent FPs and FNs in the results. We then compared our experimental findings with existing literature on prompting strategies and LLM behaviour.
+
+We discuss the results of the qualitative analysis in Section~\ref{sec:llmCapabilities}.
+
+% Source: chapters/07_results.tex, model and prompting-strategy configuration results.
+
+\subsection{Detector Configuration: Model Comparison}\label{sec:detectorConfigurationModels}
+
+To evaluate the baseline performance of LLMs in detecting the seven qualifying SQL antipatterns, we used the performance of the Zero-Shot Prompting strategy, which uses the fewest prompt engineering methods and is the most representative of real-life use. In Table~\ref{tab:zeroShotBev} we show the baseline detection performance of SQL antipatterns for each compared LLM, calculated as the weighted average of the detection performances of individual antipatterns. In the Online Resources we show the baseline detection performances for individual SQL antipatterns.
+
+\begin{longtable}[hp]{|p{4cm}|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=2.2, table-column-width=2cm]|S[table-format=4.0, table-column-width=2cm]|S[table-format=3.0, table-column-width=1.5cm]|}
+	\caption{Binary evaluation metrics, costs, runtimes, and retry counts for detection of SQL antipatterns using Zero-Shot Prompting.}
+	\label{tab:zeroShotBev}\\ \hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{7}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{7}{l}{\textit{Continues...}}
+	\endfoot
+	\hline
+	\endlastfoot
+    \makecell[l]{\sotaModelNl} & 0.85 & 0.92 & 0.88 & 26.16 & 2423 & 1 \\ \hline
+    \makecell[l]{\openModelNl} & 0.88 & 0.89 & 0.88 & 11.77 & 5774 & 175 \\ \hline
+    \makecell[l]{\nonReasoningModelNl} & 0.88 & 0.89 & 0.88 & 29.97 & 367 & 0 \\ \hline
+    \makecell[l]{\mediumModelNl} & 0.83 & 0.87 & 0.83 & 1.49 & 2808 & 0 \\
+\end{longtable}
+
+All near-SotA models (GPT-5.2, GLM-5, and Opus 4.5) achieved a weighted average F1-score of \num{0.88}, demonstrating strong detection performance. The difference lies in the paranoia of the models: GPT-5.2 achieved a greater recall than the other models (\num{0.92} vs \num{0.89}), but a lower precision (\num{0.85} vs \num{0.88}), capturing more TPs, while also returning more FPs.
+
+However, the models had markedly different observed costs and runtimes. Opus 4.5 was the fastest but also the most expensive, completing the analysis of \num{20} projects (containing \num{823} analysed “relevant” files) in six minutes and seven seconds at a cost of \usd{29.97}. GLM-5 was nearly three times cheaper at \usd{11.77}, but over \num{15} times slower due to stability issues explained later. GPT-5.2 cost \usd{26.16} and was \num{6.6} times slower than Opus 4.5. The gpt-oss-120B model cost \usd{1.49} and was slightly slower than GPT-5.2.
+
+An interesting difference between the near-SotA models was that Opus 4.5 was consistently superior in the precision of detecting the “Keyless Entry” antipattern, achieving a precision of at least \num{0.72} in all prompting strategies, also consistently displaying a very high recall of at least \num{0.98}, while all other models never exceeded a precision of \num{0.64}.
+
+It should also be noted that for both the baseline prompting strategy and all tested prompting strategies, GLM-5 and gpt-oss-120B models showed unstable behaviour. The GLM-5 model was by far the slowest with inconsistent runtimes and had a tendency to return misformatted and empty responses, causing the analysis for these files to be retried. 
+
+The gpt-oss-120B model had a tendency to end up in long/infinite cycles during its reasoning process, causing inconsistent and long runtimes. The model also suffered from several anomalies that mainly affected the precision of the model. In some cases, it detected the same antipattern occurrence twice, while in others it denoted an antipattern-free file with a detected antipattern occurrence with a line span consisting of values between \num{-1} and \num{0}, ignoring the instructions in the prompt. In numerous cases, the model filled the output fields with nonsensical values, such as choosing line ranges that extend beyond the bounds of the analysed files, which hinders both the precision and recall of the results in our methodology.
+
+In Figure~\ref{fig:gptOssAnomaly}, we display an example where the reasoning process of the model “leaked” into the final response, causing multiple anomalies for one antipattern occurrence: an invalid line range, an incorrect code fragment containing Unicode-encoded non-breaking space characters, and a reasoning for the antipattern occurrence where the model is berating its previous thinking process. Interestingly, the occurrence of such anomalies was higher for files, which required more reasoning tokens to be analysed. We did not spot any such anomalies in the results for other models. An interpretation of these stability issues is discussed in Section~\ref{sec:llmCapabilities}.
+
+\begin{figure}[h]
+    \begin{lstlisting}[frame=none, basicstyle=\small, breaklines=true, breakatwhitespace=false, breakindent=0pt]
+Response(occurrences=[AntipatternOccurrence(
+    antipatternName=<AntipatternName.id_required: 'ID Required'>, 
+    linesRangeStart=0, 
+    linesRangeEnd=-17, 
+    codeFragment='77: \xa0\xa0', 
+    reasoning="]} The assistant's answer is garbled nonsensical. Need to produce correct output: list of antipattern occurrences with appropriate fields: antipatternName, codeFragment (lines of definition), linesRangeStart, linesRangeEnd, and reasoning. Let's analyze class for each antipattern defined: ID Required, Keyless Entry, Rounding Errors, 31 Flavors, Fear of the Unknown. Also consider that class is for a table (not a view). First, ID Required: primary key column name "
+)])
+    \end{lstlisting}
+    \caption{Example of an anomalous response provided by the gpt-oss-120B model.}
+    \label{fig:gptOssAnomaly}
+\end{figure}
+
+\subsection{Detector Configuration: Prompting-Strategy Comparison}\label{sec:detectorConfigurationPrompts}
+
+In the following sections, we analyse the effects of the evaluated prompting strategies on the detection performance of SQL antipatterns. It should be noted that due to the stability issues described in the previous section, which resulted in extremely inconsistent runtimes for the GLM-5 and gpt-oss-120B models, we omitted these models from all runtime comparisons between the evaluated prompting strategies and the baseline.
+
+\subsubsection{Few-Shot Prompting}
+
+As shown by the binary evaluation metrics in Table~\ref{tab:fewShotBev}, only GLM-5 showed a slight increase in precision (\num{0.89} vs \num{0.88}), recall (\num{0.90} vs \num{0.89}), and F1-score (\num{0.89} vs \num{0.88}). For all other models, differences were small at the reported two-decimal resolution; run-to-run uncertainty was not measured.
+
+\begin{longtable}[hp]{|p{4cm}|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=2.2, table-column-width=2cm]|S[table-format=4.0, table-column-width=2cm]|S[table-format=3.0, table-column-width=1.5cm]|}
+	\caption{Binary evaluation metrics, costs, runtimes, and retry counts for detection of SQL antipatterns using Few-Shot Prompting.}
+	\label{tab:fewShotBev}\\ \hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{7}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{7}{l}{\textit{Continues...}}
+	\endfoot
+	\hline
+	\endlastfoot
+    \makecell[l]{\sotaModelNl} & 0.86 & 0.92 & 0.88 & 29.97 & 2507 & 0 \\ \hline
+    \makecell[l]{\openModelNl} & 0.89 & 0.90 & 0.89 & 14.85 & 4281 & 9 \\ \hline
+    \makecell[l]{\nonReasoningModelNl} & 0.88 & 0.89 & 0.88 & 45.00 & 352 & 0 \\ \hline
+    \makecell[l]{\mediumModelNl} & 0.83 & 0.87 & 0.84 & 2.00 & 543 & 1 \\
+\end{longtable}
+
+In the Online Resources we show the detection performances for individual SQL antipatterns using the Few-Shot Prompting strategy. The differences compared to the baseline were generally negligible, except for the gpt-oss-120B model, which saw the F1-score for the “Keyless Entry” antipattern decrease from \num{0.77} to \num{0.71}, and the F1-score for the “Fear of the Unknown” antipattern increase from \num{0.18} to \num{0.42}.
+
+Using the Few-Shot Prompting strategy, the mean analysis cost across the displayed model values increased by approximately \qty{32}{\percent}, while detection metrics changed little. Compared with the baseline, runtime increased by \qty{3}{\percent} for GPT-5.2 and decreased by \qty{4}{\percent} for Opus 4.5. The larger runtime changes for the two open models coincided with their stability issues.
+
+\subsubsection{Chain-of-Thought Prompting}
+
+Using the CoT strategy, the mean analysis cost across the displayed model values increased by approximately \qty{27}{\percent} compared with the baseline, while runtime increased by \qty{20}{\percent} for GPT-5.2 and \qty{160}{\percent} for Opus 4.5, as shown in Table~\ref{tab:chainOfThoughtBev}.
+
+\begin{longtable}[hp]{|p{4cm}|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=2.2, table-column-width=2cm]|S[table-format=4.0, table-column-width=2cm]|S[table-format=3.0, table-column-width=1.5cm]|}
+	\caption{Binary evaluation metrics, costs, runtimes, and retry counts for detection of SQL antipatterns using Chain-of-Thought Prompting.}
+	\label{tab:chainOfThoughtBev}\\ \hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{7}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{7}{l}{\textit{Continues...}}
+	\endfoot
+	\hline
+	\endlastfoot
+    \makecell[l]{\sotaModelNl} & 0.85 & 0.91 & 0.87 & 30.43 & 2896 & 1 \\ \hline
+    \makecell[l]{\openModelNl} & 0.87 & 0.88 & 0.87 & 15.39 & 9628 & 234 \\ \hline
+    \makecell[l]{\nonReasoningModelNl} & 0.92 & 0.90 & 0.90 & 40.86 & 956 & 0 \\ \hline
+    \makecell[l]{\mediumModelNl} & 0.81 & 0.85 & 0.82 & 1.62 & 895 & 3 \\
+\end{longtable}
+
+The prompting strategy did not improve performance over the baseline for any of the reasoning models; on the contrary, the F1-score decreased slightly for all of them. The non-reasoning model, Claude Opus 4.5, on the other hand, saw small improvements in the F1-score, increasing from \num{0.88} to \num{0.90}.
+
+In the Online Resources we show the detection performances for individual SQL antipatterns using the CoT prompting strategy. For Opus 4.5, Implicit Columns precision and recall increased from \num{0.94} to \num{0.97} and from \num{0.93} to \num{0.95}, while ID Required precision increased from \num{0.90} to \num{0.95}. Keyless Entry precision dropped from \num{0.77} to \num{0.72}. Fear of the Unknown precision increased from \num{0.60} to \num{0.88}, while recall dropped from \num{0.50} to \num{0.39}, leaving the F1-score nearly unchanged.
+
+While all other models also experienced fluctuations in their precision and recall scores for individual antipatterns, most were small. For 31 Flavors with GPT-5.2, the F1-score decreased from \num{0.75} to \num{0.58}. We observed the largest overall decline in the precision and recall scores of the gpt-oss-120B model, further discussed in Section~\ref{sec:llmCapabilities}.
+
+\subsubsection{Tree-of-Thought Prompting}
+
+The ToT strategy was the most computationally expensive: the mean analysis cost across the displayed model values increased by approximately \qty{119}{\percent} compared with the baseline, while runtime increased by \qty{94}{\percent} for GPT-5.2 and \qty{1181}{\percent} for Opus 4.5, as shown in Table~\ref{tab:treeOfThoughtBev}.
+
+\begin{longtable}[hp]{|p{4cm}|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=2.2, table-column-width=2cm]|S[table-format=4.0, table-column-width=2cm]|S[table-format=3.0, table-column-width=1.5cm]|}
+	\caption{Binary evaluation metrics, costs, runtimes, and retry counts for detection of SQL antipatterns using Tree-of-Thought Prompting.}
+	\label{tab:treeOfThoughtBev}\\ \hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{7}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Model}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} & {\thead{Cost (USD)}} & {\thead{Runtime (s)}} & {\thead{Retries}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{7}{l}{\textit{Continues...}}
+	\endfoot
+	\hline
+	\endlastfoot
+    \makecell[l]{\sotaModelNl} & 0.87 & 0.91 & 0.89 & 51.70 & 4702 & 2 \\ \hline
+    \makecell[l]{\openModelNl} & 0.92 & 0.88 & 0.87 & 16.42 & 5359 & 14 \\ \hline
+    \makecell[l]{\nonReasoningModelNl} & 0.92 & 0.90 & 0.90 & 81.43 & 4701 & 9 \\ \hline
+    \makecell[l]{\mediumModelNl} & 0.81 & 0.83 & 0.81 & 2.13 & 2139 & 58 \\
+\end{longtable}
+
+The results were similar to the ones of the CoT prompting strategy, with the non-reasoning model, Claude Opus 4.5, seeing the largest improvement in the F1-score, increasing from \num{0.88} to \num{0.90}. The F1-score dropped slightly for two of the three reasoning models, but interestingly, the GPT-5.2 model saw slight improvements in its detection performance. Once again, the gpt-oss-120B model exhibited the largest overall reduction in detection performance, exceeding even the decline observed with the CoT strategy.
+
+In the Online Resources we show the detection performances for individual SQL antipatterns using the ToT prompting strategy. For Opus 4.5, Implicit Columns precision and recall increased slightly, while ID Required precision increased from \num{0.90} to \num{0.96}. Fear of the Unknown precision increased from \num{0.60} to \num{0.87}, while recall dropped from \num{0.50} to \num{0.39}, resulting in a lower F1-score.
+
+While all other models also showed changes in per-class precision and recall, most were small. For Keyless Entry with GPT-5.2, precision increased from \num{0.53} to \num{0.65}.
+
+\subsubsection{Summary}
+
+None of the evaluated prompting strategies showed a consistent improvement in detection performance across all models. Prompting strategies designed to elicit reasoning (CoT, ToT) displayed a \qty{2}{\percent} increase in the F1-score for the non-reasoning model, while often degrading the performance of reasoning models. Few-Shot Prompting increased the F1-score for GLM-5 while not affecting the performance of the other models.
+
+Compounded with the fact that the more complex prompting strategies resulted in a large increase in analysis costs and runtimes, we ultimately found that they were not reliably beneficial in this setting. Therefore, we used our baseline Zero-Shot prompts for the development of our SQL antipattern detection tool.
+
+
+% Source: chapters/05_development.tex, detector pipeline and held-out protocol.
+
+The tool was developed with the assistance of OpenAI Codex \nobreakcite{openAiCodex2026GitHub}, using the GPT-5.4 \nobreakcite{gpt54} model, in a semi-autonomous agentic coding process. The development process was organised around iterative implementation tasks. For each task, we specified the intended behaviour, constraints, and expected outcome, after which the coding agent inspected the existing codebase, proposed or implemented the necessary changes, and ran relevant checks where applicable. Human supervision was retained throughout the process: generated changes were reviewed, requirements were clarified when necessary, and architectural decisions, evaluation requirements, and final acceptance of the implementation remained under human control. In this way, Codex was used primarily as an implementation assistant, while the design goals and validation criteria were defined by us.
+
+\subsection{Architecture}
+
+We implemented the tool as a monolithic command-line interface (CLI) application. Compared to a graphical user interface (GUI) application, this approach offers greater versatility, allowing the tool to be run in non-interactive environments, such as continuous integration (CI) pipelines and batch evaluation scripts. Additionally, the CLI approach avoids coupling the core analysis logic to a particular user interface. This allows for developing alternative frontends in the future, such as a standalone desktop application or an IDE extension, without requiring substantial changes to the analysis pipeline.
+
+The tool is built as a self-contained executable without local runtime dependencies (e.g., Python or Node.js), simplifying distribution and use in controlled evaluation environments. It features extensive configuration options (detailed in Section~\ref{sec:configurationOptions}), which can be provided as command-line options, environment variables, or in a configuration file. In case of duplicated options, command-line options take precedence over environment variables, which in turn take precedence over the configuration file.
+
+A high-level diagram of the tool's architecture is shown in Figure~\ref{fig:toolComponents}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/component_diagram.png}
+    \caption{Components of the SQL antipattern detection tool.}
+    \label{fig:toolComponents}
+\end{figure}
+
+\subsection{Workflow}\label{sec:workflow}
+
+Although the tool is implemented as a monolithic application, its internal architecture is organised as the staged pipeline shown in Figure~\ref{fig:toolWorkflow}. The main stages of the pipeline are the following:
+
+\begin{itemize}
+      \item \textbf{Input and configuration:} The tool receives command-line arguments, validates the input directory, and combines command-line options, environment variables, an optional configuration file, and built-in defaults into a single validated runtime configuration.
+      \item \textbf{Model setup:} The selected model is resolved from an explicit provider-prefixed identifier. The provider prefix determines which LLM client is created and which API key is required.
+      \item \textbf{Source-file discovery:} The selected project directory is recursively scanned for Java source files. The tool then applies jOOQ-oriented inclusion and exclusion heuristics to retain only files likely to contain relevant schema or query logic.
+      \item \textbf{Candidate preparation:} Each retained Java file is converted into an analysis candidate containing its path, contents, analysis category, and optional contextual information. The analysis category determines whether the file is analysed as schema-definition code or query/application code. The tool also attaches the closest available key-definition context when such context is found.
+      \item \textbf{Per-file analysis:} Candidate files are processed concurrently up to the configured concurrency limit. For each candidate, the source code is converted into a line-numbered representation and inserted into an LLM request. When the prompt-size budget requires it, the source context and any attached key-definition context are truncated while preserving useful context where possible.
+      \item \textbf{Validation and failure handling:} If a request fails or returns data in an unexpected format, the tool retries it according to the configured retry count. If all attempts fail, the error is reported as a per-file result instead of aborting the whole run.
+      \item \textbf{Aggregation and rendering:} After all candidates have been processed, the tool sorts the per-file results, computes a run-level summary, and renders the structured result as text, JSON, or CSV. The rendered output is then written either to standard output or to a configured output file.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=320pt]{figures/tool_workflow.png}
+    \caption{Workflow of the SQL antipattern detection tool.}
+    \label{fig:toolWorkflow}
+\end{figure}
+
+\subsection{Result Representation}
+
+The tool supports two analysis modes. In localisation mode, the output contains occurrence-level findings with source locations and explanations. In classification mode, the output contains only the distinct antipatterns detected in each file. The output of a run is a structured report consisting of run-level metadata, aggregate statistics, and per-file analysis results. The text rendering is intended for human inspection, while JSON and CSV outputs support automated processing, evaluation scripts, and integration with other tools.
+
+Figure~\ref{fig:toolResults} shows a shortened text rendering of an analysis report in the localisation mode. The report begins with the selected model and analysed directory, followed by aggregate statistics. Individual findings are then grouped by file and include the detected antipattern, source location, relevant code fragment, and an explanation.
+
+\bigskip % Add space before the figure
+\begingroup % Start a local scope
+\captionsetup{type=figure}
+\phantomsection
+\captionlistentry[figure]{Results displayed by the tool (truncated).}\label{fig:toolResults}
+\begin{lstlisting}[
+    frame=none,
+    basicstyle=\small,
+    breaklines=true,
+    breakatwhitespace=false,
+    breakindent=0pt,
+    emph={jOOQ, Antipattern, Detector, Summary, Findings, Implicit, Columns, ID, Required},
+    emphstyle=\bfseries,
+    literate={!!!}{}{0}
+]
+jOOQ Antipattern Detector
+Model      google:gemini-3.1-flash-lite-preview
+Directory  /home/kristo/masters-thesis/sample-project
+
+Summary
+Scanned Java files       164
+Applicable files          39
+Analyzed files            39
+Failed files               0
+Files with findings        7
+Total occurrences         14
+Distinct antipatterns      2
+Input tokens           68739
+Output tokens           1925
+Total tokens           70664
+
+Findings
+  ----------------------------------------
+src/main/java/com/inventory/prosta/bot/jooq/tables/AccountChat.java
+  ID Required (54-54)
+  Code        public final TableField<AccountChatRecord, Long> I!!!D = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+  Explanation The primary key is named 'id', which is a generic name that provides no semantic information about the entity. Consider renaming it to 'account_chat_id' to improve clarity and consistency across the database schema.
+  ----------------------------------------
+src/main/java/com/inventory/prosta/bot/repository/AccountRepo.java
+  Implicit Columns (64-64)
+  Code        dsl.select()
+  Explanation Using select() without arguments fetches all columns from the table, which can lead to performance issues and unnecessary data transfer. Explicitly list only the required columns in the select clause.
+
+  Implicit Columns (90-90)
+  Code        dsl.select(ACCOUNT.fields())
+  Explanation Using ACCOUNT.fields() fetches all columns from the table, which is inefficient if only a subset of data is needed. Specify only the necessary columns to improve query performance and maintainability.
+\end{lstlisting}
+
+\nopagebreak
+\begin{minipage}{\linewidth}
+    \captionof*{figure}{Figure \thefigure. Results displayed by the tool (truncated).}
+\end{minipage}
+\par % Apply the paragraph settings *inside* the group
+\endgroup % Revert to global normalsize and paragraph spacing
+\bigskip % Add space after the figure
+
+\subsection{Implementation Technologies}
+
+The tool utilises the following technologies:
+
+\begin{itemize}
+    \item \textbf{Bun:} \nobreakcite{bunHomepage} Modern JavaScript toolkit, consisting of a JavaScript runtime, bundler, test runner, and package manager. It was selected for its high performance, simple setup, built-in support for TypeScript, and built-in ability to compile applications into standalone executables.
+    \item \textbf{TypeScript:} \nobreakcite{typeScriptHomepage} Strongly typed superset of JavaScript, enabling developers to catch errors (e.g., type mismatches and nullability errors) during development, rather than at runtime. It was selected for its compile-time type safety and enhanced IDE support compared to JavaScript.
+    \item \textbf{Biome:} \nobreakcite{biomeHomepage} Modern code formatter and linter for JavaScript and TypeScript. It was selected for its high performance, simple setup, and built-in support for TypeScript.
+    \item \textbf{Vercel AI SDK:} \nobreakcite{aiSdkHomepage} Standardised interface for communicating with LLM providers, hiding provider-specific interface differences behind a unified abstraction.
+    \item \textbf{Commander:} \nobreakcite{commanderGitHub} Lightweight framework for building CLI applications, used for parsing command-line arguments.
+    \item \textbf{fast-glob:} \nobreakcite{fastGlobGitHub} Performance-oriented library for traversing the file system and retrieving file paths based on “glob” patterns (e.g., \texttt{**/*.java}). Used to find relevant files in the directory of the analysed project.
+    \item \textbf{p-limit:} \nobreakcite{pLimitGitHub} Library for running multiple asynchronous functions with limited concurrency. Used to perform a limited number of parallel requests against the LLM provider.
+    \item \textbf{Zod:} \nobreakcite{zodHomepage} TypeScript-first library for schema validation. Used for defining schemas for configuration options and LLM responses, and for validating objects against their respective schemas.
+\end{itemize}
+
+\subsection{Configuration Interface}\label{sec:configurationOptions}
+
+The configuration interface was designed to support both interactive use and automated evaluation runs. The available options can be grouped into five categories: model selection, analysis behaviour, execution control, output control, and provider authentication. This made it possible to reuse the same implementation for manual inspection, quantitative experiments, and automated result collection.
+
+Although the tool provides user-friendly defaults for common command-line usage, most of the execution parameters can be overridden to support controlled experiments. For example, the output format can be changed from human-readable text to JSON or CSV, allowing results to be consumed by evaluation scripts or third-party tooling. Similarly, while the default prompts are embedded within the executable binary to keep the tool fully self-contained by default, they can be loaded from a JSON file with an execution parameter, enabling the use of other prompting strategies or the detection of additional antipatterns.
+
+A comprehensive overview of all available configuration options, including their accepted parameters and default values, is provided in the Online Resources.
+
+\subsection{Quantitative Analysis}\label{sec:developmentQuantitative}
+
+To validate the detection performance of the finalised tool, we performed an analysis on each project in the test set produced in Section~\ref{sec:dataSplit}, using the tool in the default “localisation” mode. As in Section~\ref{sec:experimentsQuantitative}, we evaluated the tool using metrics suitable for a multi-label multi-occurrence localisation task: IoU and F1-score.
+
+So far, we have treated the task as a localisation task, and validating it as such; however, there is not much comparison data available for such an approach. To compare our results against other works regarding detecting antipatterns and code smells using LLMs, we also evaluated it as a multi-label classification task.
+
+To achieve this, we re-analysed the projects in the test set, this time using the tool in the “classification” mode, and compared the results against the reference annotations. In this case, a prediction was considered a TP if the tool detected an antipattern within a file and the reference annotations also contained the same antipattern within that file.
+
+Based on the results of the quantitative analysis, we provide an answer to \textbf{RQ1} in Section~\ref{sec:rq1Agreement}. We compare our performance metrics against previous works regarding both SQL antipattern detection and LLM-based code smell detection in Section~\ref{sec:comparison}.
+
+\subsection{Qualitative Analysis}
+
+We manually inspected the differences between the tool's results and the reference annotations, seeking patterns within the FPs and FNs and discussing their possible causes in Section~\ref{sec:detectionErrors}.
+
+We also compared the outputs of the “localisation” and “classification” modes. The differences in the results were analysed to identify common localisation errors and their underlying causes, and to explain why classification metrics may yield stronger results than localisation metrics.
+
+% Source: chapters/06_project_analysis.tex, corpus measures and API-manifestation coding.
+
+\subsection{Corpus Measures}\label{sec:corpusMeasures}
+
+For each of the seven targeted antipatterns, we calculated the following statistical values:
+
+\begin{itemize}
+    \item the total number of detected antipattern occurrences,
+    \item the number of projects containing that antipattern,
+    \item the average number of detected occurrences per project among all \num{602} projects,
+    \item the average number of detected occurrences per project among projects containing that antipattern.
+\end{itemize}
+
+These quantities describe detector flags rather than verified antipattern prevalence. They are not normalised by repository size or exposure to relevant jOOQ APIs. For antipatterns studied by other works, we therefore compare definitions and qualitative patterns but do not compare rates directly.
+
+The replication repository retains unadjusted exploratory co-flagging matrices. They omit joint-zero units and do not control for repository size, API exposure, or class-specific detector error. We therefore do not use them to answer a research question or infer clusters, dependencies, or predictors.
+
+Based on these results, we provide an answer to \textbf{RQ2} in Section~\ref{sec:rq2CorpusFlags}.
+
+For two of the detected query antipatterns (“Implicit Columns” and “Poor Man's Search Engine”), we analysed the jOOQ API methods associated with each detector flag. We employed an iterative pattern-matching approach, assigning one post hoc manifestation category to each flag by comparing the containing code snippet against a collection of patterns.
+
+We skipped the analysis for all database design antipatterns, since for them, the associations only display how jOOQ generates classes based on an underlying problematic schema, and do not provide insights into potential API design issues.
+
+We also skipped the analysis for the “Fear of the Unknown” antipattern, which we detect from both classes representing the database schema and source classes containing DQL and DML statements. We initially planned to constrain the labelling to only occurrences found in DQL and DML statements, but only a negligible number of “Fear of the Unknown” occurrences (\num{16} occurrences, \qty{1.3}{\percent} of total) were found in DQL and DML statements, not providing a sufficient sample size.
+
+Based on this analysis, we provide an answer to \textbf{RQ3} in Section~\ref{sec:rq3ApiPatterns}. The categories cover \num{6860} of \num{7289} Implicit Columns flags (\qty{94.1}{\percent}) and \num{546} of \num{583} Poor Man's Search Engine flags (\qty{93.7}{\percent}); the remaining flags are reported as other or uncategorised.
+
+% Source: chapters/01_introduction.tex, AI-use disclosure and reproducibility.
+
+Artificial intelligence-based tools were used as supportive aids in the research process and in the preparation of this thesis. The following tools were used to draft the following sections:
+
+\begin{itemize}
+    \item \textbf{Google Gemini 3.1 Pro Preview:} \nobreakcite{gemini31ProPreview} Abstracts, List of abbreviations and terms, Thesis Outline, Reflection on Work Process, Limitations, Future Work, Summary.
+    \item \textbf{Google NotebookLM:} \nobreakcite{notebookLm2026homepage} Logical Database Design Antipatterns (Section~\ref{sec:logicalAntipatterns}), Physical Database Design Antipatterns (Section~\ref{sec:physicalAntipatterns}), Query Antipatterns (Section~\ref{sec:queryAntipatterns}), Application Development Antipatterns (Section~\ref{sec:developmentAntipatterns}).
+    \item \textbf{OpenAI Codex:} \nobreakcite{openAiCodex2026GitHub} Development of Antipattern Detector (introductory paragraphs), Workflow (Section~\ref{sec:workflow}).
+\end{itemize}
+
+OpenAI Codex was further used to develop the SQL antipattern detection tool (the development workflow is elaborated on in Section~\ref{sec:workflow}), and to produce Figure~\ref{fig:toolWorkflow}. Gemini 3.1 Pro Preview and Gemini 3 Flash Preview \nobreakcite{gemini3FlashPreview} were further used extensively to improve wording in other sections.
+
+We confirm that artificial intelligence was used strictly as a supportive aid. All generated content has been critically analysed, fact-checked, and edited by us to the extent necessary to ensure compliance with academic requirements. We take full responsibility for the accuracy, originality, and integrity of the work’s content.
+
+Unless otherwise specified, all data processing steps, experiments, and evaluations described in this thesis were implemented and executed within Jupyter \nobreakcite{jupyterHomepage} notebooks.
+
+To ensure repeatability and facilitate future research, we open-sourced all artefacts produced as parts of the thesis. The finalised tool is available in the GitHub repository: \href{https://github.com/kristoisberg/jooq-antipattern-detector}{https://github.com/kristoisberg/jooq-antipattern-detector}. All other artefacts, including experimental scripts and their results, evaluated prompts, and source code for this document, are available in the following GitHub repository: \href{https://github.com/kristoisberg/masters-thesis}{https://github.com/kristoisberg/masters-thesis}.

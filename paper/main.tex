@@ -43,29 +43,10 @@
 }
 \renewcommand\theadfont{\bfseries}
 
-% Preserve the thesis source files verbatim while adapting their heading
-% hierarchy to the article class, which has no \chapter command.
-\let\articlesection\section
-\let\articlesubsection\subsection
-\let\articlesubsubsection\subsubsection
-\let\articleparagraph\paragraph
-\NewDocumentCommand{\chapter}{s o m}{%
-  \IfBooleanTF{#1}{\articlesection*{#3}}{%
-    \IfNoValueTF{#2}{\articlesection{#3}}{\articlesection[#2]{#3}}}}
-\RenewDocumentCommand{\section}{s o m}{%
-  \IfBooleanTF{#1}{\articlesubsection*{#3}}{%
-    \IfNoValueTF{#2}{\articlesubsection{#3}}{\articlesubsection[#2]{#3}}}}
-\RenewDocumentCommand{\subsection}{s o m}{%
-  \IfBooleanTF{#1}{\articlesubsubsection*{#3}}{%
-    \IfNoValueTF{#2}{\articlesubsubsection{#3}}{\articlesubsubsection[#2]{#3}}}}
-\RenewDocumentCommand{\subsubsection}{s o m}{%
-  \IfBooleanTF{#1}{\articleparagraph*{#3}}{%
-    \IfNoValueTF{#2}{\articleparagraph{#3}}{\articleparagraph[#2]{#3}}}}
-
 \begin{document}
 
-\title{Detecting SQL Antipatterns in jOOQ Database Access Code Using Large Language Models}
-\titlerunning{Detecting SQL Antipatterns in jOOQ Code Using LLMs}
+\title{LLM-Based SQL Antipattern Detection in jOOQ Code: An Occurrence-Level Evaluation and Repository Study}
+\titlerunning{LLM-Based SQL Antipattern Detection in jOOQ Code}
 
 \author{Kristo Isberg\thanks{Corresponding author} \and Erki Eessaar}
 \authorrunning{K. Isberg and E. Eessaar}
@@ -93,7 +74,7 @@ The finalised tool is available in the following GitHub repository: \href{https:
 \keywords{SQL antipatterns \and jOOQ \and large language models \and static analysis \and prompting \and empirical software engineering}
 \end{abstract}
 
-\input{chapters/chapters_main.tex}
+\input{sections/sections_main.tex}
 
 \section*{Statements and Declarations}
 
@@ -123,8 +104,5 @@ The SQL-antipattern detector and its source code are publicly available at \url{
 
 \bibliographystyle{../template/spbasic}
 \bibliography{references}
-
-\appendix
-\input{appendices/appendices_main.tex}
 
 \end{document}

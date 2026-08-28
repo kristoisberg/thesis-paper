@@ -1,0 +1,81 @@
+\section{Discussion}\label{sec:discussion}
+
+% Source: chapters/08_analysis.tex, LLM Capabilities and Limitations in Static Analysis.
+
+\subsection{LLM Capabilities and Limitations in Static Analysis}\label{sec:llmCapabilities}
+
+Across all prompting strategies, we noticed a pattern where more common antipatterns were generally detected with a higher performance than rarer antipatterns. This can have multiple contributing factors:
+\begin{itemize}
+    \item \textbf{Lack of training data:} Due to fewer cases in the training set, the instructions for detecting less common antipatterns may not be as refined and resilient to variations in coding patterns.
+    \item \textbf{Low confidence:} Due to fewer cases in the validation set, each individual detection error causes a large reduction of the F1-score for less common antipatterns.
+    \item \textbf{Detection complexity:} The most common antipatterns, “Implicit Columns” and “ID Required”, are in most cases self-contained and do not require cross-referencing multiple pieces of code, while some less common antipatterns, such as “Keyless Entry” and “Fear of the Unknown” require additional context to be detected correctly.
+\end{itemize}
+
+
+% Source: chapters/08_analysis.tex, Comparison with Existing Tools and Literature and Post Hoc API Manifestations.
+
+\subsection{Comparison with Existing Tools and Literature}\label{sec:comparison}
+
+\nobreaktextcite{de2025effectiveness} were able to classify a variation of the “Implicit Columns” antipattern (called the “Use of \texttt{SELECT *} (asterisk wildcard)” or “USA” issue in their work) in PL/SQL projects with an F1-score of \num{1.00} using the GPT-4o model, with Phi-4, Gemini 2.0 Flash, and GPT-4o mini models displaying a lower F1-score. While achieving a higher detection performance than us, their work only included a subset of the “Implicit Columns” antipattern, simplifying the detection task for models. In total, they detected eight PL/SQL code smells, with the GPT-4o and Phi-4 models achieving an overall F1-score of \num{0.79}.
+
+\nobreaktextcite{nagy2017static} did not measure the detection performance of their tool, \emph{SQLInspect}. However, their tool relies on SQL query extraction from Java code. In their performance evaluation against multiple codebases, the query extractor achieved a precision of at least \num{0.879} and a recall of at least \num{0.715} \nobreakcite[p. 492]{meurice2016static}, resulting in a minimum F1-score of \num{0.79} for SQL query extraction, which they suggest using as an upper bound for the SQL antipattern detection performance of \emph{SQLInspect} \nobreakcite[p. 328]{muse2020prevalence}. The overlap of detected antipatterns between our tool and \emph{SQLInspect} is limited to the “Fear of the Unknown” and “Implicit Columns” antipatterns.
+
+The suggested upper bound F1-score of \num{0.79} is lower than both the corrected (\num{0.97}) and uncorrected (\num{0.96}) F1-scores of our tool for the “Implicit Columns” antipattern. It is also lower than the corrected F1-score of our tool for the “Fear of the Unknown” antipattern (\num{0.82}), but higher than the uncorrected F1-score (\num{0.48}). However, it should be noted that \emph{SQLInspect} only detects the “Fear of the Unknown” antipattern in DQL and DML statements, and does not detect schema-level issues.
+
+In Table~\ref{tab:toolComparison}, we show the detection performance of our tool in classification mode, compared against works regarding LLM-based antipattern, smell, and vulnerability detection in various domains. Based on F1-score, we selected the results of the best-performing model(s) from each work. While not a direct comparison, it shows that our tool performs adequately compared to other tools using a similar methodology in other domains.
+
+\begin{longtable}[hp]{|p{2.5cm}|S[table-format=4.0, table-column-width=0.9cm]|p{2.6cm}|p{3.5cm}|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.0cm]|S[table-format=1.2, table-column-width=1.5cm]|}
+	\caption{Detection performance of the developed tool compared to various LLM-based detection tools.}
+	\label{tab:toolComparison}\\ \hline
+	{\thead[l]{Tool}} & {\thead{Year}} & {\thead[l]{Model}} & {\thead[l]{Domain}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
+	\hline
+	\endfirsthead
+	\multicolumn{7}{l}
+	{\tablename\ \thetable\ -- \textit{Continues...}} \\
+	\hline
+	{\thead[l]{Tool}} & {\thead{Year}} & {\thead[l]{Model}} & {\thead[l]{Domain}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
+	\hline
+	\endhead
+	\hline \multicolumn{7}{l}{\textit{Continues...}}
+	\endfoot
+	\hline
+	\endlastfoot
+    \makecell[l]{Tamberg and\\Bahsi} & \citeyear{tamberg_suurte_2024} & GPT-4 & \makecell[l]{Software vulnerability\\detection} & 0.76 & 0.60 & 0.67 \\ \hline
+    Sousa et al. & \citeyear{de2025effectiveness} & GPT-4o & \makecell[l]{PL/SQL smell\\detection} & 0.68 & 0.93 & 0.79 \\ \hline
+    Sousa et al. & \citeyear{de2025effectiveness} & Phi-4 & \makecell[l]{PL/SQL smell\\detection} & 0.70 & 0.90 & 0.79 \\ \hline
+    Blaauwendraad & \citeyear{blaauwendraad2025evaluating} & GPT 4o-mini & \makecell[l]{Traditional code\\smell detection} & 0.26 & 0.61 & 0.37 \\ \hline
+    \makecell[l]{Sadik and\\Govind} & \citeyear{sadik2025benchmarking} & GPT-4 & \makecell[l]{Traditional code\\smell detection} & 0.79 & 0.41 & 0.54 \\ \hline
+    \makecell[l]{Ploom and\\Eessaar} & \citeyear{ploom_suurte_2026} & Gemini 3 Pro & \makecell[l]{UML diagram smell\\detection from PDFs} & 0.82 & 0.69 & 0.75 \\ \hline
+    \makecell[l]{Ours\\(uncorrected)} & 2026 & \makecell[l]{Claude Opus 4.5\\(non-reasoning)} & \makecell[l]{SQL antipattern\\detection in jOOQ} & 0.88 & 0.92 & 0.88 \\\hline
+    \makecell[l]{Ours\\(corrected)} & 2026 & \makecell[l]{Claude Opus 4.5\\(non-reasoning)} & \makecell[l]{SQL antipattern\\detection in jOOQ} & 0.93 & 0.95 & 0.94 \\
+\end{longtable}
+
+Direct density comparisons with plain-SQL studies are not possible. Our numerator consists of detector flags and no defensible SQL-statement denominator is available for dynamically constructed jOOQ queries. The corpus results are therefore interpreted only as unnormalised detector-output distributions.
+
+\subsection{Post Hoc API Manifestations}\label{sec:apiDesign}
+
+Our post hoc categories describe the distribution of code-fragment patterns among detector flags. Without denominators for each API's use, the results do not estimate the risk associated with an API method or support claims about documentation or API design.
+
+For Implicit Columns, the categories matching \texttt{selectFrom(TABLE)} and \texttt{select().from(TABLE)} contain \num{5227} of \num{7289} class flags (\qty{71.7}{\percent}). The category scheme covers \qty{94.1}{\percent} of the flags.
+
+For Poor Man's Search Engine, the \texttt{Field.like} category contains \num{273} of \num{583} class flags (\qty{46.8}{\percent}); the four largest categories contain \num{517} flags (\qty{88.7}{\percent}). The category scheme covers \qty{93.7}{\percent} of the flags.
+
+
+% Source: chapters/08_analysis.tex, Future Work.
+
+\subsection{Future Work}\label{sec:futureWork}
+
+The catalogue of SQL antipatterns evaluated in this thesis is limited to Karwin's foundational work. Future work could expand this tool to allow for detecting antipatterns from more extensive and specialised taxonomies \nobreakcite{alshemaimri2021survey,10.1007/978-3-031-09070-7_26,10.1007/978-3-031-35311-6_51,factor2014sql} and the follow-up book by \nobreaktextcite{karwin2026more}, as well as vendor-specific literature \nobreakcite{angelakos2025PostgreSQL}.
+
+This thesis deliberately restricted the evaluated prompting strategies to single request-response cycles to manage scope. Exploring more complex (e.g., multi-turn or multi-agent) prompting frameworks could offer sophisticated pathways for improvement, refining reasoning pathways and achieving a higher degree of analytical rigour.
+
+The accurate detection of complex antipatterns (e.g., “Keyless Entry” and “Fear of the Unknown”) is currently constrained by the limited cross-file context provided in prompts. Implementing a Retrieval-Augmented Generation (RAG) architecture represents a promising methodological enhancement. By indexing the relevant parts of a codebase, a RAG-enabled system could dynamically supply the LLM with comprehensive context, thereby substantially improving both precision and recall for context-dependent antipatterns. To offset the token overhead of retrieving this additional context, future implementations could pair RAG with lightweight pre-filtering mechanisms, such as regular expressions or basic AST parsing. By using these heuristics to isolate and send only the specific code blocks containing jOOQ queries—rather than entire source files—the tool could drastically shrink the required context windows, conserving API resources and significantly reducing analysis costs.
+
+The financial costs and latency associated with frontier commercial models may impede continuous analysis of large codebases. Future research could evaluate newer small language models and explore fine-tuning them using the manually annotated reference dataset. Such models may reduce costs and support self-hosting, but their agreement and resource requirements require measurement.
+
+The current tool implementation only provides core detection functionality, which future work could extend upon. The architecture allows alternative user interfaces to be developed independently of the tool, while more interactive interfaces could enable more advanced functionality. For instance, a user interface could be used to mark detections -- both false positives and deliberate violations -- as ignored, so subsequent analyses would not re-detect the same antipattern occurrences.
+
+Future work could test whether the method transfers to other query builders, such as LINQ and SQLAlchemy.
+
+While the results of the large-scale analysis were used to find the jOOQ DSL methods most commonly associated with query antipatterns, we did not evaluate them regarding database design antipatterns. The \num{15931} flagged antipattern occurrences could be further processed and analysed, seeking patterns among the detections, which could be used to improve detection heuristics in other tools, such as scripts analysing database system tables.
+
