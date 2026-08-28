@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1--6 were completed on 2026-08-28; see the corresponding reports in `.review/`.
+Status: in progress. Steps 1--7 were completed on 2026-08-28; see the corresponding reports in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -171,15 +171,17 @@ Completion check: Discussion gained 340 words, within the planned 288--352 range
 
 ### Step 7: Confirm that Threats to Validity needs no expansion (+0 words)
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-7-threats-audit.md`.
+
 Actions:
 
 - Verify that the existing construct, internal, external, conclusion, and reliability subsections still cover the effects of the restored method detail.
-- Keep the existing manifest-search, GitHub API-cap, single-run, backend-routing, caching, missing-metadata, and replay limitations.
+- Keep the existing manifest-search, GitHub API-cap, single-run, bounded gateway/provider, missing-metadata, and replay limitations. The earlier reference to an existing caching limitation was stale: the section contains no cache-effect claim, and the surviving evidence does not show that caching affected the single-pass runs.
 - Add no prose unless a later restoration step creates a genuinely new threat.
 
 Do not claim that the omitted population is small, that the chosen mining approach was best, or that gateway routing affected runs for which routing evidence is unavailable.
 
-Completion check: Threats remains at its baseline word count unless a new, non-duplicative consequence must be reconciled.
+Completion check: Threats remained at its 926-word baseline. Parallel consistency and logic reviews found complete, non-duplicative coverage. A technical review proposed explicit codebook and future-caching sentences, but the existing construct and reliability paragraphs already cover the codebook consequence, while a caching sentence would introduce an unevidenced provider mechanism. No manuscript change was required.
 
 ### Step 8: Reconcile the restored prose
 

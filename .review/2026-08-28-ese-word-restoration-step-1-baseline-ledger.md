@@ -44,7 +44,7 @@ The per-section planning counts are the included-file values from the canonical 
 | Conclusion | 163 | 0 | 163 |
 | **Current execution budget** |  | **2,945** |  |
 
-The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section already covers manifest-search coverage, the GitHub result cap, single-run uncertainty, routing, caching, missing metadata, and replay limits. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
+The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section covers manifest-search coverage, the GitHub result cap, single-run uncertainty, bounded gateway/provider change, missing metadata, and replay limits. It does not assert a caching effect because the evidence does not show that caching affected the single-pass runs. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
 
 The clean final logs contain zero LaTeX errors, undefined citations, undefined references, overfull boxes, or BibTeX warnings. The main log contains 19 underfull-box notices and the supplement contains one. These are the harmless table-cell, URL, and page-breaking notices accepted in Step 13. Both frozen analysis scripts also reran successfully. They reproduced the 536 predictions, 523 references, 460/76/63 primary totals, IoU grid, 10,000-replicate bootstrap ranges, 15,931 corpus flags, 601 flagged repositories, all class totals, and the 59.1% overall top-decile concentration.
 
@@ -186,3 +186,5 @@ Step 4 completed rows S01--S08 at a combined 1,388 words. Its 164-word remainder
 Step 5 completed rows R01--R03 at a combined 550 words, 14 below their provisional allocation and within the step tolerance. The resulting execution budget is 2,925 words, still inside the overall target range.
 
 Step 6 completed rows D01--D02 at a combined 340 words, 20 above their provisional allocation and within the step tolerance. The resulting execution budget is 2,945 words. The main PDF reached 12,352 extracted words and 31 pages, so no further length restoration is planned.
+
+Step 7 audited every restored consequence against the five Threats to Validity categories. The section remained unchanged at 926 words; its SHA-256 remained `67b021d1d1f30133924d4b6f21828c63083a25810bdf1ff501e225080b4c48c7`. The stale metadata reference to an existing caching limitation was corrected without adding an unsupported cache-effect claim to the manuscript.
