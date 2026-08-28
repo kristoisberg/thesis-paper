@@ -262,6 +262,8 @@ Completion check: the introduction, abstract, results answers, discussion, and c
 
 ### Step 11: Reduce the main-paper tables, figures, and appendices
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-step-11-floats-online-resources.md`.
+
 Actions:
 
 - Keep the pipeline, operational definitions, configuration selection, held-out results, prevalence, API manifestations, and error mechanisms in the paper.

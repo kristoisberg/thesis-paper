@@ -9,13 +9,17 @@ LATEXMK = docker run --rm \
 	$(TEXLIVE_IMAGE)
 LATEXMK_FLAGS = -pdf -file-line-error -halt-on-error -interaction=nonstopmode
 
-.PHONY: paper main clean
+.PHONY: paper main supplement clean
 
-paper: main
+paper: main supplement
 
 main:
 	$(LATEXMK) $(LATEXMK_FLAGS) main.tex
 
+supplement:
+	$(LATEXMK) $(LATEXMK_FLAGS) supplementary.tex
+
 clean:
 	$(LATEXMK) -C main.tex
-	$(RM) paper/main.bbl
+	$(LATEXMK) -C supplementary.tex
+	$(RM) paper/main.bbl paper/supplementary.bbl

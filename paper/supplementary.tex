@@ -1,0 +1,122 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage{siunitx}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=25mm}
+\sisetup{mode=text}
+
+\title{Online Resource 1: Supplementary Material for\\
+\emph{LLM-Based SQL Antipattern Detection in jOOQ Code}}
+\author{Kristo Isberg \and Erki Eessaar}
+\date{}
+
+\begin{document}
+\maketitle
+
+This supplement contains detailed material moved from the article and indexes the larger frozen replication resources. The full study artefacts are preserved at commit \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}. Detector source is preserved separately at commit \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}.
+
+\section{Resource index}
+
+\begin{description}
+    \item[Repository mining.] The frozen repository contains the \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-github-search-terms.tex}{GitHub search strings}, \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-omitted-projects.tex}{omitted-project list}, and mining notebooks under \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts}{\texttt{scripts/}}.
+    \item[Annotation materials.] The \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-annotated-antipatterns.tex}{full 19-class catalogue}, \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/diagrams/decision}{decision trees}, and reference datasets are preserved in the frozen repository.
+    \item[Detector configuration.] All query and schema \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/prompts}{prompts}, model-selection detail, per-class configuration results, and configuration options are preserved with the study artefacts.
+    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, co-detection matrices and heatmaps, and the ordered source-fragment categorisation procedure. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} reproduce the two compact diagnostics cited by the article.
+    \item[Implementation.] Architecture, workflow, output, and command-line configuration details accompany the frozen \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{detector source} and the original thesis appendices.
+\end{description}
+
+\section{Equivalent SQL and jOOQ source representations}
+
+The following fragments express the same Implicit Columns occurrence: both select every column from the \texttt{employee} table.
+
+\paragraph{SQL}
+\begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
+SELECT * FROM employee WHERE name = 'Jack'
+\end{lstlisting}
+
+\paragraph{jOOQ}
+\begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
+var employee = dslContext.select(DSL.asterisk())
+    .from(EMPLOYEE)
+    .where(EMPLOYEE.NAME.eq("Jack"))
+    .fetchOne();
+\end{lstlisting}
+
+\section{Detection representations and output units}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}}
+    \caption{Detection representations and output units relevant to jOOQ source analysis.}\label{tab:detectionApproaches}\\
+    \hline
+    \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
+    \endfirsthead
+    \caption[]{Detection representations and output units (continued).}\\
+    \hline
+    \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
+    \endhead
+    \hline
+    \endfoot
+    SQL extraction and parsing &
+    SQL recovered from host-language source or query logs; parsed-statement warnings \citep{sharma2018smelly,nagy2017static,DBLP:conf/sigmod/DintyalaNA20}. &
+    Does not directly expose occurrences represented by jOOQ domain-specific-language calls or generated schema classes. \\
+    API or AST rules &
+    Host-language syntax and application programming interface (API) patterns or abstract syntax tree (AST) nodes; warnings attached to matched source nodes \citep{DBLP:journals/tse/MohaGDM10}. &
+    Can localise encoded patterns but requires explicit coverage of jOOQ idioms and cross-file relationships. \\
+    LLM source analysis &
+    Source code and supplied context; prior work reports smell recognition or classification \citep{de2025effectiveness,blaauwendraad2025evaluating}. &
+    Can return class-labelled spans, whose agreement and class-specific errors require empirical evaluation. \\
+    This study &
+    Java domain-specific-language and generated schema code; multiple class-labelled source-line spans. &
+    Evaluates the occurrence output later counted as detector flags across repositories. \\
+\end{longtable}
+
+\section{Project-disjoint split support}\label{sec:splitSupport}
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Occurrence and repository support in the project-disjoint split. Each cell gives occurrences followed by repositories in parentheses.}
+    \begin{tabular}{lrrrr}
+        \hline
+        \textbf{Class} & \textbf{Total} & \textbf{Training} & \textbf{Validation} & \textbf{Test} \\
+        \hline
+        Implicit Columns & 795 & 175 (20) & 350 (19) & 270 (20) \\
+        ID Required & 259 & 55 (18) & 99 (15) & 105 (16) \\
+        Keyless Entry & 122 & 30 (7) & 56 (1) & 36 (3) \\
+        Fear of the Unknown & 95 & 23 (6) & 36 (8) & 36 (5) \\
+        31 Flavors & 71 & 17 (6) & 15 (4) & 39 (1) \\
+        Poor Man's Search Engine & 55 & 19 (5) & 15 (4) & 21 (3) \\
+        Rounding Errors & 39 & 13 (4) & 10 (1) & 16 (2) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Intersection-over-union sensitivity}\label{sec:iouSensitivity}
+
+\begin{table}[H]
+    \centering
+    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union threshold. Each row applies the same one-to-one matching rule to all \num{536} predictions and the original reference spans.}
+    \begin{tabular}{rrrrrrr}
+        \hline
+        \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \hline
+        0.25 & 462 & 74 & 61 & 0.862 & 0.883 & 0.873 \\
+        0.50 & 460 & 76 & 63 & 0.858 & 0.880 & 0.869 \\
+        0.75 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
+        1.00 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\bibliographystyle{../template/spbasic}
+\bibliography{references}
+
+\end{document}

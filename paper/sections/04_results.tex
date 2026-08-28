@@ -32,12 +32,11 @@ One run of the selected detector returned \num{536} predictions from \num{502} r
 
 Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial class differences. F1-scores ranged from \num{0.481} for Fear of the Unknown to \num{0.974} for 31 Flavors. Implicit Columns, 31 Flavors, and Rounding Errors each exceeded \num{0.89}, whereas Keyless Entry, Fear of the Unknown, and Poor Man's Search Engine remained below \num{0.70}. The macro precision, recall, and F1-score were \num{0.797}, \num{0.813}, and \num{0.793}; the reference-support-weighted values were \num{0.885}, \num{0.880}, and \num{0.877}. These aggregates reinforce the need to interpret each corpus flag class in light of its own held-out agreement.
 
-\begin{table}[t]
+\begin{table}[H]
     \centering
     \small
     \caption{Occurrence-level agreement of one selected-detector run with the original single-annotator reference spans at intersection over union \num{0.50}. TP, FP, and FN are one-to-one event-matching counts; true negatives are undefined for this localisation task. The final row pools all classes.}
     \label{tab:toolDetections}
-    \label{tab:toolBevUncorrected}
     \begin{tabular}{lrrrrrr}
         \hline
         \textbf{Antipattern} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
@@ -58,7 +57,7 @@ Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial
 
 The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurring mechanisms. Implicit Columns and Poor Man's Search Engine disagreements involved local query-method semantics. Keyless Entry and Fear of the Unknown disagreements concerned inferred relationships and missing-value conventions. Inspection also exposed omissions and span errors in the original reference annotations. We retain that original reference for the primary result because detector disagreements guided the later review.
 
-\begin{table}[t]
+\begin{table}[H]
     \centering
     \small
     \caption{Dominant disagreement mechanisms observed during qualitative review of the held-out run. Counts refer to false positives or false negatives against the original reference spans. Reference-annotation issues were discovered through detector disagreements and therefore do not form an independent audit.}
@@ -80,24 +79,7 @@ The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurr
 
 The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this as an optimistic sensitivity analysis because the review could find disagreements visible to the detector while missing occurrences overlooked by both the annotator and detector.
 
-Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} bounds it between \num{0.863} and \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds.
-
-\begin{table}[t]
-    \centering
-    \small
-    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union threshold. Each row applies the same one-to-one matching rule to the original reference spans and all \num{536} predictions.}
-    \label{tab:iouSensitivity}
-    \begin{tabular}{rrrrrrr}
-        \hline
-        \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-        \hline
-        0.25 & 462 & 74 & 61 & 0.862 & 0.883 & 0.873 \\
-        0.50 & 460 & 76 & 63 & 0.858 & 0.880 & 0.869 \\
-        0.75 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
-        1.00 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
-        \hline
-    \end{tabular}
-\end{table}
+Micro F1 varied by \num{0.010} across the tested span boundaries, ranging from \num{0.863} to \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds. Online Resource~1 reports the complete threshold grid.
 
 A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.799} and \num{0.933}, micro recall between \num{0.817} and \num{0.913}, and micro F1 between \num{0.819} and \num{0.913}. These percentile ranges describe sensitivity to the composition of the selected test projects. They are not population confidence intervals and do not measure variation across detector runs.
 
@@ -140,13 +122,11 @@ Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns amon
 
 For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{273} of \num{583} flags, or \qty{46.8}{\percent}. The next three patterns matched case-insensitive or contains-style method names. These four categories contained \num{517} flags, or \qty{88.7}{\percent}. The full category scheme covered \qty{93.7}{\percent}.
 
-\begin{table}[t]
+\begin{table}[H]
     \centering
     \small
     \caption{Recurring post hoc manifestation categories among detector flags for two query antipatterns. Categories are precedence-ordered string or regular-expression matches over detector-returned code fragments. Shares use the class flag total as denominator; they do not measure API-specific risk.}
     \label{tab:apiManifestations}
-    \label{tab:implicitColumnsCauses}
-    \label{tab:poorMansSearchEngineCauses}
     \begin{tabular}{p{2.2cm}p{5.3cm}rr}
         \hline
         \textbf{Flag class} & \textbf{Manifestation category} & \textbf{Flags} & \textbf{Share (\%)} \\

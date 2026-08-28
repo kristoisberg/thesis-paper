@@ -9,7 +9,7 @@ SQL antipatterns are recurring database-design or query-construction choices tha
 
 Prior studies found SQL antipatterns in open-source and industrial systems \nobreakcite{muse2020prevalence,sharma2018smelly}. In SQLite-based Android applications, removing Implicit Columns reduced mean query runtime by \qty{27}{\percent} and energy use by \qty{29}{\percent} \nobreakcite[p. 60]{lyu2019quantifying}.
 
-The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatterns} states this study's operational definitions, including the boundaries that differ from the broader conceptual definitions. The full Karwin taxonomy and the class-specific annotation and prompt decision rules are available in the online replication materials.
+The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatterns} states this study's operational definitions, including the boundaries that differ from the broader conceptual definitions. The full Karwin taxonomy and the class-specific annotation and prompt decision rules are available in Online Resource~1.
 
 \begin{longtable}{@{}p{0.24\textwidth}p{0.70\textwidth}@{}}
     \caption{Operational definitions of the seven SQL antipattern classes retained for detector evaluation.}
@@ -52,24 +52,7 @@ The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatte
 
 jOOQ represents SQL as a Java domain-specific language \nobreakcite{jooq2025sql}. Its code generator maps database objects, including tables and constraints, to Java classes \nobreakcite{jooq2025codegen}. Projects may also execute plain SQL through its JDBC wrapper \nobreakcite{jooq2025execution}.
 
-Implicit Columns denotes a blind projection, such as \texttt{SELECT *}, whose result can change when a table's columns change \nobreakcite[Ch. 19]{karwin2023sql}. Figure~\ref{fig:implicitColumnsRepresentations} shows the same blind projection as SQL text and as a jOOQ DSL expression.
-
-\begin{figure}[h]
-    \textbf{SQL}
-    \begin{lstlisting}[frame=none, basicstyle=\small]
-SELECT * FROM employee WHERE name = 'Jack'
-    \end{lstlisting}
-
-    \textbf{jOOQ}
-    \begin{lstlisting}[frame=none, basicstyle=\small]
-var employee = dslContext.select(DSL.asterisk())
-    .from(EMPLOYEE)
-    .where(EMPLOYEE.NAME.eq("Jack"))
-    .fetchOne();
-    \end{lstlisting}
-    \caption{Equivalent Implicit Columns occurrences in SQL text and a jOOQ Java DSL expression. Both select every column from the \texttt{employee} table.}
-    \label{fig:implicitColumnsRepresentations}
-\end{figure}
+Implicit Columns denotes a blind projection, such as \texttt{SELECT *}, whose result can change when a table's columns change \nobreakcite[Ch. 19]{karwin2023sql}. In jOOQ, the same projection can be expressed through chained \texttt{select(...)} and \texttt{from(TABLE)} calls. Online Resource~1 provides the paired SQL and jOOQ listings.
 
 A jOOQ statement is assembled from Java calls and may refer to schema information through generated classes. The corresponding SQL is produced at runtime \nobreakcite{jooq2025withgen}. Source-level detection must therefore interpret DSL calls and generated schema representations, rather than relying only on recoverable SQL strings.
 
@@ -80,37 +63,6 @@ Static detectors commonly encode metric thresholds or rules over source represen
 
 Two SQL-antipattern tools illustrate extraction-and-parsing approaches for SQL embedded in host-language source. DbDeo extracts SQL strings, parses them, and applies schema-smell rules \nobreakcite{sharma2018smelly}. SQLInspect uses intra-procedural string resolution and a fault-tolerant parser before applying query-antipattern rules \nobreakcite{nagy2017static,nagy2018sqlinspect}. SQLCheck analyses application query logs with static and dynamic checks \nobreakcite{DBLP:conf/sigmod/DintyalaNA20}. These tools expect SQL text or executed queries. Their coverage of source-level jOOQ DSL expressions and generated schema classes has not been established.
 
-Recent studies apply LLMs to code-quality detection \nobreakcite{blaauwendraad2025evaluating}. Most directly, \nobreaktextcite[p. 410]{de2025effectiveness} evaluated language models for PL/SQL smell detection. Table~\ref{tab:detectionApproaches} compares the representations and output units of these approaches with the requirements of this study.
-
-\begin{longtable}{@{}p{0.20\textwidth}p{0.34\textwidth}p{0.40\textwidth}@{}}
-    \caption{Detection representations and output units relevant to jOOQ source analysis.}
-    \label{tab:detectionApproaches}\\
-    \hline
-    \thead[l]{Approach} & \thead[l]{Representation and output} & \thead[l]{Relevance to this study} \\ \hline
-    \endfirsthead
-    \caption[]{Detection representations and output units relevant to jOOQ source analysis (continued).}\\
-    \hline
-    \thead[l]{Approach} & \thead[l]{Representation and output} & \thead[l]{Relevance to this study} \\ \hline
-    \endhead
-    \hline
-    \endfoot
-    \hline
-    \endlastfoot
-    SQL extraction and parsing &
-    SQL recovered from host-language source or query logs; parsed-statement warnings \nobreakcite{sharma2018smelly,nagy2017static,DBLP:conf/sigmod/DintyalaNA20}. &
-    Does not directly expose occurrences represented by jOOQ DSL calls or generated schema classes. \\
-
-    API or AST rules &
-    Host-language syntax and API patterns; warnings attached to matched source nodes \nobreakcite{DBLP:journals/tse/MohaGDM10}. &
-    Can localise encoded patterns precisely, but requires explicit coverage of jOOQ idioms and cross-file relationships. No evaluated seven-class jOOQ baseline was found in the reviewed work. \\
-
-    LLM source analysis &
-    Source code and supplied context; prior work reports smell recognition or classification \nobreakcite{de2025effectiveness,blaauwendraad2025evaluating}. &
-    Can return class-labelled spans, but span agreement and class-specific errors require empirical evaluation. \\
-
-    This study &
-    Java DSL and generated schema code; multiple class-labelled source-line spans. &
-    Evaluates the same occurrence unit later counted as detector flags across repositories. \\
-\end{longtable}
+LLMs have been applied to code-quality detection \nobreakcite{blaauwendraad2025evaluating}. Language models have also been evaluated for PL/SQL smell detection \nobreakcite[p. 410]{de2025effectiveness}. These approaches use representations and output units different from the class-labelled jOOQ source spans evaluated here; Online Resource~1 provides the detailed comparison.
 
 A file may contain several occurrences of the same antipattern. File-level classification establishes only whether a class is present; it does not establish how many distinct occurrences the detector recovers or whether their source spans agree with the reference annotations. The reviewed work does not report occurrence-level localisation for the seven retained classes in jOOQ code. This study therefore evaluates same-file, same-class line-span agreement before using detector flags in the repository analysis.
