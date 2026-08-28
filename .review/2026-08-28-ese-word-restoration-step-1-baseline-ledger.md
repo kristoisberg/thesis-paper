@@ -39,10 +39,10 @@ The per-section planning counts are the included-file values from the canonical 
 | Background and Related Work | 789 | 599 | 1,388 |
 | Study Design | 2,287 | 1,388 | 3,675 |
 | Results | 1,224 | 550 | 1,774 |
-| Discussion | 777 | 320 | 1,097 |
+| Discussion | 777 | 340 | 1,117 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Current execution budget** |  | **2,925** |  |
+| **Current execution budget** |  | **2,945** |  |
 
 The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section already covers manifest-search coverage, the GitHub result cap, single-run uncertainty, routing, caching, missing metadata, and replay limits. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
 
@@ -150,9 +150,9 @@ Each row defines one candidate restored paragraph. The destination names an exis
 | R01 | Results RQ1, after `tab:detectionErrors` | `paper/chapters/08_analysis.tex:31-35,38-40,45-49,52-58,61,71,74-81` | Add concrete code forms and examples absent from the compact table. | 368 | Completed in Step 5. Preserved the class order and concrete source forms; identified reference changes as detector-informed; removed inferred reasoning, prompt causality, and the old figure. |
 | R02 | Results RQ2, after `tab:corpusFlags` | `paper/chapters/07_results.tex:390-400` | Add flags-per-repository and flags-per-flagged-repository context. | 87 | Completed in Step 5 from the SHA-256-verified frozen CSV. Omitted corpus cost, runtime, and old RQ numbering; used flags throughout. |
 | R03 | Results RQ3, after `tab:apiManifestations` | `paper/chapters/07_results.tex:408-410,442-444` | Add selected lower-frequency source-fragment categories. | 95 | Completed in Step 5 with current fragment labels and precedence; made no resolved-call or API-risk claim. |
-| D01 | Discussion, before "Relation to existing detectors" | `paper/chapters/07_results.tex:61,87,91,115,123,147,155-157` | Interpret the single-run configuration trade-off. | 160 | Describe values as originally reported. Zero-Shot was simpler and lower-cost; it was faster than CoT and ToT-inspired prompting but 15 seconds slower than Few-Shot for Opus. Run-to-run uncertainty is unmeasured. |
-| D02 | Discussion, end of the implications subsection | `paper/chapters/08_analysis.tex:187,193,197,199` | Define bounded follow-up studies. | 160 | Frame each as an experiment. Cite named taxonomies and models. Cite LINQ or SQLAlchemy before naming them, or say "other query builders." Predict no accuracy, cost, or transfer gain. |
-|  |  |  | **Current execution budget** | **2,925** |  |
+| D01 | Discussion, before "Relation to existing detectors" | `paper/chapters/07_results.tex:61,87,91,115,123,147,155-157` | Interpret the single-run configuration trade-off. | 153 | Completed in Step 6. Preserved the reported Opus comparison sequence, cited the model and prompt designs, and retained the missing-output and single-run limits. |
+| D02 | Discussion, end of the implications subsection | `paper/chapters/08_analysis.tex:187,193,197,199` | Define bounded follow-up studies. | 187 | Completed in Step 6. Framed broader taxonomies, smaller or self-hosted models, other query builders, and preserved-flag analysis as experiments with specified measurements and no predicted gain. |
+|  |  |  | **Current execution budget** | **2,945** |  |
 
 ## Fixed exclusions
 
@@ -184,3 +184,5 @@ Step 3 completed rows B01--B05 at a combined 599 words, 61 below their provision
 Step 4 completed rows S01--S08 at a combined 1,388 words. Its 164-word remainder moved to R01, whose legacy source contains concrete class-error examples; the execution budget remains 2,939 words.
 
 Step 5 completed rows R01--R03 at a combined 550 words, 14 below their provisional allocation and within the step tolerance. The resulting execution budget is 2,925 words, still inside the overall target range.
+
+Step 6 completed rows D01--D02 at a combined 340 words, 20 above their provisional allocation and within the step tolerance. The resulting execution budget is 2,945 words. The main PDF reached 12,352 extracted words and 31 pages, so no further length restoration is planned.

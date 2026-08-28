@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1--5 were completed on 2026-08-28; see the corresponding reports in `.review/`.
+Status: in progress. Steps 1--6 were completed on 2026-08-28; see the corresponding reports in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -20,12 +20,12 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 | Background and Related Work | 789 | 599 | 1,388 |
 | Study Design | 2,287 | 1,388 | 3,675 |
 | Results | 1,224 | 550 | 1,774 |
-| Discussion | 777 | 320 | 1,097 |
+| Discussion | 777 | 340 | 1,117 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Net change** |  | **2,925** |  |
+| **Net change** |  | **2,945** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range. Step 3 finished 61 words below its provisional allocation, and Step 5 finished 14 words below its allocation. The current execution budget is therefore 2,925 words. This remains inside the 2,850--3,150 target range, so neither difference is a quota to fill elsewhere.
+The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range. Step 3 finished 61 words below its provisional allocation, Step 5 finished 14 words below, and Step 6 finished 20 words above. The current execution budget is therefore 2,945 words. This remains inside the 2,850--3,150 target range, so no difference is a quota to fill elsewhere.
 
 ## Source-reuse protocol
 
@@ -149,12 +149,16 @@ Do not restore classification-only results, the old RQ numbering, the IoU grid a
 
 Completion check: Results gained 550 words, within the planned 508--620 range. Every restored sentence reports an observation, comparison, or direct answer; inferred model reasoning and prompt causality remain excluded.
 
-### Step 6: Restore the Discussion's analytical chain (+320 words)
+### Step 6: Restore the Discussion's analytical chain (+340 words)
+
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-6-discussion.md`.
 
 Primary sources:
 
 - configuration-comparison paragraphs from `paper/chapters/07_results.tex:61,87,91,115,123,147,155-157`
 - selected future-work sentences from `paper/chapters/08_analysis.tex:187,193,197,199`
+
+Actual net additions were 153 words for D01 and 187 words for D02.
 
 Actions:
 
@@ -163,7 +167,7 @@ Actions:
 
 Do not restore the work-process reflection, schedule narrative, model-release commentary, direct cross-study F1 ranking, claims about developer benefit, or unsupported claims that RAG, preprocessing, or a particular model will improve accuracy or cost.
 
-Completion check: Discussion gains 288--352 words; each interpretive paragraph begins from a current result or a cited difference in study design; none repeats the Results section paragraph for paragraph.
+Completion check: Discussion gained 340 words, within the planned 288--352 range. Each restored paragraph begins from a current result or a scoped design difference, and the new analysis does not repeat a Results paragraph. The main PDF now contains 12,352 extracted words across 31 pages, so subsequent steps are verification-only work rather than further expansion.
 
 ### Step 7: Confirm that Threats to Validity needs no expansion (+0 words)
 
