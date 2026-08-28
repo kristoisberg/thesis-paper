@@ -35,7 +35,7 @@ Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial
 \begin{table}[H]
     \centering
     \small
-    \caption{Occurrence-level agreement of one selected-detector run with the original single-annotator reference spans at intersection over union \num{0.50}. TP, FP, and FN are one-to-one event-matching counts; true negatives are undefined for this localisation task. The final row pools all classes.}
+    \caption{Occurrence-level agreement of one selected-detector run with the original single-annotator reference spans at intersection over union \num{0.50}. True positives (TP), false positives (FP), and false negatives (FN) are one-to-one event-matching counts; true negatives are undefined for this localisation task. The final row pools all classes.}
     \label{tab:toolDetections}
     \begin{tabular}{lrrrrrr}
         \hline
@@ -137,11 +137,11 @@ For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{2
 \begin{table}[H]
     \centering
     \small
-    \caption{Recurring post hoc manifestation categories among detector flags for two query antipatterns. Categories are precedence-ordered string or regular-expression matches over detector-returned code fragments. Shares use the class flag total as denominator; they do not measure API-specific risk.}
+    \caption{Recurring post hoc source-fragment categories among detector flags for two query antipatterns. Categories are precedence-ordered string or regular-expression matches over detector-returned code fragments. Shares use the class flag total as denominator; they do not measure API-specific risk.}
     \label{tab:apiManifestations}
     \begin{tabular}{p{2.2cm}p{5.3cm}rr}
         \hline
-        \textbf{Flag class} & \textbf{Manifestation category} & \textbf{Flags} & \textbf{Share (\%)} \\
+        \textbf{Flag class} & \textbf{Source-fragment category} & \textbf{Flags} & \textbf{Share (\%)} \\
         \hline
         \makecell[l]{Implicit\\Columns} & \texttt{selectFrom} fragment & 3417 & 46.9 \\
         & \texttt{select()} fragment & 1810 & 24.8 \\

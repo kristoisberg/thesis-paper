@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1--8 were completed on 2026-08-28; see the corresponding reports in `.review/`.
+Status: completed on 2026-08-28 with a documented TeXCount deviation. Steps 1--9 and their reports are in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -14,18 +14,18 @@ The current main article is 25 pages. TeXCount reports 6,985 words when text, he
 
 The implementation target is a **net addition of 3,000 TeXCount-visible manuscript words**, with an acceptable range of 2,850--3,150. That should produce approximately 9,985 TeXCount words and 12,300 PDF-extracted words, subject to LaTeX tokenisation. The expected page range is 30--32 pages, which reaches the lower end of the 30--40-page practical target.
 
-| Section | Baseline TeXCount | Planned net addition | Approximate target |
-|---|---:|---:|---:|
-| Introduction | 384 | 68 | 452 |
-| Background and Related Work | 789 | 556 | 1,345 |
-| Study Design | 2,287 | 1,336 | 3,623 |
-| Results | 1,224 | 559 | 1,783 |
-| Discussion | 777 | 267 | 1,044 |
-| Threats to Validity | 926 | 0 | 926 |
-| Conclusion | 163 | 0 | 163 |
-| **Net change** |  | **2,786** |  |
+| Section | Baseline TeXCount | Pre-reconciliation addition | Final addition | Final count |
+|---|---:|---:|---:|---:|
+| Introduction | 384 | 68 | 68 | 452 |
+| Background and Related Work | 789 | 599 | 556 | 1,345 |
+| Study Design | 2,287 | 1,388 | 1,336 | 3,623 |
+| Results | 1,224 | 550 | 565 | 1,789 |
+| Discussion | 777 | 340 | 267 | 1,044 |
+| Threats to Validity | 926 | 0 | 0 | 926 |
+| Conclusion | 163 | 0 | 0 | 163 |
+| **Net change** |  | **2,945** | **2,792** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. The reconciled net addition is 2,786 words, 64 below the plan's tolerance. No material was added merely to cross that threshold: the compiled paper already exceeds the practical targets at 12,393 layout-extracted words and 31 pages. Step 9 will record this deviation in the final audit.
+The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. Step 9 added six caption words to expand abbreviations and align terminology. The final net addition is 2,792 words, 58 below the plan's tolerance. The compiled paper exceeds the practical targets at 12,399 layout-extracted words and 31 pages, so the final audit accepted the shortfall instead of adding threshold-driven prose.
 
 ## Source-reuse protocol
 
@@ -200,6 +200,8 @@ Completion check: all 19 restored paragraph units remain mapped to the legacy so
 
 ### Step 9: Build, inspect, and measure the final article
 
+Status: completed on 2026-08-28 with the documented TeXCount deviation. See `2026-08-28-ese-word-restoration-step-9-final-audit.md`.
+
 Actions:
 
 - Run `make clean && make paper`.
@@ -210,7 +212,7 @@ Actions:
 - Compare section deltas against the budget table and explain any movement greater than 10%.
 - Produce a final report containing the reuse ledger, exact net count, final PDF-extracted count, page count, build status, and any deviations from this plan.
 
-Completion check: the net TeXCount increase is 2,850--3,150 words, the compiled main PDF contains at least 12,000 extracted words and at least 30 pages, and all Step 13 repository-local checks still pass. If the article reaches the word target before all planned passages are restored, stop; do not add the remaining passages as padding.
+Completion check: the compiled main PDF contains 12,399 layout-extracted words across 31 pages, and all Step 13 repository-local checks pass. The final 2,792-word TeXCount increase is 58 words below the planned tolerance. The final audit records this deviation because adding prose for the threshold would violate the source-reuse and no-padding rules.
 
 ## Material that remains excluded
 
