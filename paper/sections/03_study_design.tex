@@ -302,7 +302,7 @@ We found that all selected models supported structured outputs with adequate rel
 
 \subsection{Designing Prompts}\label{sec:prompts}
 
-We designed prompts based on the four prompting strategies listed in Section~\ref{sec:promptEngineering}. We limited our experiments to prompting techniques that could be fully executed in the span of one prompt and one response to manage the scope of the thesis.
+Prompting supplies task instructions and context to an LLM \nobreakcite{DBLP:journals/csur/LiuYFJHN23}. We compared four configurations that fit within one request and response. Zero-Shot Prompting supplied task instructions without examples, whereas Few-Shot Prompting added input-output examples \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. Our Chain-of-Thought configuration appended \texttt{Let's think step by step.} to elicit intermediate reasoning \nobreakcite{DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22}. The Tree-of-Thought-inspired configuration used a prompt-level role discussion to consider and assess several candidate analyses \nobreakcite{tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}.
 
 We iteratively developed and refined prompts for each technique, comparing the results against the training set produced in Section~\ref{sec:dataSplit}. We tested each iteration against all evaluated models until further changes did not improve the observed training-set metrics. To simplify the experimental setup and the interpretation of results, we only developed universal, model-agnostic prompts, without tuning them for individual models.
 
@@ -323,69 +323,13 @@ We also applied the following pre-processing steps to the input files:
 
 We designed our prompts to detect the seven qualifying antipatterns present in the training, validation, and tests sets created in Section~\ref{sec:dataSplit}. Designing them, we started with broad instructions, allowing models to use their judgement and reasoning to a wide extent. As we identified instances where the model misinterpreted certain antipatterns or detected them incorrectly, we moved towards more concrete and specific instructions to eliminate ambiguity and ensure the model consistently adhered to our intended criteria.
 
-Ultimately, it was necessary to define all detected antipatterns explicitly and, in certain cases, to specify the exact method calls and coding patterns to look out for. When models were provided only with the names of antipatterns, they tended to construct their own definitions, which were at times inconsistent with those proposed by \nobreaktextcite{karwin2023sql}. We attribute this behaviour to the limited availability of literature on SQL antipatterns within the training data of LLMs, resulting in them “hallucinating” the definitions.
+Ultimately, it was necessary to define all detected antipatterns explicitly and, in certain cases, to specify the exact method calls and coding patterns to look out for. When models were provided only with the names of antipatterns, they produced definitions that were at times inconsistent with those proposed by \nobreaktextcite{karwin2023sql}. We therefore included the operational definitions in the prompts.
 
 Furthermore, for the “ID Required”, “31 Flavors”, “Poor Man's Search Engine”, and “Implicit Columns” antipatterns, it was necessary to provide explicit localisation rules to ensure consistent localisation behaviour.
 
 For the Few-Shot Prompting technique, which required concrete examples, we acquired the examples from the training set produced in Section~\ref{sec:dataSplit} by default. For antipattern variants and edge cases, which we were unable to find representative examples for from the training set, we created the examples synthetically.
 
-We ultimately settled on the instructions detailed in Figures~\ref{fig:ddlInstructions} and~\ref{fig:dmlDqlInstructions} for detecting antipatterns in generated and non-generated source files, respectively, consistent between all prompting strategies listed in Section~\ref{sec:promptEngineering}. The complete prompts for all prompting strategies, containing sample input files, are shown in the Online Resources.
-
-\bigskip % Add space before the figure
-\begingroup % Start a local scope
-\captionsetup{type=figure}
-\phantomsection
-\captionlistentry[figure]{Detection instructions used in DDL prompts.}\label{fig:ddlInstructions}
-\begin{lstlisting}[
-    frame=none,
-    basicstyle=\small,
-    breaklines=true,
-    breakatwhitespace=false,
-    breakindent=0pt
-]
-- ID Required: Never identify this issue in classes representing views, as views cannot contain primary keys. If the class represents a table, always detect the antipattern, if the name of the primary key is just "id" (case-insensitive). Also detect the issue if a synthetic primary key column exists, even though another unique constraint exists, which is suitable as a primary key (the constraint is on columns, which are virtually immutable by nature), and which does not complicate foreign keys referencing the table too much. Only include the lines of the primary key column definition in the line range, do not include comments or anything else.
-- Keyless Entry: A column, which refers to another table, is missing its foreign key. Never identify this issue in classes representing views, as views cannot contain foreign keys. Only report this issue if the "Keys" class provided at the end contains a primary key that this is appropriate for this column to refer to.
-- Rounding Errors: Storing fixed-precision values in floating-point type columns, such as FLOAT and REAL, rather than using fixed-precision types like DECIMAL and NUMERIC.
-- 31 Flavors: Specifying allowed values in the column definition, i.e. with a CHECK constraint or an ENUM type, rather than using a lookup table. Only include the lines of the column definition in the line range, do not include comments or anything else. Do not report the issue if the CHECK constraint is used to check the value for emptiness or against a range of values (including greater/lesser than comparisons).
-- Fear of the Unknown: A special default value, such as an empty string, is used to mark a missing value, rather than NULL, and the special value does not hold a semantic meaning. A column, which can never be NULL in practice (e.g. it has a default value), is marked as NULLABLE.
-
-If the file does not contain any antipatterns, leave the list of occurrences empty.
-\end{lstlisting}
-
-\nopagebreak
-\begin{minipage}{\linewidth}
-    \captionof*{figure}{Figure \thefigure. Detection instructions used in DDL prompts.}
-\end{minipage}
-\par % Apply the paragraph settings *inside* the group
-\endgroup % Revert to global normalsize and paragraph spacing
-
-\bigskip % TODO: verify before submitting
-\bigskip % these are here to make sure the caption for figure 8 is not on a new page alone
-
-\begingroup % Start a local scope
-\captionsetup{type=figure}
-\phantomsection
-\captionlistentry[figure]{Detection instructions used in DML/DQL prompts.}\label{fig:dmlDqlInstructions}
-\begin{lstlisting}[
-    frame=none,
-    basicstyle=\small,
-    breaklines=true,
-    breakatwhitespace=true,
-    breakindent=0pt
-]
-- Poor Man's Search Engine: Usage of LIKE, ILIKE or regular expressions to perform full-text search. Report the issue if it isn't obvious from the method input parameters, whether the patterns contain wildcards used for full-text search. Do not report the issue if LIKE, ILIKE or regex is used for prefix search. Only include the line(s) where the full-text search condition is created in the line range.
-- Implicit Columns: A query fetching all columns from a database table. In addition to obvious violations, report cases where jOOQ fetches all columns of a table into records or generated DAOs (located in a package ending with `tables.daos`). Do not report this issue if it occurs within a `fetchCount` or `fetchExists` call. Only include the line(s) where the blind projection is selected in the line range, do not include the rest of the query.
-- Fear of the Unknown: Query logic uses a NULLABLE column in a way that produces incorrect results with NULL. Do not report issues that arise from insufficient null-handling in Java code. Also do not report the issue if you're unsure if the column is NULLABLE.
-
-Only identify problems in code, which interacts directly with the jOOQ DSL or generated DAOs (located in a package ending with `tables.daos`). Do not identify problems in code, which interacts with higher level abstractions. In case of multiple consecutive issues, report them separately, even if they are on consecutive lines. If the file does not contain any antipatterns, leave the list of occurrences empty.
-\end{lstlisting}
-
-\nopagebreak
-\begin{minipage}{\linewidth}
-    \captionof*{figure}{Figure \thefigure. Detection instructions used in DML/DQL prompts.}
-\end{minipage}
-\par % Apply the paragraph settings *inside* the group
-\endgroup % Revert to global normalsize and paragraph spacing
+The complete instructions, localisation rules, and sample inputs for all four prompting configurations are provided in the Online Resources.
 
 \subsection{Quantitative Analysis}\label{sec:experimentsQuantitative}
 
@@ -807,7 +751,7 @@ Artificial intelligence-based tools were used as supportive aids in the research
 
 \begin{itemize}
     \item \textbf{Google Gemini 3.1 Pro Preview:} \nobreakcite{gemini31ProPreview} Abstracts, List of abbreviations and terms, Thesis Outline, Reflection on Work Process, Limitations, Future Work, Summary.
-    \item \textbf{Google NotebookLM:} \nobreakcite{notebookLm2026homepage} Logical Database Design Antipatterns (Section~\ref{sec:logicalAntipatterns}), Physical Database Design Antipatterns (Section~\ref{sec:physicalAntipatterns}), Query Antipatterns (Section~\ref{sec:queryAntipatterns}), Application Development Antipatterns (Section~\ref{sec:developmentAntipatterns}).
+    \item \textbf{Google NotebookLM:} \nobreakcite{notebookLm2026homepage} The full SQL-antipattern catalogue provided with the online replication materials.
     \item \textbf{OpenAI Codex:} \nobreakcite{openAiCodex2026GitHub} Development of Antipattern Detector (introductory paragraphs), Workflow (Section~\ref{sec:workflow}).
 \end{itemize}
 
