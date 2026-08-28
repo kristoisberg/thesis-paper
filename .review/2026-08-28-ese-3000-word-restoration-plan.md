@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1 and 2 were completed on 2026-08-28; see `2026-08-28-ese-word-restoration-step-1-baseline-ledger.md` and `2026-08-28-ese-word-restoration-step-2-introduction.md`.
+Status: in progress. Steps 1--3 were completed on 2026-08-28; see the corresponding reports in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -17,15 +17,15 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 | Section | Baseline TeXCount | Planned net addition | Approximate target |
 |---|---:|---:|---:|
 | Introduction | 384 | 68 | 452 |
-| Background and Related Work | 789 | 660 | 1,449 |
+| Background and Related Work | 789 | 599 | 1,388 |
 | Study Design | 2,287 | 1,552 | 3,839 |
 | Results | 1,224 | 400 | 1,624 |
 | Discussion | 777 | 320 | 1,097 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Net change** |  | **3,000** |  |
+| **Net change** |  | **2,939** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range.
+The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range. Step 3 finished 61 words below its provisional allocation, leaving a current execution budget of 2,939 words. This remains inside the 2,850--3,150 target range, so the difference was not reassigned as a quota elsewhere.
 
 ## Source-reuse protocol
 
@@ -73,7 +73,9 @@ Do not restore the old five RQs, thesis outline, broad Design Science Research f
 
 Completion check: the Introduction gained 68 words and reaches the measurement problem by its third conceptual move. The original 180-word allocation could not be supported without duplicating existing motivation or adding connective filler, so the remaining 112 words were reassigned to Step 4's source-rich repository-mining material.
 
-### Step 3: Restore the related-work argument (+660 words)
+### Step 3: Restore the related-work argument (+599 words)
+
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-3-background.md`.
 
 Primary sources:
 
@@ -91,7 +93,7 @@ Actions:
 
 Do not restore the full 19-class taxonomy, prompt-engineering tutorial, promotional jOOQ adoption claims, CodeRabbit claims, the statement that only two SQL tools exist, or numerical cross-study rankings. Use "coverage has not been established" rather than "incapable."
 
-Completion check: Background gains 594--726 words; its final paragraph still identifies the output-unit gap; every restored tool description has a citation and is used by the synthesis.
+Completion check: Background gained 599 words, within the planned 594--726 range. Its final paragraph still identifies the output-unit gap; every restored tool description has a citation and is used by the synthesis.
 
 ### Step 4: Restore procedural depth in Study Design (+1,552 words)
 

@@ -36,13 +36,13 @@ The per-section planning counts are the included-file values from the canonical 
 | Section | Included-file TeXCount | Planned net addition | Target |
 |---|---:|---:|---:|
 | Introduction | 384 | 68 | 452 |
-| Background and Related Work | 789 | 660 | 1,449 |
+| Background and Related Work | 789 | 599 | 1,388 |
 | Study Design | 2,287 | 1,552 | 3,839 |
 | Results | 1,224 | 400 | 1,624 |
 | Discussion | 777 | 320 | 1,097 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Net addition** |  | **3,000** |  |
+| **Current execution budget** |  | **2,939** |  |
 
 The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section already covers manifest-search coverage, the GitHub result cap, single-run uncertainty, routing, caching, missing metadata, and replay limits. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
 
@@ -134,11 +134,11 @@ Each row defines one candidate restored paragraph. The destination names an exis
 | ID | Destination in current article | Legacy source | Paragraph job | Budget | Required factual adaptation |
 |---|---|---|---|---:|---|
 | I01 | Introduction, after the opening paragraph | `paper/chapters/01_introduction.tex:5-6`; `paper/chapters/02_background.tex:25-27` | Add attributed evidence about persistence and remediation priority. | 68 | Completed in Step 2. Omitted duplicated prevalence and impact figures, developer-education claims, tooling causality, and a redundant representation bridge; preserved the current move into jOOQ. |
-| B01 | Background, after the opening definition | `paper/chapters/02_background.tex:5,7` | Distinguish antipatterns from code smells. | 90 | Do not repeat the operational definition or restore unused history. Keep each citation attached to its claim. |
-| B02 | Background, before the operational-definition table | `paper/chapters/02_background.tex:11-13` | Explain the Implicit Columns maintenance mechanism. | 100 | Omit the existing 27%/29% result and the unevaluated `INSERT` form. |
-| B03 | Background, after the opening jOOQ paragraph | `paper/chapters/02_background.tex:85` | Explain DSL, code-generation, generated-schema, and JDBC roles. | 150 | Omit adoption, ORM-superiority, GitHub-star, and customer claims. Use current jOOQ citations. |
-| B04 | Background, expand the first detection-approaches paragraph | `paper/chapters/02_background.tex:104-112` | Restore the metric-, rule-, and learned-analysis progression. | 140 | Remove product inventories, extended smell examples, universal rigidity claims, and uncited real-world adoption statements. |
-| B05 | Background, expand the existing SQL-detector comparison | `paper/chapters/02_background.tex:135-145` | Compare representations, analysis methods, class scope, and output units. | 180 | Remove "only two," "incapable," and cross-tool performance rankings. Avoid four independent inventory paragraphs; the existing gap paragraph remains the synthesis. |
+| B01 | Background, after the opening definition | `paper/chapters/02_background.tex:5,7` | Distinguish antipatterns from code smells. | 78 | Completed in Step 3. Kept the cited definitions and removed unused history. |
+| B02 | Background, before the operational-definition table | `paper/chapters/02_background.tex:11-13` | Explain the Implicit Columns maintenance mechanism. | 82 | Completed in Step 3. Kept the existing 27%/29% result once and omitted the unevaluated `INSERT` form. |
+| B03 | Background, after the opening jOOQ paragraph | `paper/chapters/02_background.tex:85` | Explain DSL, code-generation, generated-schema, and JDBC roles. | 92 | Completed in Step 3. Omitted adoption, ORM-superiority, GitHub-star, customer, and IDE-support claims, and left the runtime consequence to the existing synthesis paragraph. |
+| B04 | Background, expand the first detection-approaches paragraph | `paper/chapters/02_background.tex:104-112` | Restore the metric-, rule-, and learned-analysis progression. | 228 | Completed in Step 3. Removed product inventories, extended smell examples, universal rigidity claims, and uncited adoption statements. |
+| B05 | Background, expand the existing SQL-detector comparison | `paper/chapters/02_background.tex:135-145` | Compare representations, analysis methods, class scope, and output units. | 119 | Completed in Step 3. Removed "only two," "incapable," database-catalogue inventory, and cross-tool rankings; retained the existing gap synthesis. |
 | S01 | Study Design, repository mining after the dated-search paragraph | `paper/chapters/03_dataset_creation.tex:11-15` | Explain the generated-class requirement and manifest-search rationale. | 292 | Includes the 112-word Step 2 remainder. Preserve target-population limits. Avoid claims of exhaustive coverage, measured import-search saturation, or universal build failure. |
 | S02 | Study Design, repository mining before the funnel figure | `paper/chapters/03_dataset_creation.tex:21-27` | Explain content filtering and human-reviewed duplicate removal. | 120 | Omit the 21% speculation, model praise, and named tutorial/course anecdotes kept online. Preserve the 645/603/602 boundaries. |
 | S03 | Study Design, sampling around the current count paragraph | `paper/chapters/03_dataset_creation.tex:64-71,89-113` | Define relevant files and explain the skewed size distribution and stratum sampling. | 230 | Avoid representativeness claims, the uncited Head-Tail Breaks name, restored equations, and corrected-distribution detours. Use current counts. |
@@ -152,7 +152,7 @@ Each row defines one candidate restored paragraph. The destination names an exis
 | R03 | Results RQ3, after `tab:apiManifestations` | `paper/chapters/07_results.tex:408-410,442-444` | Add selected lower-frequency source-fragment categories. | 90 | Use current frozen fragment labels and catch-all definitions. Do not imply resolved API calls or API risk. |
 | D01 | Discussion, before "Relation to existing detectors" | `paper/chapters/07_results.tex:61,87,91,115,123,147,155-157` | Interpret the single-run configuration trade-off. | 160 | Describe values as originally reported. Zero-Shot was simpler and lower-cost; it was faster than CoT and ToT-inspired prompting but 15 seconds slower than Few-Shot for Opus. Run-to-run uncertainty is unmeasured. |
 | D02 | Discussion, end of the implications subsection | `paper/chapters/08_analysis.tex:187,193,197,199` | Define bounded follow-up studies. | 160 | Frame each as an experiment. Cite named taxonomies and models. Cite LINQ or SQLAlchemy before naming them, or say "other query builders." Predict no accuracy, cost, or transfer gain. |
-|  |  |  | **Total planned net addition** | **3,000** |  |
+|  |  |  | **Current execution budget** | **2,939** |  |
 
 ## Fixed exclusions
 
@@ -174,7 +174,9 @@ The following sources are not candidates for later restoration:
 - Baseline reproduced: **yes**. TeXCount 6,985; PDF-extracted count 9,332; main PDF 25 pages.
 - Clean build verified: **yes**. Both PDFs built; final logs have no errors, unresolved references or citations, overfull boxes, or BibTeX warnings.
 - Article identity frozen: **yes**. Title, central claim, RQs, contribution boundary, numerical evidence, floats, and online-resource boundary are recorded above.
-- Paragraph-level source ledger complete: **yes**. Nineteen candidate paragraph units have legacy sources, stable destinations, argumentative jobs, budgets, and factual adaptations. Their budgets total 3,000 words.
+- Paragraph-level source ledger complete: **yes**. Nineteen candidate paragraph units have legacy sources, stable destinations, argumentative jobs, budgets, and factual adaptations. They totalled 3,000 words when Step 1 was completed; the executed rows and current budget are recorded above.
 - Manuscript changed: **no**.
 
-Step 2 completed row I01 at 68 words. Its unsupported 112-word remainder moved to S01 rather than being replaced with generated filler; the ledger still totals 3,000 words.
+Step 2 completed row I01 at 68 words. Its unsupported 112-word remainder moved to S01 rather than being replaced with generated filler; the ledger still totalled 3,000 words at that point.
+
+Step 3 completed rows B01--B05 at a combined 599 words, 61 below their provisional allocation and within the step's tolerance. The difference was not reassigned because the resulting 2,939-word execution budget remains inside the overall target range.
