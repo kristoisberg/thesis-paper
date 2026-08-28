@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: completed on 2026-08-28 with a documented TeXCount deviation. Steps 1--9 and their reports are in `.review/`.
+Status: completed on 2026-08-28. A post-audit restoration of the four floats removed in `07a81e5` brought the final TeXCount increase inside the planned tolerance. Steps 1--9 and the superseding float-restoration report are in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -14,18 +14,18 @@ The current main article is 25 pages. TeXCount reports 6,985 words when text, he
 
 The implementation target is a **net addition of 3,000 TeXCount-visible manuscript words**, with an acceptable range of 2,850--3,150. That should produce approximately 9,985 TeXCount words and 12,300 PDF-extracted words, subject to LaTeX tokenisation. The expected page range is 30--32 pages, which reaches the lower end of the 30--40-page practical target.
 
-| Section | Baseline TeXCount | Pre-reconciliation addition | Final addition | Final count |
-|---|---:|---:|---:|---:|
-| Introduction | 384 | 68 | 68 | 452 |
-| Background and Related Work | 789 | 599 | 556 | 1,345 |
-| Study Design | 2,287 | 1,388 | 1,336 | 3,623 |
-| Results | 1,224 | 550 | 565 | 1,789 |
-| Discussion | 777 | 340 | 267 | 1,044 |
-| Threats to Validity | 926 | 0 | 0 | 926 |
-| Conclusion | 163 | 0 | 0 | 163 |
-| **Net change** |  | **2,945** | **2,792** |  |
+| Section | Baseline TeXCount | Pre-reconciliation addition | Step 9 addition | Float-restoration delta | Current addition | Current count |
+|---|---:|---:|---:|---:|---:|---:|
+| Introduction | 384 | 68 | 68 | 0 | 68 | 452 |
+| Background and Related Work | 789 | 599 | 556 | +262 | 818 | 1,607 |
+| Study Design | 2,287 | 1,388 | 1,336 | +54 | 1,390 | 3,677 |
+| Results | 1,224 | 550 | 565 | +36 | 601 | 1,825 |
+| Discussion | 777 | 340 | 267 | -6 | 261 | 1,038 |
+| Threats to Validity | 926 | 0 | 0 | 0 | 0 | 926 |
+| Conclusion | 163 | 0 | 0 | 0 | 0 | 163 |
+| **Net change** |  | **2,945** | **2,792** | **+346** | **3,138** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. Step 9 added six caption words to expand abbreviations and align terminology. The final net addition is 2,792 words, 58 below the plan's tolerance. The compiled paper exceeds the practical targets at 12,399 layout-extracted words and 31 pages, so the final audit accepted the shortfall instead of adding threshold-driven prose.
+The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. Step 9 added six caption words to expand abbreviations and align terminology. The later user-directed restoration of four existing floats added 346 TeXCount words, including captions and adjacent interpretation, without adding a new analytical claim. The current 3,138-word increase is inside the 2,850--3,150 tolerance. The compiled paper contains 12,878 layout-extracted words across 32 pages.
 
 ## Source-reuse protocol
 
@@ -200,7 +200,7 @@ Completion check: all 19 restored paragraph units remain mapped to the legacy so
 
 ### Step 9: Build, inspect, and measure the final article
 
-Status: completed on 2026-08-28 with the documented TeXCount deviation. See `2026-08-28-ese-word-restoration-step-9-final-audit.md`.
+Status: completed on 2026-08-28 with the documented TeXCount deviation. This is the historical Step 9 state; `2026-08-28-ese-main-float-restoration.md` supersedes its final measurements.
 
 Actions:
 
@@ -212,7 +212,7 @@ Actions:
 - Compare section deltas against the budget table and explain any movement greater than 10%.
 - Produce a final report containing the reuse ledger, exact net count, final PDF-extracted count, page count, build status, and any deviations from this plan.
 
-Completion check: the compiled main PDF contains 12,399 layout-extracted words across 31 pages, and all Step 13 repository-local checks pass. The final 2,792-word TeXCount increase is 58 words below the planned tolerance. The final audit records this deviation because adding prose for the threshold would violate the source-reuse and no-padding rules.
+Completion check at Step 9: the compiled main PDF contained 12,399 layout-extracted words across 31 pages, and all Step 13 repository-local checks passed. The 2,792-word TeXCount increase was 58 words below the planned tolerance, so the audit recorded the deviation rather than adding threshold-driven prose. The subsequent four-float restoration raised the current values to 12,878 layout-extracted words, 32 pages, and a 3,138-word TeXCount increase.
 
 ## Material that remains excluded
 
@@ -224,6 +224,6 @@ Completion check: the compiled main PDF contains 12,399 layout-extracted words a
 - work-process reflection, AI-writing reflection, and personal/supervisor narrative;
 - unsupported novelty, superiority, causality, prevalence, API-risk, and developer-utility claims;
 - exact validation settings or outputs that the surviving artefacts cannot establish;
-- tables and appendices already assigned to Online Resource 1.
+- thesis-scale tables and appendices assigned only to Online Resource 1; the four compact diagnostics restored after Step 9 remain in both the article and the stand-alone supplement.
 
 These exclusions are structural and evidential safeguards, not a reserve to draw from if the target is missed.

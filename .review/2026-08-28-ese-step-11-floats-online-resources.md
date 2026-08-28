@@ -2,7 +2,11 @@
 
 Date: 2026-08-28
 
-Status: completed.
+Status: completed, then partially reversed at the user's request after the word-restoration audit. The four floats moved out in Step 11 are again present in the main article; the supplement retains stand-alone copies.
+
+## Post-Step-11 restoration
+
+The paired SQL/jOOQ representation, detection-representation comparison, project-split support table, and IoU-threshold grid were restored from the pre-`07a81e5` article structure. Their captions and adjacent references were reconciled with the current terminology and evidence boundary. The article now contains 11 labelled visual elements, including two `longtable` environments; TeXCount reports nine floats. The current clean build is 32 A4 pages, while Online Resource 1 remains seven pages and independently readable.
 
 ## Applied changes
 

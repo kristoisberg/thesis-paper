@@ -19,7 +19,7 @@ Status: partially completed. All repository-local manuscript checks pass. The pa
 
 ## Verification
 
-- `make clean && make paper` built `paper/main.pdf` at 25 A4 pages during Step 13 and `paper/ESM_1.pdf` at 7 A4 pages. The later word-restoration Step 9 clean build supersedes the main-paper count at 31 A4 pages; the supplement remains 7 pages.
+- `make clean && make paper` built `paper/main.pdf` at 25 A4 pages during Step 13 and `paper/ESM_1.pdf` at 7 A4 pages. Word-restoration Step 9 later superseded the main-paper count at 31 pages, and the subsequent four-float restoration supersedes it again at 32 pages; the supplement remains 7 pages.
 - Both final logs contain no overfull boxes, undefined references, undefined citations, or LaTeX errors. Both BibTeX logs report `warning$ -- 0`. Remaining underfull boxes are harmless table-cell and URL wrapping.
 - PDF inspection found no clipped content, orphan headings, isolated floats, or margin violations. PDF title, author, subject, and keyword metadata are populated in both files.
 - All three research questions retain matching wording between the Introduction and Results, have direct answers, and use the same final values in the Abstract and Conclusion.

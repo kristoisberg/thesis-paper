@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: completed with a documented TeXCount deviation.
+Status: completed with a documented TeXCount deviation. This report records the historical Step 9 state; `2026-08-28-ese-main-float-restoration.md` supersedes its final counts, hashes, page count, and float inventory.
 
 ## Starting state
 

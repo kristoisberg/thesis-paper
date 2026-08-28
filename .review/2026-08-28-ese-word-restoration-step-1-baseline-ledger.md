@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: completed. This step changed review metadata only. No manuscript, supplement, bibliography, analysis, or figure file changed.
+Status: completed. This step changed review metadata only. Its baseline remains historical; current-state counts and float boundaries below include the later user-directed four-float restoration.
 
 ## Baseline identity
 
@@ -33,20 +33,20 @@ The baseline was rebuilt with `make clean && make paper`. TeXCount ran in the sa
 
 The per-section planning counts are the included-file values from the canonical `texcount -inc -sum main.tex` run. Counting Study Design alone produces 2,299 because TeXCount parses 12 words differently without the inclusion context. Later deltas must use the included-file values.
 
-| Section | Included-file baseline | Final net addition | Final count |
+| Section | Included-file baseline | Current net addition | Current count |
 |---|---:|---:|---:|
 | Introduction | 384 | 68 | 452 |
-| Background and Related Work | 789 | 556 | 1,345 |
-| Study Design | 2,287 | 1,336 | 3,623 |
-| Results | 1,224 | 565 | 1,789 |
-| Discussion | 777 | 267 | 1,044 |
+| Background and Related Work | 789 | 818 | 1,607 |
+| Study Design | 2,287 | 1,390 | 3,677 |
+| Results | 1,224 | 601 | 1,825 |
+| Discussion | 777 | 261 | 1,038 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Current execution budget** |  | **2,792** |  |
+| **Current execution budget** |  | **3,138** |  |
 
 The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section covers manifest-search coverage, the GitHub result cap, single-run uncertainty, bounded gateway/provider change, missing metadata, and replay limits. It does not assert a caching effect because the evidence does not show that caching affected the single-pass runs. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
 
-The clean final logs contain zero LaTeX errors, undefined citations, undefined references, overfull boxes, or BibTeX warnings. The main log contains 19 underfull-box notices and the supplement contains one. These are the harmless table-cell, URL, and page-breaking notices accepted in Step 13. Both frozen analysis scripts also reran successfully. They reproduced the 536 predictions, 523 references, 460/76/63 primary totals, IoU grid, 10,000-replicate bootstrap ranges, 15,931 corpus flags, 601 flagged repositories, all class totals, and the 59.1% overall top-decile concentration.
+The current clean logs contain zero LaTeX errors, undefined citations, undefined references, overfull boxes, or BibTeX warnings. The main log contains 20 underfull-box notices and the supplement contains one. These are harmless table-cell, URL, and page-breaking notices. Both frozen analysis scripts also reran successfully. They reproduced the 536 predictions, 523 references, 460/76/63 primary totals, IoU grid, 10,000-replicate bootstrap ranges, 15,931 corpus flags, 601 flagged repositories, all class totals, and the 59.1% overall top-decile concentration.
 
 ## Protected article identity
 
@@ -97,7 +97,7 @@ Current manuscript values and the frozen analysis take precedence over legacy pr
 
 ## Protected float inventory
 
-The main paper contains one figure and six labelled tables. Restoration prose may introduce and interpret them, but it may not add, replace, or move their detailed counterparts back from Online Resource 1.
+At the Step 1 baseline, the main paper contained one figure and six labelled tables. The later user-directed reversal of Step 11 restored four visual elements from Online Resource 1, so the current article contains two figures and nine labelled tables.
 
 | Label | Role |
 |---|---|
@@ -108,12 +108,16 @@ The main paper contains one figure and six labelled tables. Restoration prose ma
 | `tab:detectionErrors` | Compact index of observed disagreement mechanisms. |
 | `tab:corpusFlags` | Corpus flag totals, repository coverage, and concentration. |
 | `tab:apiManifestations` | Post hoc source-fragment categories for two flag classes. |
+| `fig:implicitColumnsRepresentations` | Paired SQL and jOOQ Implicit Columns representations. |
+| `tab:detectionApproaches` | Detection representations and output units. |
+| `tab:trainingTestValidationSplit` | Occurrence and repository support by project-disjoint partition. |
+| `tab:iouSensitivity` | Complete line-span IoU-threshold sensitivity grid. |
 
-`tab:evaluatedAntipatterns` is a `longtable` that TeXCount does not classify as a float, which explains why TeXCount reports six floats although seven labelled visual elements appear above.
+`tab:evaluatedAntipatterns` and `tab:detectionApproaches` are `longtable` environments that TeXCount does not classify as floats. TeXCount therefore reports nine floats although the current article contains 11 labelled visual elements.
 
 ## Online-resource boundary
 
-Online Resource 1 remains the home of the following material:
+Online Resource 1 contains the following material. The paired representation listing, detection comparison, split-support table, and IoU grid are now stand-alone copies of material also present in the article:
 
 - the resource index and preservation warnings;
 - immutable snapshots, preserved outputs, model dates, settings, retries, dependencies, and script invocations;
@@ -154,7 +158,7 @@ Each row defines one candidate restored paragraph. The destination names an exis
 | D02 | Discussion, end of the implications subsection | `paper/chapters/08_analysis.tex:187,193,197,199` | Define bounded follow-up studies. | 187 | Completed in Step 6. Framed broader taxonomies, smaller or self-hosted models, other query builders, and preserved-flag analysis as experiments with specified measurements and no predicted gain. |
 |  |  |  | **Pre-reconciliation row total** | **2,945** |  |
 
-The row values record each restoration step's standalone delta before the cross-section reconciliation. Step 8 preserved every row's source mapping but edited boundaries shared with existing prose, so the final section deltas and 2,792-word current execution budget above supersede this pre-reconciliation sum.
+The row values record each restoration step's standalone delta before the cross-section reconciliation. Step 8 preserved every row's source mapping but edited boundaries shared with existing prose. The current section deltas and 3,138-word execution budget above also include the later four-float restoration.
 
 ## Fixed exclusions
 
@@ -194,3 +198,5 @@ Step 7 audited every restored consequence against the five Threats to Validity c
 Step 8 reconciled the 19 restored paragraph units in place. It removed 159 TeXCount words of duplicated definition, repeated table narration, thesis navigation, and mechanical summary, leaving a 2,786-word net restoration. Every retained unit remains attached to its named source row; the reconciliation added no freestanding paragraph and retained only short local citation, terminology, and transition corrections. The resulting paper contains 9,771 TeXCount words, 12,393 layout-extracted PDF words, and 31 pages.
 
 Step 9 expanded TP, FP, and FN in the occurrence-agreement caption and aligned the RQ3 caption and header with `source-fragment category`. The final paper contains 9,777 TeXCount words, a 2,792-word net restoration, 12,399 layout-extracted PDF words, and 31 pages. All clean-build, layout, consistency, frozen-analysis, and Step 13 repository-local checks pass. The net addition remains 58 words below the plan's lower tolerance; no threshold-driven prose was added.
+
+After Step 9, the four visual elements removed in `07a81e5` were restored to the main article at the user's request. The current paper contains 10,123 TeXCount words, a 3,138-word net increase over the baseline, 12,878 layout-extracted PDF words, and 32 pages. The clean build and float-page layout audit pass; `2026-08-28-ese-main-float-restoration.md` records the superseding evidence.

@@ -89,7 +89,26 @@ The remaining classes had fewer disagreements. The 31 Flavors false negative was
 
 The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this as an optimistic sensitivity analysis because the review could find disagreements visible to the detector while missing occurrences overlooked by both the annotator and detector.
 
-Micro F1 varied by \num{0.010} across the tested span boundaries, ranging from \num{0.863} to \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds. Online Resource~1 reports the complete threshold grid.
+Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} reports the complete threshold grid.
+
+\begin{table}[tbp]
+    \centering
+    \small
+    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union (IoU) threshold. True positives (TP), false positives (FP), and false negatives (FN) follow the same one-to-one matching rule for all \num{536} predictions and \num{523} original reference spans. Micro F1 ranges from \num{0.863} to \num{0.873}.}
+    \label{tab:iouSensitivity}
+    \begin{tabular}{rrrrrrr}
+        \hline
+        \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \hline
+        0.25 & 462 & 74 & 61 & 0.862 & 0.883 & 0.873 \\
+        0.50 & 460 & 76 & 63 & 0.858 & 0.880 & 0.869 \\
+        0.75 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
+        1.00 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Only Implicit Columns and Poor Man's Search Engine changed across these thresholds. The pooled score remained within the \num{0.863}--\num{0.873} range.
 
 A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.799} and \num{0.933}, micro recall between \num{0.817} and \num{0.913}, and micro F1 between \num{0.819} and \num{0.913}. These percentile ranges describe sensitivity to the composition of the selected test projects. They are not population confidence intervals and do not measure variation across detector runs.
 

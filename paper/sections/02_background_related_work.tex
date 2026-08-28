@@ -52,7 +52,24 @@ The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatte
 
 jOOQ provides a Java domain-specific language (DSL) for constructing SQL \nobreakcite{jooq2025sql}. Developers construct and execute SQL statements through Java calls. Code generation provides type safety \nobreakcite{jooq2025codegen}. The generator reverse-engineers an existing database schema into Java classes that model objects such as tables, columns, keys, and constraints \nobreakcite{jooq2025codegen}. DSL queries refer to these generated objects through typed Java identifiers. The analysed representation therefore includes query-construction calls and generated classes carrying schema evidence. jOOQ also permits plain SQL execution through its Java Database Connectivity (JDBC) wrapper \nobreakcite{jooq2025execution}. This route retains an SQL statement in Java source. The DSL route instead assembles a statement from Java calls and generated object references. The two routes expose different source representations to a detector even when they express equivalent database operations.
 
-In jOOQ, the blind projection described above can be expressed through chained \texttt{select()} and \texttt{from(TABLE)} calls. Online Resource~1 provides the paired SQL and jOOQ listings.
+In jOOQ, the blind projection described above can be expressed through chained \texttt{select(DSL.asterisk())} and \texttt{from(TABLE)} calls. Figure~\ref{fig:implicitColumnsRepresentations} shows the SQL and jOOQ source forms. Their syntax differs, but both leave the projection unspecified and select every column from the table \nobreakcite{jooq2025sql}.
+
+\begin{figure}[tbp]
+    \textbf{SQL}
+    \begin{lstlisting}[frame=none,basicstyle=\small\ttfamily,columns=fullflexible]
+SELECT * FROM employee WHERE name = 'Jack'
+    \end{lstlisting}
+
+    \textbf{jOOQ}
+    \begin{lstlisting}[frame=none,basicstyle=\small\ttfamily,columns=fullflexible]
+var employee = dslContext.select(DSL.asterisk())
+    .from(EMPLOYEE)
+    .where(EMPLOYEE.NAME.eq("Jack"))
+    .fetchOne();
+    \end{lstlisting}
+    \caption{Equivalent Implicit Columns representations in SQL text and a jOOQ Java domain-specific language (DSL) expression. The SQL \texttt{*} and jOOQ \texttt{DSL.asterisk()} forms both select every column from the \texttt{employee} table.}
+    \label{fig:implicitColumnsRepresentations}
+\end{figure}
 
 Because jOOQ produces the corresponding SQL at runtime \nobreakcite{jooq2025withgen}, source-level detection must interpret DSL calls and generated schema representations rather than rely only on recoverable SQL strings.
 
@@ -72,6 +89,37 @@ SQLInspect resolves SQL strings within Java procedures and passes the recovered 
 
 Other approaches begin from database-side representations. SQLCheck parses application query logs and applies static and dynamic analysis to individual queries and relationships among consecutive queries \nobreakcite{DBLP:conf/sigmod/DintyalaNA20}. Its findings concern executed queries. Coverage of source-level jOOQ DSL expressions and generated schema classes has not been established.
 
-Prior LLM studies analyse source directly. Their reported output units also differ from the present task. Code-quality studies report recognition or classification of problematic code \nobreakcite{blaauwendraad2025evaluating}. PL/SQL work reports smell detection over procedural SQL source \nobreakcite[p. 410]{de2025effectiveness}. The present detector receives Java DSL and generated-schema code and can return several class-labelled line spans from one file. Online Resource~1 provides the detailed representation and output-unit comparison.
+Prior LLM studies analyse source directly. Their reported output units also differ from the present task. Code-quality studies report recognition or classification of problematic code \nobreakcite{blaauwendraad2025evaluating}. PL/SQL work reports smell detection over procedural SQL source \nobreakcite[p. 410]{de2025effectiveness}. The present detector receives Java DSL and generated-schema code and can return several class-labelled line spans from one file. Table~\ref{tab:detectionApproaches} compares these representations and output units. Prior approaches report recovered-SQL, query-log, or matched-node warnings; this study reports multiple class-labelled spans from Java DSL and generated-schema code.
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+    \caption{Detection representations and output units relevant to jOOQ source analysis. API denotes application programming interface, AST denotes abstract syntax tree, and LLM denotes large language model. The comparison distinguishes statement warnings and source-unit classifications from the multiple class-labelled source spans evaluated in this study.}
+    \label{tab:detectionApproaches}\\
+    \hline
+    \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
+    \endfirsthead
+    \caption[]{Detection representations and output units relevant to jOOQ source analysis (continued).}\\
+    \hline
+    \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
+    \endhead
+    \hline
+    \endfoot
+    \hline
+    \endlastfoot
+    SQL extraction and parsing &
+    SQL recovered from host-language source or query logs; parsed-statement warnings \nobreakcite{sharma2018smelly,nagy2017static,DBLP:conf/sigmod/DintyalaNA20}. &
+    Does not directly localise source occurrences represented by jOOQ DSL calls or generated schema classes. \\
+
+    API or AST rules &
+    Host-language syntax and API patterns or AST nodes; warnings attached to matched source nodes \nobreakcite{DBLP:journals/tse/MohaGDM10}. &
+    Can localise encoded patterns but requires explicit coverage of jOOQ idioms and cross-file relationships. \\
+
+    LLM source analysis &
+    Source code and supplied context; prior work reports smell recognition or classification \nobreakcite{de2025effectiveness,blaauwendraad2025evaluating}. &
+    Can return class-labelled spans, whose agreement and class-specific errors require empirical evaluation. \\
+
+    This study &
+    Java DSL and generated schema code; multiple class-labelled source-line spans. &
+    Evaluates the occurrence output later counted as detector flags across repositories. \\
+\end{longtable}
 
 A file may contain several occurrences of the same antipattern. File-level classification establishes only whether a class is present; it does not establish how many distinct occurrences the detector recovers or whether their source spans agree with the reference annotations. The cited approaches do not report occurrence-level localisation for the seven retained classes in jOOQ code. This study therefore evaluates same-file, same-class line-span agreement before using detector flags in the repository analysis.

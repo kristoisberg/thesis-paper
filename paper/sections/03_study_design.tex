@@ -67,7 +67,29 @@ Whole-project assignment was required because files in one repository can share 
 
 Class and split selection used the complete \num{61}-repository annotation set. Before searching for a split, we retained classes with at least \num{25} occurrences in at least three projects. Twelve of the 19 annotated classes failed this support rule, leaving seven classes for subsequent experiments. The threshold removed classes whose few events or projects could not be distributed meaningfully across three project-disjoint partitions.
 
-We then evaluated all \num{1000000} integer seeds from \num{0} through \num{999999}. Each seed assigned \num{21}, \num{20}, and \num{20} complete projects to the three sets. For each candidate, the objective measured variation in each class's occurrence counts across the splits and summed the squared values over the seven classes. Seed \num{767573} achieved the lowest score, \num{0.52}. This procedure used annotation labels to choose both the retained classes and the split. It balanced occurrence counts under the stated objective, although project support remained sparse for several classes. Online Resource~1 reports occurrence and repository support by class and split.
+We then evaluated all \num{1000000} integer seeds from \num{0} through \num{999999}. Each seed assigned \num{21}, \num{20}, and \num{20} complete projects to the three sets. For each candidate, the objective measured variation in each class's occurrence counts across the splits and summed the squared values over the seven classes. Seed \num{767573} achieved the lowest score, \num{0.52}. This procedure used annotation labels to choose both the retained classes and the split. Table~\ref{tab:trainingTestValidationSplit} reports occurrence and repository support for the resulting partitions.
+
+\begin{table}[tbp]
+    \centering
+    \small
+    \caption{Occurrence and repository support in the project-disjoint split. The partitions contain \num{21} training, \num{20} validation, and \num{20} test repositories. Partition cells give occurrences followed by repositories in parentheses; Total gives occurrences across all partitions. Several classes occur in only one to five projects per partition.}
+    \label{tab:trainingTestValidationSplit}
+    \begin{tabular}{lrrrr}
+        \hline
+        \textbf{Class} & \textbf{Total} & \textbf{Training} & \textbf{Validation} & \textbf{Test} \\
+        \hline
+        Implicit Columns & 795 & 175 (20) & 350 (19) & 270 (20) \\
+        ID Required & 259 & 55 (18) & 99 (15) & 105 (16) \\
+        Keyless Entry & 122 & 30 (7) & 56 (1) & 36 (3) \\
+        Fear of the Unknown & 95 & 23 (6) & 36 (8) & 36 (5) \\
+        31 Flavors & 71 & 17 (6) & 15 (4) & 39 (1) \\
+        Poor Man's Search Engine & 55 & 19 (5) & 15 (4) & 21 (3) \\
+        Rounding Errors & 39 & 13 (4) & 10 (1) & 16 (2) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The split balanced occurrence counts under the stated objective, while several partition cells contain only one to five projects. Project-level support therefore remained sparse for several classes.
 
 The support rule and seed search were data-dependent design choices. Holding out whole projects still prevents direct file-level overlap between development and test data, which is the separation required for the detector evaluation.
 
