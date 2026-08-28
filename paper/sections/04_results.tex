@@ -80,7 +80,7 @@ The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurr
 
 The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this as an optimistic sensitivity analysis because the review could find disagreements visible to the detector while missing occurrences overlooked by both the annotator and detector.
 
-The aggregate result is insensitive to the tested span boundary. Table~\ref{tab:iouSensitivity} bounds micro F1 between \num{0.863} and \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds.
+Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} bounds it between \num{0.863} and \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds.
 
 \begin{table}[t]
     \centering

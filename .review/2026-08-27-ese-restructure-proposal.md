@@ -234,6 +234,8 @@ Completion check: every result answers one RQ or is explicitly labelled configur
 
 ### Step 9: Write the discussion and threats to validity
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-step-9-discussion-validity.md`.
+
 Actions:
 
 - Organise the discussion around what occurrence-level validation adds, how the findings relate to existing detectors, and what the observed API patterns imply.
