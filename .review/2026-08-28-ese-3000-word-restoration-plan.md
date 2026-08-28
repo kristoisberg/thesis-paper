@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1--4 were completed on 2026-08-28; see the corresponding reports in `.review/`.
+Status: in progress. Steps 1--5 were completed on 2026-08-28; see the corresponding reports in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -19,13 +19,13 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 | Introduction | 384 | 68 | 452 |
 | Background and Related Work | 789 | 599 | 1,388 |
 | Study Design | 2,287 | 1,388 | 3,675 |
-| Results | 1,224 | 564 | 1,788 |
+| Results | 1,224 | 550 | 1,774 |
 | Discussion | 777 | 320 | 1,097 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Net change** |  | **2,939** |  |
+| **Net change** |  | **2,925** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range. Step 3 finished 61 words below its provisional allocation, leaving a current execution budget of 2,939 words. This remains inside the 2,850--3,150 target range, so the difference was not reassigned as a quota elsewhere.
+The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range. Step 3 finished 61 words below its provisional allocation, and Step 5 finished 14 words below its allocation. The current execution budget is therefore 2,925 words. This remains inside the 2,850--3,150 target range, so neither difference is a quota to fill elsewhere.
 
 ## Source-reuse protocol
 
@@ -126,14 +126,16 @@ Do not restore implementation architecture, CLI options, complete prompts, the c
 
 Completion check: Study Design gained 1,388 words, nine below the provisional tolerance. Padding and disallowed legacy detail remained excluded. The unused 164-word allocation moved to R01 in Step 5, whose legacy class-error narratives contain concrete source examples.
 
-### Step 5: Restore concrete result detail (+564 words)
+### Step 5: Restore concrete result detail (+550 words)
+
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-5-results.md`.
 
 Primary sources:
 
 - `paper/chapters/08_analysis.tex:31-35,38-40,45-49,52-58,61,71,74-81`
 - `paper/chapters/07_results.tex:390-400,408-410,442-444`
 
-Current sub-budgets are 384 words for R01 and 90 words each for R02 and R03. R01 includes the 164-word remainder from Step 4.
+Actual net additions were 368 words for R01, 87 words for R02, and 95 words for R03. R01 used the source-rich allocation carried forward from Step 4 without padding to its full provisional budget.
 
 Actions:
 
@@ -145,7 +147,7 @@ Actions:
 
 Do not restore classification-only results, the old RQ numbering, the IoU grid already assigned online, the large per-class tables, or unqualified occurrence/prevalence language.
 
-Completion check: Results gains 508--620 words; every sentence reports an observation, comparison, or direct answer; no discussion-level causal explanation appears in Results.
+Completion check: Results gained 550 words, within the planned 508--620 range. Every restored sentence reports an observation, comparison, or direct answer; inferred model reasoning and prompt causality remain excluded.
 
 ### Step 6: Restore the Discussion's analytical chain (+320 words)
 

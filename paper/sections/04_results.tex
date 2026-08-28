@@ -77,6 +77,14 @@ The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurr
     \end{tabular}
 \end{table}
 
+For Implicit Columns, \num{14} of the \num{17} false negatives marked data-modification statements that returned all columns. The statements used \texttt{returning()} or \texttt{returningResult()}. One false positive and one false negative differed from the reference only in localisation: the reference covered a complete multi-line \texttt{SELECT} clause, whereas the detector returned the line containing the relevant expression. Detector-informed review of the remaining disagreements found an incorrect source file, an off-by-one line range, and a missing reference occurrence.
+
+The ID Required false negatives included six primary-key columns named \texttt{id} and one opportunity to use an existing alternative identifier instead of a synthetic key. Its unsuitable natural-key proposal concerned a URL-valued field whose use would have produced large and complex foreign keys. Detector-informed review of the other disagreements found five incorrect line ranges, four invalid reference occurrences, and seven additions to the reference. For Keyless Entry, \num{15} of \num{30} false positives marked columns in audit-log tables. Another linked \texttt{island\_id} to an \texttt{island.id} primary key despite the columns having different data types. The detector-informed review retained nine disputed username-column flags because the referenced username was neither a primary nor a unique key.
+
+The Fear of the Unknown false negatives divided into \num{10} columns that represented missing values through non-null sentinel defaults, such as an empty string or the Unix epoch, and seven columns with defaults for values treated as naturally non-null, such as Boolean state values. One false positive proposed a query refactoring without identifying an occurrence. Detector-informed review added the other \num{23} predictions to the revised reference: six used defaults for missing values and \num{17} were nullable columns whose represented values were treated as naturally non-null.
+
+The remaining classes had fewer disagreements. The 31 Flavors false negative was a \texttt{SMALLINT} range check whose values represented authorisation methods, whereas its false positive was a \texttt{VARCHAR} \texttt{status} column with no schema evidence of a fixed value set. Poor Man's Search Engine included seven false negatives and two false positives where consecutive expressions were grouped into one span. Its other disagreements were two wildcard-free \texttt{LIKE} expressions and one \texttt{containsIgnoreCase} condition stored in an intermediate collection before use in a query. All three Rounding Errors false negatives were \texttt{DOUBLE} casino-game coefficients used to calculate monetary winnings.
+
 The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this as an optimistic sensitivity analysis because the review could find disagreements visible to the detector while missing occurrences overlooked by both the annotator and detector.
 
 Micro F1 varied by \num{0.010} across the tested span boundaries, ranging from \num{0.863} to \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds. Online Resource~1 reports the complete threshold grid.
@@ -111,6 +119,8 @@ The flags were concentrated within repositories. The highest-count \qty{10}{\per
         \hline
     \end{tabular}
 \end{table}
+
+Across all \num{602} repositories, the aggregate output corresponds to \num{26.46} flags per repository and \num{26.51} per flagged repository when restricted to the \num{601} repositories with at least one flag. Implicit Columns averaged \num{12.11} flags per repository and \num{13.62} per flagged repository; ID Required averaged \num{5.98} and \num{6.88}, respectively. The larger denominator contrast appears for less widely distributed classes: Keyless Entry averaged \num{3.58} flags over the full corpus and \num{10.77} over its \num{200} flagged repositories. These averages use repositories as units and do not adjust for repository size.
 
 These counts do not estimate true antipattern prevalence. The corpus has no independent reference annotation, class-specific error correction, repository-size adjustment, or API-exposure denominator. The result therefore describes where this selected detector placed flags within the identified corpus.
 
@@ -147,6 +157,8 @@ For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{2
         \hline
     \end{tabular}
 \end{table}
+
+The Implicit Columns row for other categorised patterns combines generated DAO methods with \num{163} flags, \texttt{fetch(TABLE, ...)} with \num{151}, plain SQL wildcard fragments with \num{137}, \texttt{fetchOne(TABLE, ...)} with \num{130}, and \texttt{select(TABLE).from(TABLE)} with \num{107}. Together, these lower-frequency categories contain \num{688} flags, or \qty{9.4}{\percent} of the class total. For Poor Man's Search Engine, the corresponding row consists of \num{17} plain SQL \texttt{LIKE} fragments and \num{12} \texttt{likeRegex} fragments, totalling \num{29} flags or \qty{5.0}{\percent}. Each flag entered the first matching category in the precedence order, so these labels describe source fragments rather than resolved call targets.
 
 These categories describe recurring manifestations among flags. Without counts of all uses of each API, they cannot show whether one API is more likely than another to be associated with an antipattern.
 
