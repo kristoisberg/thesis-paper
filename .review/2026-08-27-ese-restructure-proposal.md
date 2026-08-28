@@ -206,6 +206,8 @@ Completion check: every background subsection supports a method choice or later 
 
 ### Step 7: Consolidate the study design
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-step-7-study-design.md`.
+
 Actions:
 
 - Order the preserved methods paragraphs by the empirical pipeline.
