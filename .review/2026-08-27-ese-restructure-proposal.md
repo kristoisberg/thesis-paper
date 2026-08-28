@@ -248,6 +248,8 @@ Completion check: every interpretation points to a reported result, and every ma
 
 ### Step 10: Rewrite only the framing and connective prose
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-step-10-framing.md`.
+
 Actions:
 
 - Rewrite the introduction around the problem, gap, central claim, RQs, and contributions.

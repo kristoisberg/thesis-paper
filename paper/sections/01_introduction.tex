@@ -1,41 +1,23 @@
 \section{Introduction}\label{sec:introduction}
 
-% Source: chapters/01_introduction.tex, opening and Research Objectives.
-SQL (Structured Query Language) is one of the most popular programming languages in the world \nobreakcite{stackOverflowSurvey}, with the four most popular database management systems as of March 2026 all using SQL as their main language of interaction \nobreakcite{stackOverflowSurvey,dbEnginesRanking}. At the same time, most developers using SQL have not been taught the best and worst practices of the language. They “are self-taught in SQL, learning it out of self-defence when they find themselves working on a project that requires it” \nobreakcite[p. xvi]{karwin2023sql}.
+SQL antipatterns are recurring database-design or query-construction choices that can impair performance, maintainability, portability, or data integrity \citetext{\citealp[p. 1]{karwin2023sql}; \citealp[p. 4]{alshemaimri2021survey}}. Prior studies have reported them in open-source and industrial systems \nobreakcite{muse2020prevalence,sharma2018smelly}, and controlled measurements have shown costs for particular antipatterns \citetext{\citealp{lyu2019quantifying}; \citealp[pp. 2334--2335]{DBLP:conf/sigmod/DintyalaNA20}}. Detection can expose these choices during development, but the analysed source representation determines what a detector can observe.
 
-This disparity—wide adoption with many users, but sparse systematic knowledge among them—results in a situation where the same mistakes are being repeated across the industry. When developers encounter problems with their database designs and queries, they often independently create solutions with similar flaws. These recurring missteps are known as SQL antipatterns—“the most frequent missteps software developers naively make while using SQL” \nobreakcite[p. 1]{karwin2023sql}.
+jOOQ embeds SQL construction in Java through a fluent domain-specific language and generated schema classes \nobreakcite{jooq2025sql,jooq2025codegen}. A query may therefore be distributed across Java expressions and supporting schema code rather than available as a complete SQL statement. Existing SQL-antipattern detectors analyse executed statements, recover SQL text from host-language source, or classify source units \nobreakcite{sharma2018smelly,nagy2017static,nagy2018sqlinspect,DBLP:conf/sigmod/DintyalaNA20,de2025effectiveness}. These approaches do not establish how closely a detector can localise the same class-labelled jOOQ occurrences as a reference process. That evidence is needed before repository-scale detector counts can be interpreted at the occurrence level.
 
-Previous research has shown that SQL antipatterns are prevalent among both industrial and open-source systems \citetext{\citealp{muse2020prevalence}; \citealp[pp. 59–60]{sharma2018smelly}}, and they have quantifiable negative effects on the affected systems \citetext{\citealp{lyu2019quantifying}; \citealp[pp. 2334–2335]{DBLP:conf/sigmod/DintyalaNA20}}.
-Research has also shown that antipattern occurrences tend to remain unfixed for long periods of time and are likely never to be fixed at all \nobreakcite{muse2020prevalence}. The researchers suggested that this may be due either to developers’ lack of awareness of SQL antipatterns and their disadvantages, or to the comparatively low priority assigned to fixing such antipatterns \nobreakcite{muse2020prevalence}.
+This study evaluates a large language model (LLM)-based detector as a measurement instrument for jOOQ occurrence localisation. Project-disjoint evaluation measures how closely one selected-detector run agrees with the original single-annotator reference for the class-labelled span outputs later counted as corpus flags. This evidence supports class-specific statements about detector flags; true antipattern prevalence and API-associated risk remain unmeasured.
 
-Both of these reasons could be attributed to the lack of SQL antipattern detection tools, which could bring attention to the occurrences of SQL antipatterns upon their introduction. As it stands right now, the tooling support for detecting SQL antipatterns in source code is scarce: while relevant tools exist for detecting antipatterns in plain SQL statements and some popular ORM (Object-Relational Mapping) frameworks, other frameworks and libraries lack support. One such library is jOOQ Object Oriented Querying (jOOQ)—a popular Java library for building and executing SQL queries in a type-safe manner.
-
-\subsection{Research Objectives}\label{sec:objectives}
-
-The primary goal of this research is the development of a static analysis tool based on LLMs (Large Language Models), capable of detecting SQL antipatterns in jOOQ-based database access code.
-
-We focus our research on LLM-based static analysis, rather than alternatives, because of their advanced understanding of code semantics and context, which is highly desirable in these circumstances. Some SQL antipatterns are highly context-specific, and detecting them in jOOQ-based code may require analysing multiple files and understanding the relationships between them. The jOOQ API (Application Programming Interface) is also extensive, and its dynamic nature allows SQL antipatterns to occur in many different forms, making comprehensive coverage through traditional static analysis very difficult.
-
-Our secondary goal is to describe the distribution of SQL-antipattern detector flags in jOOQ-based code, as well as the ways in which these flags manifest themselves. These results characterise the detector outputs in the identified repository corpus; they do not estimate the risk associated with individual jOOQ APIs.
-
-We aim to answer the following research questions:
+The study addresses three research questions:
 
 \begin{itemize}
     \item \textbf{RQ1:} What occurrence-level agreement does one run of the selected LLM-based detector achieve against the original single-annotator reference spans for seven operationalised SQL antipatterns in the 20-repository, project-disjoint test partition?
     \item \textbf{RQ2:} How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?
-    \item \textbf{RQ3:} Which recurring jOOQ API or source-code patterns are most frequently associated with detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?
+    \item \textbf{RQ3:} Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?
 \end{itemize}
 
-% Source: chapters/01_introduction.tex, Methodology and Contributions.
+The study makes three contributions:
 
-\subsection{Methodology and Contributions}
-
-This research follows the principles of Design Science Research \nobreakcite{hevner2004design}. The primary design artefact produced by this research is an LLM-based SQL antipattern detection tool for jOOQ.
-
-To establish this tool's foundation, we compared multiple state-of-the-art LLMs and prompt engineering strategies (Zero-Shot, Few-Shot, Chain-of-Thought, Tree-of-Thought) using both quantitative metrics and qualitative inspection.
-
-Additionally, we produced a human-labelled reference dataset of SQL antipattern occurrences in Java code, which uses jOOQ for database access, curated through repository mining and stratified random sampling. Moreover, we analysed the detector-output distribution in \num{602} identified Java software projects that use jOOQ.
-
-To the best of our knowledge, this study is the first to evaluate LLM-based antipattern detection as a localisation task rather than a pure classification task. Instead of merely determining whether a file contains an antipattern, the proposed tool identifies the precise boundaries of antipattern occurrences.
-
-
+\begin{itemize}
+    \item an occurrence-level reference dataset containing \num{1562} class-labelled spans across 19 operationalised SQL antipatterns from 61 sampled jOOQ repositories, with seven classes retained for detector analysis;
+    \item a project-disjoint evaluation of one selected LLM-detector run against original reference spans, including class-specific errors and sensitivity to span-matching thresholds and test-project composition; and
+    \item a bounded characterisation of detector flags in 602 identified repositories, including repository concentration and recurring source-fragment patterns for two flag classes.
+\end{itemize}

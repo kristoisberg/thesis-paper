@@ -134,7 +134,7 @@ These counts do not estimate true antipattern prevalence. The corpus has no inde
 
 \noindent\textbf{Answer to RQ2.} The detector produced \num{15931} flags in \num{601} of \num{602} repositories. Implicit Columns and ID Required accounted for \qty{68.3}{\percent} of all flags, and the highest-count \qty{10}{\percent} of flagged repositories contained \qty{59.1}{\percent} of the output.
 
-\subsection{RQ3: Which recurring jOOQ API or source-code patterns are most frequently associated with detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
+\subsection{RQ3: Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
 
 Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns among Implicit Columns and Poor Man's Search Engine flags. The two leading Implicit Columns patterns both selected all fields from a table. Together, they contained \num{5227} of \num{7289} flags, or \qty{71.7}{\percent}. Explicit field-array and asterisk patterns contributed a further \qty{12.9}{\percent}. The ordered categories covered \qty{94.1}{\percent} of the class flags.
 
@@ -170,4 +170,4 @@ For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{2
 
 These categories describe recurring manifestations among flags. Without counts of all uses of each API, they cannot show whether one API is more likely than another to be associated with an antipattern.
 
-\noindent\textbf{Answer to RQ3.} The two leading Implicit Columns patterns comprised \qty{71.7}{\percent} of that class. Poor Man's Search Engine flags most often matched \texttt{like(}, at \qty{46.8}{\percent}.
+\noindent\textbf{Answer to RQ3.} The two leading Implicit Columns patterns comprised \qty{71.7}{\percent} of Implicit Columns flags. Poor Man's Search Engine flags most often matched \texttt{like(}, at \qty{46.8}{\percent}.

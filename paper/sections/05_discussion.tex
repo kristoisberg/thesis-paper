@@ -10,6 +10,8 @@ The disagreement review in Table~\ref{tab:detectionErrors} identifies observable
 
 The detector-informed reference revision raised micro F1 to \num{0.932}, but the review targeted disagreements already exposed by the detector. The original-reference analysis remains primary, and the revision shows the direction of change under an optimistic detector-informed review. Independent annotation and adjudication would test reference correctness, while repeated detector runs would quantify stochastic stability. Together, those studies would help separate reference disagreement from variation across detector executions.
 
+Existing detectors use different representations and output units, which limits direct comparison.
+
 \subsection{Relation to existing detectors}
 
 The main distinction from prior SQL-antipattern detectors is the analysed representation and output unit, summarised in Table~\ref{tab:detectionApproaches}. DbDeo and SQLInspect recover SQL text from host-language source before applying parsing and rules \nobreakcite{sharma2018smelly,nagy2017static,nagy2018sqlinspect}. SQLCheck applies static and dynamic checks to executed queries \nobreakcite{DBLP:conf/sigmod/DintyalaNA20}. Prior LLM work has evaluated smell recognition or classification in PL/SQL source \nobreakcite{de2025effectiveness}. This study instead analyses Java DSL expressions and generated schema classes and returns multiple class-labelled line spans per file.
@@ -17,6 +19,8 @@ The main distinction from prior SQL-antipattern detectors is the analysed repres
 These measures cannot be ranked directly. They concern SQL extraction quality, statement warnings, source-unit classification, or occurrence-level span agreement. Class definitions also overlap only partly across studies. The held-out F1-scores therefore establish agreement for this study's seven operationalised classes; they do not establish superiority over SQL extraction, rule-based analysis, or PL/SQL classification.
 
 An evaluated deterministic baseline for the same seven-class jOOQ task is absent from the study. A direct comparison would require the same source files, class definitions, reference occurrences, and one-to-one matching rule. Such an experiment could encode syntactically explicit patterns as API or AST rules \nobreakcite{DBLP:journals/tse/MohaGDM10} and reserve contextual cases for an LLM. Its outcome would show whether a deterministic or hybrid design changes occurrence agreement, cost, or runtime under a common task. Architectural differences alone cannot establish an advantage.
+
+The recurring corpus patterns identify concrete targets for such a same-task comparison.
 
 \subsection{Implications of recurring source-fragment patterns}
 
