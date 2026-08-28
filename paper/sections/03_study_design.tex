@@ -69,29 +69,7 @@ The support rule and seed search were data-dependent design choices. Holding out
 
 We designed four universal prompt configurations on the training set. Zero-Shot and Few-Shot followed established prompting designs \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. Chain-of-Thought and Tree-of-Thought-inspired prompts elicited explicit intermediate analysis \nobreakcite{DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. Each configuration had one prompt for query code and one for generated schema code. The schema prompt also received the closest generated key-definition class to support Keyless Entry decisions. We removed leading and trailing whitespace, prefixed source lines with their original line numbers, and required structured class, span, code-fragment, and explanation fields. The Online Resources provide the exact prompts and localisation rules.\label{sec:prompts}
 
-We compared four models and the four prompting configurations on the \num{20}-repository validation set, which contained \num{823} relevant files. The models were OpenAI GPT-5.2 \nobreakcite{gpt52}, Z.ai GLM-5 \nobreakcite{DBLP:journals/corr/abs-2602-15763}, Anthropic Claude Opus 4.5 \nobreakcite{opus45Card}, and OpenAI gpt-oss-120B \nobreakcite{DBLP:journals/corr/abs-2508-10925}. Validation requests used the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub} through OpenRouter \nobreakcite{openRouter2026homepage}, with automatic provider fallbacks disabled. GPT-5.2 used xhigh reasoning and did not accept a temperature parameter. GLM-5 used temperature \num{0.0} without a configurable reasoning level; Claude Opus 4.5 used temperature \num{0.0} with reasoning disabled; and gpt-oss-120B used temperature \num{1.0} with high reasoning. Each model-prompt pair was run once. Table~\ref{tab:configurationSelection} retains the comparisons that determine the final choice; per-class and diagnostic outputs are available in the Online Resources.\label{sec:models}
-
-\begin{table}[h]
-    \centering
-    \scriptsize
-    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence metrics from one run over \num{20} validation repositories; costs include value-added tax and runtime is in seconds. The first four rows compare models with Zero-Shot prompts. The final three rows compare alternative prompts with Claude Opus 4.5.}
-    \label{tab:configurationSelection}
-    \begin{tabular}{llrrrrr}
-        \hline
-        \textbf{Model} & \textbf{Prompt} & \textbf{P} & \textbf{R} & \textbf{F1} & \textbf{Cost (USD)} & \textbf{Time (s)} \\
-        \hline
-        GPT-5.2 & Zero-Shot & 0.85 & 0.92 & 0.88 & 26.16 & 2423 \\
-        GLM-5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 11.77 & 5774 \\
-        Claude Opus 4.5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 29.97 & 367 \\
-        gpt-oss-120B & Zero-Shot & 0.83 & 0.87 & 0.83 & 1.49 & 2808 \\
-        Claude Opus 4.5 & Few-Shot & 0.88 & 0.89 & 0.88 & 45.00 & 352 \\
-        Claude Opus 4.5 & Chain-of-Thought & 0.92 & 0.90 & 0.90 & 40.86 & 956 \\
-        Claude Opus 4.5 & Tree-of-Thought & 0.92 & 0.90 & 0.90 & 81.43 & 4701 \\
-        \hline
-    \end{tabular}
-\end{table}
-
-Zero-Shot F1 was \num{0.88} for each of the three larger models. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. Reasoning-oriented prompts raised its F1 by \num{0.02}, with higher cost and much longer runtimes, and their effects did not recur across the reasoning models. We therefore selected Claude Opus 4.5 with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts. Selection reflects the observed validation balance between agreement, runtime, and cost; run-to-run uncertainty was not measured.
+We compared four models and the four prompting configurations on the \num{20}-repository validation set, which contained \num{823} relevant files. The models were OpenAI GPT-5.2 \nobreakcite{gpt52}, Z.ai GLM-5 \nobreakcite{DBLP:journals/corr/abs-2602-15763}, Anthropic Claude Opus 4.5 \nobreakcite{opus45Card}, and OpenAI gpt-oss-120B \nobreakcite{DBLP:journals/corr/abs-2508-10925}. Validation requests used the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub} through OpenRouter \nobreakcite{openRouter2026homepage}, with automatic provider fallbacks disabled. GPT-5.2 used xhigh reasoning and did not accept a temperature parameter. GLM-5 used temperature \num{0.0} without a configurable reasoning level; Claude Opus 4.5 used temperature \num{0.0} with reasoning disabled; and gpt-oss-120B used temperature \num{1.0} with high reasoning. Each model-prompt pair was run once, and we selected the final configuration from the observed agreement, cost, and runtime on this validation partition. Results reports the comparison and selection outcome; per-class and diagnostic outputs are available in the Online Resources.\label{sec:models}
 
 The final detector recursively selected relevant Java files, attached key-definition context where available, sent one structured request per file, and retained each returned class-labelled span. The released detector commit fixes file discovery, context attachment, prompt-size truncation, structured-output validation, retry handling, and failed-file reporting. We executed one primary run on the \num{20} held-out projects, covering \num{502} relevant files. The run cost \usd{14.34}, took \num{386} seconds, and returned \num{536} predictions. The same selected configuration then produced the corpus flags used for RQ2 and RQ3.
 

@@ -1,95 +1,95 @@
 \section{Results}\label{sec:results}
 
-% Source: chapters/07_results.tex, former RQ3 occurrence-level evaluation.
+We report the detector configuration selected on the validation partition before answering the three research questions. RQ1 measures one held-out occurrence-localisation run against the original reference spans. RQ2 describes the resulting detector flags across the identified corpus, and RQ3 groups recurring source-fragment patterns among two classes of those flags. This order separates instrument selection from evaluation and keeps each conclusion tied to its unit of analysis.
 
-\subsection{RQ1: What occurrence-level agreement does one run of the developed tool achieve against the original reference annotations?}\label{sec:rq1Agreement}
+\subsection{Detector configuration selection}\label{sec:detectorSelectionResults}
 
-We performed the analysis of the tool using the Claude Opus 4.5 model, with reasoning disabled, and temperature set to \num{0.0}. The tool performed the analysis using the previously developed Zero-Shot prompts. We selected the Claude Opus 4.5 model for the analysis because it was tied for the best performance under the Zero-Shot strategy while also being by far the fastest model evaluated. The cost of the analysis of \num{20} projects (containing \num{502} analysed “relevant” files) was \usd{14.34} and the runtime was \num{386} seconds.
-
-The primary evaluation uses the original single-annotator reference spans. During the subsequent qualitative analysis of the tool's output (discussed in detail in Section~\ref{sec:detectionErrors}), we discovered several inaccuracies and omissions in these annotations. We therefore report the revised annotations separately as an optimistic sensitivity analysis: detector disagreements initiated the review, and occurrences missed by both the annotator and detector could not be discovered through this process.
-
-Table~\ref{tab:toolDetections} summarises the absolute event-matching counts for each antipattern against the original reference annotations. Detailed event-matching counts for the original and revised annotations are available in the Online Resources.
-
-\begin{longtable}[hp]{|l|S[table-format=3.0, table-column-width=1.5cm]|S[table-format=2.0, table-column-width=1.5cm]|S[table-format=2.0, table-column-width=1.5cm]|}
-	\caption{Occurrence-matching counts for one selected detector run against the original reference annotations at IoU \num{0.50}.}
-	\label{tab:toolDetections}\\ \hline
-	{\thead[l]{Antipattern}} & {\thead{TP}} & {\thead{FP}} & {\thead{FN}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{4}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Antipattern}} & {\thead{TP}} & {\thead{FP}} & {\thead{FN}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{4}{l}{\textit{Continues...}}
-	\endfoot
-	\hline
-	\endlastfoot
-    Implicit Columns & 253 & 4 & 17 \\ \hline
-    ID Required & 89 & 13 & 16 \\ \hline
-    Keyless Entry & 35 & 30 & 1 \\ \hline
-    Fear of the Unknown & 19 & 24 & 17 \\ \hline
-    31 Flavors & 38 & 1 & 1 \\ \hline
-    Poor Man's Search Engine & 13 & 4 & 8 \\ \hline
-    Rounding Errors & 13 & 0 & 3 \\
-\end{longtable}
-
-Table~\ref{tab:toolEventTotals} shows the pooled occurrence-matching totals. These are not confusion matrices because true negatives are undefined for a localisation task.
+The validation comparison in Table~\ref{tab:configurationSelection} fixed Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled and temperature \num{0.0}, using the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. The reasoning-oriented prompts had an observed F1-score of \num{0.90} for Claude Opus 4.5, with higher costs and runtimes. We selected the simpler configuration for the held-out and corpus runs. Run-to-run uncertainty was not measured.
 
 \begin{table}[H]
     \centering
-    \caption{Pooled occurrence-matching counts by reference version.}
-    \label{tab:toolEventTotals}
-    \begin{tabular}{lrrrrr}
+    \scriptsize
+    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics from one run over \num{20} validation repositories. Costs include value-added tax, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5.}
+    \label{tab:configurationSelection}
+    \begin{tabular}{llrrrrr}
         \hline
-        \textbf{Reference version} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Reference spans} & \textbf{Detector flags} \\
+        \textbf{Model} & \textbf{Prompt} & \textbf{P} & \textbf{R} & \textbf{F1} & \textbf{Cost (USD)} & \textbf{Time (s)} \\
         \hline
-        Original & 460 & 76 & 63 & 523 & 536 \\
-        Revised & 512 & 24 & 51 & 563 & 536 \\
+        GPT-5.2 & Zero-Shot & 0.85 & 0.92 & 0.88 & 26.16 & 2423 \\
+        GLM-5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 11.77 & 5774 \\
+        Claude Opus 4.5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 29.97 & 367 \\
+        gpt-oss-120B & Zero-Shot & 0.83 & 0.87 & 0.83 & 1.49 & 2808 \\
+        Claude Opus 4.5 & Few-Shot & 0.88 & 0.89 & 0.88 & 45.00 & 352 \\
+        Claude Opus 4.5 & Chain-of-Thought & 0.92 & 0.90 & 0.90 & 40.86 & 956 \\
+        Claude Opus 4.5 & Tree-of-Thought & 0.92 & 0.90 & 0.90 & 81.43 & 4701 \\
         \hline
     \end{tabular}
 \end{table}
 
-We calculated the detection performance for each antipattern and report three distinct aggregates: micro averages pool event counts, macro averages give each class equal weight, and reference-support-weighted averages weight each class by \(\text{TP}+\text{FN}\). Tables~\ref{tab:toolBevUncorrected} and~\ref{tab:toolBevCorrected} report the original and revised reference results separately.
+\subsection{RQ1: What occurrence-level agreement does one run of the selected LLM-based detector achieve against the original single-annotator reference spans for seven operationalised SQL antipatterns in the 20-repository, project-disjoint test partition?}\label{sec:rq1Agreement}
 
-\begin{longtable}[hp]{|l|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|}
-	\caption{Occurrence-level metrics for one selected detector run against the original reference annotations at IoU \num{0.50}.}
-	\label{tab:toolBevUncorrected}\\ \hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{4}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{4}{l}{\textit{Continues...}}
-	\endfoot
-	\hline
-	\endlastfoot
-    Implicit Columns & 0.98 & 0.94 & 0.96 \\ \hline
-    ID Required & 0.87 & 0.85 & 0.86 \\ \hline
-    Keyless Entry & 0.54 & 0.97 & 0.69 \\ \hline
-    Fear of the Unknown & 0.44 & 0.53 & 0.48 \\ \hline
-    31 Flavors & 0.97 & 0.97 & 0.97 \\ \hline
-    Poor Man's Search Engine & 0.76 & 0.62 & 0.68 \\ \hline
-    Rounding Errors & 1.00 & 0.81 & 0.90 \\ \hline
-    \textbf{Micro average} & 0.86 & 0.88 & 0.87 \\ \hline
-    \textbf{Macro average} & 0.80 & 0.81 & 0.79 \\ \hline
-    \textbf{Reference-support-weighted average} & 0.88 & 0.88 & 0.88 \\
-\end{longtable}
+One run of the selected detector returned \num{536} predictions from \num{502} relevant files in the \num{20}-repository test partition. The original single-annotator reference contained \num{523} spans. At the prespecified intersection-over-union threshold of \num{0.50}, the one-to-one matching procedure yielded \num{460} true positives, \num{76} false positives, and \num{63} false negatives. The corresponding micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}.
 
-At the prespecified IoU threshold of \num{0.50}, the micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}. The per-class F1-scores ranged from \num{0.48} for Fear of the Unknown to \num{0.97} for 31 Flavors. Table~\ref{tab:iouSensitivity} shows that the pooled result changed little across four matching thresholds.
+Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial class differences. F1-scores ranged from \num{0.481} for Fear of the Unknown to \num{0.974} for 31 Flavors. Implicit Columns, 31 Flavors, and Rounding Errors each exceeded \num{0.89}, whereas Keyless Entry, Fear of the Unknown, and Poor Man's Search Engine remained below \num{0.70}. The macro precision, recall, and F1-score were \num{0.797}, \num{0.813}, and \num{0.793}; the reference-support-weighted values were \num{0.885}, \num{0.880}, and \num{0.877}. These aggregates reinforce the need to interpret each corpus flag class in light of its own held-out agreement.
 
-\begin{table}[H]
+\begin{table}[t]
     \centering
-    \caption{Sensitivity of pooled occurrence-level metrics to the IoU threshold.}
+    \small
+    \caption{Occurrence-level agreement of one selected-detector run with the original single-annotator reference spans at intersection over union \num{0.50}. TP, FP, and FN are one-to-one event-matching counts; true negatives are undefined for this localisation task. The final row pools all classes.}
+    \label{tab:toolDetections}
+    \label{tab:toolBevUncorrected}
+    \begin{tabular}{lrrrrrr}
+        \hline
+        \textbf{Antipattern} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+        \hline
+        Implicit Columns & 253 & 4 & 17 & 0.984 & 0.937 & 0.960 \\
+        ID Required & 89 & 13 & 16 & 0.873 & 0.848 & 0.860 \\
+        Keyless Entry & 35 & 30 & 1 & 0.538 & 0.972 & 0.693 \\
+        Fear of the Unknown & 19 & 24 & 17 & 0.442 & 0.528 & 0.481 \\
+        31 Flavors & 38 & 1 & 1 & 0.974 & 0.974 & 0.974 \\
+        Poor Man's Search Engine & 13 & 4 & 8 & 0.765 & 0.619 & 0.684 \\
+        Rounding Errors & 13 & 0 & 3 & 1.000 & 0.813 & 0.897 \\
+        \textbf{Micro total} & \textbf{460} & \textbf{76} & \textbf{63} & \textbf{0.858} & \textbf{0.880} & \textbf{0.869} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Class-specific errors}\label{sec:detectionErrors}
+
+The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurring mechanisms. Implicit Columns and Poor Man's Search Engine disagreements involved local query-method semantics. Keyless Entry and Fear of the Unknown disagreements concerned inferred relationships and missing-value conventions. Inspection also exposed omissions and span errors in the original reference annotations. We retain that original reference for the primary result because detector disagreements guided the later review.
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Dominant disagreement mechanisms observed during qualitative review of the held-out run. Counts refer to false positives or false negatives against the original reference spans. Reference-annotation issues were discovered through detector disagreements and therefore do not form an independent audit.}
+    \label{tab:detectionErrors}
+    \begin{tabular}{p{2.9cm}p{7.8cm}}
+        \hline
+        \textbf{Antipattern} & \textbf{Observed disagreement mechanisms} \\
+        \hline
+        Implicit Columns & Fourteen of \num{17} false negatives used \texttt{returning()} or \texttt{returningResult()}. Other disagreements involved span boundaries and reference errors. \\
+        ID Required & Six false negatives involved primary-key columns named \texttt{id}. One false positive proposed an unsuitable natural key; other disagreements exposed reference errors. \\
+        Keyless Entry & Fifteen of \num{30} false positives involved audit-log tables, which the prompt did not exempt. One involved an ambiguous column name, and the remainder included missing or disputed reference annotations. \\
+        Fear of the Unknown & All \num{17} false negatives involved defaults or sentinel values. Of \num{24} false positives, \num{23} exposed omissions in the original reference and one suggested a refactoring rather than an occurrence. \\
+        31 Flavors & One false negative involved a numeric \texttt{CHECK} range encoding categories. The single false positive inferred a fixed value set from a \texttt{status} column without supporting schema evidence. \\
+        Poor Man's Search Engine & Seven false negatives and two false positives resulted from grouping consecutive occurrences into one span. Two false positives used \texttt{LIKE} without wildcards, and one false negative placed \texttt{containsIgnoreCase} in an intermediate collection. \\
+        Rounding Errors & All three false negatives involved \texttt{DOUBLE} coefficients later used to calculate monetary winnings. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this as an optimistic sensitivity analysis because the review could find disagreements visible to the detector while missing occurrences overlooked by both the annotator and detector.
+
+The aggregate result is insensitive to the tested span boundary. Table~\ref{tab:iouSensitivity} bounds micro F1 between \num{0.863} and \num{0.873} from an intersection-over-union threshold of \num{0.25} through exact-span matching. Only Implicit Columns and Poor Man's Search Engine changed across these thresholds.
+
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union threshold. Each row applies the same one-to-one matching rule to the original reference spans and all \num{536} predictions.}
     \label{tab:iouSensitivity}
     \begin{tabular}{rrrrrrr}
         \hline
-        \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\
+        \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
         \hline
         0.25 & 462 & 74 & 61 & 0.862 & 0.883 & 0.873 \\
         0.50 & 460 & 76 & 63 & 0.858 & 0.880 & 0.869 \\
@@ -99,283 +99,75 @@ At the prespecified IoU threshold of \num{0.50}, the micro precision, recall, an
     \end{tabular}
 \end{table}
 
-A \num{10000}-replicate project-cluster bootstrap gave percentile ranges of \num{0.799}--\num{0.933} for micro precision, \num{0.817}--\num{0.913} for micro recall, and \num{0.819}--\num{0.913} for micro F1. These are conditional project-composition sensitivity ranges for this selected split, not population confidence intervals. Several classes occur in few held-out projects, so class-level resamples are unstable and are not used for inference.
+A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.799} and \num{0.933}, micro recall between \num{0.817} and \num{0.913}, and micro F1 between \num{0.819} and \num{0.913}. These percentile ranges describe sensitivity to the composition of the selected test projects. They are not population confidence intervals and do not measure variation across detector runs.
 
-One original Keyless Entry annotation has a reversed span (lines \num{61}--\num{51}). It is treated as invalid and unmatched, contributing one FP and one FN. The source revision needed to recover its intended endpoint is unavailable, so the span was not silently repaired.
+\noindent\textbf{Answer to RQ1.} Against the \num{523} original reference spans, one selected-detector run achieved micro precision \num{0.858}, recall \num{0.880}, and F1-score \num{0.869}. Per-class F1 ranged from \num{0.481} to \num{0.974}, with the weakest agreement for Fear of the Unknown.
 
-\begin{longtable}[hp]{|l|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|}
-	\caption{Optimistic sensitivity analysis against the revised reference annotations.}
-	\label{tab:toolBevCorrected}\\ \hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{4}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{4}{l}{\textit{Continues...}}
-	\endfoot
-	\hline
-	\endlastfoot
-    Implicit Columns & 1.00 & 0.94 & 0.97 \\ \hline
-    ID Required & 0.99 & 0.94 & 0.96 \\ \hline
-    Keyless Entry & 0.75 & 1.00 & 0.86 \\ \hline
-    Fear of the Unknown & 0.98 & 0.71 & 0.82 \\ \hline
-    31 Flavors & 0.97 & 0.97 & 0.97 \\ \hline
-    Poor Man's Search Engine & 0.76 & 0.62 & 0.68 \\ \hline
-    Rounding Errors & 1.00 & 0.81 & 0.90 \\ \hline
-    \textbf{Micro average} & 0.96 & 0.91 & 0.93 \\ \hline
-    \textbf{Macro average} & 0.92 & 0.86 & 0.88 \\ \hline
-    \textbf{Reference-support-weighted average} & 0.96 & 0.91 & 0.93 \\
-\end{longtable}
+\subsection{RQ2: How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?}\label{sec:rq2CorpusFlags}
 
-\subsubsection{Without Localisation}
+The selected detector produced \num{15931} positive flags across \num{17450} relevant Java files in the \num{602}-repository corpus. At least one retained class was flagged in \num{601} repositories, or \qty{99.8}{\percent}. Implicit Columns and ID Required dominated the output: together they accounted for \num{10886} flags, or \qty{68.3}{\percent} of all flags, and appeared in \qty{88.9}{\percent} and \qty{86.9}{\percent} of repositories, respectively. Table~\ref{tab:corpusFlags} reports class totals and repository coverage.
 
-We also performed the analysis using the classification mode, which detects antipatterns on a per-file basis, without specifying the exact location. The other settings remained the same: we used the Claude Opus 4.5 model, with reasoning disabled, and temperature set to \num{0.0}. With these settings, the cost of the analysis was \usd{12.24} and the runtime was 295 seconds.
-
-Similarly to before, we analysed the FPs and FNs in the results and revised errors found in the reference annotations. The Online Resources report the per-class counts. Table~\ref{tab:toolClassificationCounts} shows the pooled counts before and after revision.
+The flags were concentrated within repositories. The highest-count \qty{10}{\percent} of flagged repositories contained \qty{59.1}{\percent} of all flags. Class-specific top-decile shares ranged from \qty{44.6}{\percent} for Poor Man's Search Engine to \qty{66.0}{\percent} for Keyless Entry. Consequently, a small group of high-count repositories contributes much of the unnormalised corpus output.
 
 \begin{table}[H]
     \centering
-    \caption{Pooled file-classification counts by reference version.}
-    \label{tab:toolClassificationCounts}
-    \begin{tabular}{lrrrrr}
+    \small
+    \caption{Selected-detector flags in the identified \num{602}-repository corpus. Repository coverage is the percentage of all corpus repositories with at least one class flag. Top-decile concentration is the share of class flags in the highest-count \qty{10}{\percent} of flagged repositories, rounding the number of repositories up. These are detector outputs rather than prevalence estimates.}
+    \label{tab:corpusFlags}
+    \begin{tabular}{lrrrr}
         \hline
-        \textbf{Reference version} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Positive reference files} & \textbf{Positive predictions} \\
+        \textbf{Antipattern} & \textbf{Flags} & \makecell{\textbf{Repositories}\\\textbf{flagged}} & \makecell{\textbf{Coverage}\\\textbf{(\%)}} & \makecell{\textbf{Top-decile}\\\textbf{share (\%)}} \\
         \hline
-        Original & 244 & 63 & 20 & 264 & 307 \\
-        Revised & 283 & 24 & 14 & 297 & 307 \\
+        Implicit Columns & 7289 & 535 & 88.9 & 54.6 \\
+        ID Required & 3597 & 523 & 86.9 & 59.9 \\
+        Keyless Entry & 2153 & 200 & 33.2 & 66.0 \\
+        Fear of the Unknown & 1256 & 205 & 34.1 & 56.8 \\
+        31 Flavors & 390 & 87 & 14.5 & 52.8 \\
+        Poor Man's Search Engine & 583 & 114 & 18.9 & 44.6 \\
+        Rounding Errors & 663 & 86 & 14.3 & 63.3 \\
+        \textbf{Any retained class} & \textbf{15931} & \textbf{601} & \textbf{99.8} & \textbf{59.1} \\
         \hline
     \end{tabular}
 \end{table}
 
-From these counts, we calculated per-class and aggregate file-classification metrics, shown in Tables~\ref{tab:toolClassificationBevUncorrected} and~\ref{tab:toolClassificationBevCorrected}.
+These counts do not estimate true antipattern prevalence. The corpus has no independent reference annotation, class-specific error correction, repository-size adjustment, or API-exposure denominator. The result therefore describes where this selected detector placed flags within the identified corpus.
 
-\begin{longtable}[hp]{|l|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|}
-	\caption{File-classification metrics against the original reference annotations.}
-	\label{tab:toolClassificationBevUncorrected}\\ \hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{4}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{4}{l}{\textit{Continues...}}
-	\endfoot
-	\hline
-	\endlastfoot
-    Implicit Columns & 0.95 & 0.99 & 0.97 \\ \hline
-    ID Required & 0.95 & 0.90 & 0.93 \\ \hline
-    Keyless Entry & 0.41 & 1.00 & 0.58 \\ \hline
-    Fear of the Unknown & 0.35 & 0.88 & 0.50 \\ \hline
-    31 Flavors & 1.00 & 1.00 & 1.00 \\ \hline
-    Poor Man's Search Engine & 1.00 & 0.91 & 0.95 \\ \hline
-    Rounding Errors & 1.00 & 0.60 & 0.75 \\ \hline
-    \textbf{Micro average} & 0.79 & 0.92 & 0.85 \\ \hline
-    \textbf{Macro average} & 0.81 & 0.90 & 0.81 \\ \hline
-    \textbf{Reference-support-weighted average} & 0.88 & 0.92 & 0.88 \\
-\end{longtable}
+\noindent\textbf{Answer to RQ2.} The detector produced \num{15931} flags in \num{601} of \num{602} repositories. Implicit Columns and ID Required accounted for \qty{68.3}{\percent} of all flags, and the highest-count \qty{10}{\percent} of flagged repositories contained \qty{59.1}{\percent} of the output.
 
-\begin{longtable}[hp]{|l|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|S[table-format=1.2, table-column-width=1.5cm]|}
-	\caption{Optimistic file-classification sensitivity analysis against the revised reference annotations.}
-	\label{tab:toolClassificationBevCorrected}\\ \hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{4}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Antipattern}} & {\thead{Precision}} & {\thead{Recall}} & {\thead{F1-Score}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{4}{l}{\textit{Continues...}}
-	\endfoot
-	\hline
-	\endlastfoot
-    Implicit Columns & 0.97 & 1.00 & 0.98 \\ \hline
-    ID Required & 1.00 & 0.95 & 0.98 \\ \hline
-    Keyless Entry & 0.77 & 1.00 & 0.87 \\ \hline
-    Fear of the Unknown & 0.74 & 0.94 & 0.83 \\ \hline
-    31 Flavors & 1.00 & 1.00 & 1.00 \\ \hline
-    Poor Man's Search Engine & 1.00 & 0.91 & 0.95 \\ \hline
-    Rounding Errors & 1.00 & 0.60 & 0.75 \\ \hline
-    \textbf{Micro average} & 0.92 & 0.95 & 0.94 \\ \hline
-    \textbf{Macro average} & 0.93 & 0.91 & 0.91 \\ \hline
-    \textbf{Reference-support-weighted average} & 0.93 & 0.95 & 0.94 \\
-\end{longtable}
+\subsection{RQ3: Which recurring jOOQ API or source-code patterns are most frequently associated with detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
 
-As seen from Tables~\ref{tab:toolClassificationBevUncorrected} and~\ref{tab:toolClassificationBevCorrected}, the reference-support-weighted file-classification metrics remained similar to the localised version. The tool produced lower precision at higher or similar recall for several antipatterns, including Implicit Columns and Fear of the Unknown. Poor Man's Search Engine, which suffered from localisation issues discussed in Section~\ref{sec:detectionErrors}, had precision of \num{1.00} and recall of \num{0.91} in file-classification mode, compared with \num{0.76} and \num{0.62} in localisation mode.
+Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns among Implicit Columns and Poor Man's Search Engine flags. The two leading Implicit Columns patterns both selected all fields from a table. Together, they contained \num{5227} of \num{7289} flags, or \qty{71.7}{\percent}. Explicit field-array and asterisk patterns contributed a further \qty{12.9}{\percent}. The ordered categories covered \qty{94.1}{\percent} of the class flags.
 
-Against the original reference annotations, agreement varied substantially by class in both localisation and file-classification modes. Keyless Entry and Fear of the Unknown had the lowest localisation precision and F1-scores, and both require interpretation of entity relationships and business logic.
+For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{273} of \num{583} flags, or \qty{46.8}{\percent}. The next three patterns matched case-insensitive or contains-style method names. These four categories contained \num{517} flags, or \qty{88.7}{\percent}. The full category scheme covered \qty{93.7}{\percent}.
 
+\begin{table}[t]
+    \centering
+    \small
+    \caption{Recurring post hoc manifestation categories among detector flags for two query antipatterns. Categories are precedence-ordered string or regular-expression matches over detector-returned code fragments. Shares use the class flag total as denominator; they do not measure API-specific risk.}
+    \label{tab:apiManifestations}
+    \label{tab:implicitColumnsCauses}
+    \label{tab:poorMansSearchEngineCauses}
+    \begin{tabular}{p{2.2cm}p{5.3cm}rr}
+        \hline
+        \textbf{Flag class} & \textbf{Manifestation category} & \textbf{Flags} & \textbf{Share (\%)} \\
+        \hline
+        \makecell[l]{Implicit\\Columns} & \texttt{selectFrom(TABLE)} fragment & 3417 & 46.9 \\
+        & \texttt{select().from(TABLE)} fragment & 1810 & 24.8 \\
+        & \texttt{fields()} fragment & 665 & 9.1 \\
+        & \texttt{asterisk()} fragment & 280 & 3.8 \\
+        & Other categorised patterns & 688 & 9.4 \\
+        & Other or uncategorised & 429 & 5.9 \\
+        \hline
+        \makecell[l]{Poor Man's\\Search Engine} & \texttt{like(} fragment & 273 & 46.8 \\
+        & \texttt{containsIgnoreCase(} fragment & 96 & 16.5 \\
+        & \texttt{likeIgnoreCase(} fragment & 87 & 14.9 \\
+        & \texttt{contains(} fragment & 61 & 10.5 \\
+        & Other categorised patterns & 29 & 5.0 \\
+        & Other or uncategorised & 37 & 6.3 \\
+        \hline
+    \end{tabular}
+\end{table}
 
-% Source: chapters/08_analysis.tex, Qualitative Analysis of Detection Errors.
+These categories describe recurring manifestations among flags. Without counts of all uses of each API, they cannot show whether one API is more likely than another to be associated with an antipattern.
 
-\subsubsection{Qualitative Analysis of Detection Errors}\label{sec:detectionErrors}
-
-In this section, we qualitatively analyse the underlying causes of the FPs and FNs observed during the evaluation of the developed tool (as presented in Section~\ref{sec:rq1Agreement}). We structure this analysis by the respective SQL antipatterns.
-
-\paragraph*{Implicit Columns}
-The main causes of FNs were DML statements, which returned all columns of modified rows with the \texttt{returning()} and \texttt{returningResult()} methods, which translate to the \texttt{RETURNING *} clause in plain SQL. It appears that the model did not associate these methods with the “Implicit Columns” antipattern, although they return blind projections from the database. Such DML statements accounted for \num{14} of the \num{17} FNs.
-
-One FP and one FN were caused by different localisation behaviour: while the reference annotations marked the entire multi-line \texttt{SELECT} clause, the tool only attributed the antipattern to the line directly causing the antipattern.
-
-The final three FPs and two FNs were attributed to mistakes in the reference annotations: in one case, an antipattern occurrence was attributed to the wrong source file; in the second case, the line number was off by one; in the final case, the reference annotations were missing an occurrence altogether.
-
-\paragraph*{ID Required}
-Six FNs were caused by the tool not flagging primary key columns named as “id”, while one FN was caused by the tool not recognising an opportunity to use an alternative ID field as the primary key instead of the synthetic primary key. One FP was caused by the tool suggesting replacing a synthetic primary key with a field, which would make foreign keys too large and complex (a field containing internet URLs).
-
-The remaining FPs and FNs were attributed to mistakes in the reference annotations: in five cases, the annotations contained incorrect line ranges; in four cases, they contained invalid occurrences; in seven cases, they were missing occurrences detected by the tool.
-
-\paragraph*{Keyless Entry}
-Half of the FPs (15) were caused by the tool flagging missing foreign keys in tables used for audit logging. We did not mark these columns in the reference annotations because these tables store historical data, which could refer to rows that do not exist any more. The prompt instructions did not specify an exception for audit tables; therefore, we attributed these errors to imprecise instructions.
-
-One FP was caused by an ambiguity in database object names. The affected schema contained a table named “island”, which had a primary key column named “id”. The second table contained a column named “island\_id”, which the tool considered a reference to the aforementioned primary key. However, the columns had different data types, and “island\_id” actually referred to an external identifier.
-
-The other 14 FPs and one FN were attributed to mistakes in the reference annotations: in one case, an occurrence had an incorrect line range; in the other 13 cases, occurrences were missing.
-
-Nine of these FPs were edge cases, which we decided to resolve in favour of the tool: the tool flagged nine columns storing usernames of application users. While the affected database schema contained a table for users, the username was neither a primary nor unique key in that table. We considered the missing unique key an integrity violation of its own, and resolving it would have resulted in definite cases of the “Keyless Entry” antipattern; hence, we revised these nine reference annotations.
-
-\paragraph*{Fear of the Unknown}
-Ten FNs were caused by the tool not flagging columns, which used \texttt{NOT NULL} constraints with special default values (e.g., an empty string or the Unix epoch (January 1, 1970, 00:00:00 UTC)) to indicate “missing” values, rather than using nullable columns.
-
-The other seven FNs were caused by the tool not flagging columns, which had default values and contained values that were non-nullable by nature (e.g., boolean values indicating state).
-
-One FP was caused by the model suggesting a refactoring opportunity in a complex query, rather than pointing out an actual antipattern occurrence.
-
-The other 23 FPs were attributed to omissions in the reference annotations. In six cases, the annotations omitted columns that used default values to represent missing values; in the other \num{17} cases, they omitted nullable columns containing values considered non-nullable by nature.
-
-\paragraph*{31 Flavors}
-The single FN was caused by the tool not flagging the \texttt{CHECK} constraint shown in Figure~\ref{fig:checkConstraint}, which validated a \texttt{SMALLINT} column against a range of values representing different authorisation methods. This error was likely due to imprecise prompt instructions because the prompt contained an instruction to ignore \texttt{CHECK} constraints checking for ranges (e.g., valid ages), but did not account for edge cases of this kind.
-
-\begin{figure}[h]
-    \begin{lstlisting}[frame=none, basicstyle=\small, breaklines=true, breakatwhitespace=false, breakindent=0pt]
-(((authorize_type >= 0) AND (authorize_type <= 1)))
-    \end{lstlisting}
-    \caption{CHECK constraint causing a false negative “31 Flavors” detection.}
-    \label{fig:checkConstraint}
-\end{figure}
-
-The single FP was caused by the tool flagging a \texttt{VARCHAR(50)} column named “status”, while there was nothing in the schema definition code indicating that the column contained a fixed set of values.
-
-\paragraph*{Poor Man's Search Engine}
-Seven FNs and two FPs were caused by differences in localisation behaviour. In cases where two or more consecutive lines contained distinct occurrences of the “Poor Man's Search Engine” antipattern, the reference dataset contained separate annotations. The tool grouped them as one occurrence, although the prompt contained instructions to do otherwise.
-
-The remaining two FPs were caused by the tool flagging usages of the \texttt{LIKE} operator without any wildcards as antipattern occurrences. In these cases, the \texttt{LIKE} operator behaved similarly to an ordinary equality check, which could be determined from the logic of the class being analysed.
-
-The final FN was caused by the tool not flagging a usage of the \texttt{containsIgnoreCase} jOOQ DSL method, which is translated into the \texttt{LIKE} operator with preceding and succeeding wildcards. We suspect that the antipattern occurrence was not flagged because the condition was stored in an intermediate Java collection before being used in a query.
-
-\paragraph*{Rounding Errors}
-The three FNs were all the same kind: the model did not consider casino game coefficients stored in \texttt{DOUBLE} columns as “Rounding Errors” antipattern occurrences. However, we marked these columns in the reference annotations because the coefficients were used to calculate monetary winnings in the business logic.
-
-
-% Source: chapters/07_results.tex, former RQ4 corpus flag distribution.
-
-\subsection{RQ2: What is the distribution of detector flags in the identified corpus of Java projects using jOOQ?}\label{sec:rq2CorpusFlags}
-
-We analysed the complete set of \num{602} projects (containing \num{17450} analysed “relevant” files) with our tool, using the Claude Opus 4.5 model, with reasoning disabled, and temperature set to \num{0.0}. The cost of the analysis was \usd{1036.32} and the runtime was \num{12391} seconds (\num{3}h \num{31}m). The detector-output distribution is shown in Table~\ref{tab:corpusFlags}.
-
-\begin{longtable}[hp]{|p{2.8cm}|S[table-format=5.0, table-column-width=2.5cm]|S[table-format=3.0, table-column-width=2.5cm]|S[table-format=2.2, table-column-width=2.5cm]|S[table-format=2.2, table-column-width=2.5cm]|}
-	\caption{Detector flags in the identified \num{602}-repository corpus.}
-	\label{tab:corpusFlags}\\ \hline
-	{\thead[l]{Antipattern}} & {\thead{Detector\\flags}} & {\thead{Projects with\\at least\\one flag}} & {\thead{Flags per\\project}} & {\thead{Flags per\\flagged\\project}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{5}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Antipattern}} & {\thead{Detector\\flags}} & {\thead{Projects with\\at least\\one flag}} & {\thead{Flags per\\project}} & {\thead{Flags per\\flagged\\project}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{5}{l}{\textit{Continues...}} \\
-	\endfoot
-	\hline
-	\endlastfoot
-    \makecell[l]{Implicit\\Columns} & 7289 & 535 & 12.11 & 13.62 \\ \hline
-    ID Required & 3597 & 523 & 5.98 & 6.88 \\ \hline
-    \makecell[l]{Keyless\\Entry} & 2153 & 200 & 3.58 & 10.77 \\ \hline
-    \makecell[l]{Fear of the\\Unknown} & 1256 & 205 & 2.09 & 6.13 \\ \hline
-    31 Flavors & 390 & 87 & 0.65 & 4.48 \\ \hline
-    \makecell[l]{Poor Man's\\Search\\Engine} & 583 & 114 & 0.97 & 5.11 \\ \hline
-    \makecell[l]{Rounding\\Errors} & 663 & 86 & 1.10 & 7.71 \\ \hline
-    \textbf{Any retained class} & 15931 & 601 & 26.46 & 26.51 \\
-\end{longtable}
-
-In total, the tool produced \num{15931} flags across the seven classes. Implicit Columns and ID Required were the most frequently flagged classes, with at least one flag in \qty{89}{\percent} and \qty{87}{\percent} of the analysed projects, respectively. Fear of the Unknown had at least one flag in \qty{34}{\percent} of projects. These counts are not estimates of true prevalence because they are not corrected for class-specific detector error or normalised by repository size or API-use exposure.
-
-
-% Source: chapters/07_results.tex, former RQ5 API manifestations.
-
-\subsection{RQ3: Which post hoc API manifestation categories are most frequent among query-antipattern detector flags?}\label{sec:rq3ApiPatterns}
-
-In the following sections, we examine the post hoc manifestation categories assigned to Implicit Columns and Poor Man's Search Engine detector flags. The categories are precedence-ordered string and regular-expression matches over detector-returned code fragments; they were not independently audited against source-level API resolution.
-
-\subsubsection{Implicit Columns}
-
-As shown in Table~\ref{tab:implicitColumnsCauses}, \texttt{DSL.selectFrom(TABLE)} and \texttt{DSL.select().from(TABLE)} account for \num{5227} of \num{7289} Implicit Columns flags (\qty{71.7}{\percent}). The categories cover \qty{94.1}{\percent} of class flags; \num{429} flags (\qty{5.9}{\percent}) are other or uncategorised.
-
-Calls matching \texttt{TABLE.fields()} and \texttt{DSL.asterisk()} account for \qty{9.1}{\percent} and \qty{3.8}{\percent} of class flags. Generated DAO methods and plain SQL wildcard fragments each account for about \qty{2}{\percent}.
-
-\begin{longtable}[hp]{|p{8cm}|S[table-format=4.0, table-column-width=3cm]|S[table-format=2.1, table-column-width=3cm]|}
-	\caption{Distribution of Implicit Columns detector flags across post hoc manifestation categories.}
-	\label{tab:implicitColumnsCauses}\\ \hline
-	{\thead[l]{Manifestation category}} & {\thead{Detector-flag\\count}} & {\thead{Share of\\class flags}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{3}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Manifestation category}} & {\thead{Detector-flag\\count}} & {\thead{Share of\\class flags}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{3}{l}{\textit{Continues...}} \\
-	\endfoot
-	\hline
-	\endlastfoot
-    \texttt{DSL/DSLContext.selectFrom(TABLE)} & 3417 & 46.9 \\ \hline
-    \texttt{DSL/DSLContext.select().from(TABLE)} & 1810 & 24.8 \\ \hline
-    \texttt{TABLE.fields()} & 665 & 9.1 \\ \hline
-    \texttt{DSL.asterisk()} & 280 & 3.8 \\ \hline
-    Generated DAO methods (combined) & 163 & 2.2 \\ \hline
-    \texttt{DSL/DSLContext.fetch(TABLE, ...)} & 151 & 2.1 \\ \hline
-    Plain SQL wildcards & 137 & 1.9 \\ \hline
-    \texttt{DSL/DSLContext.fetchOne(TABLE, ...)} & 130 & 1.8 \\ \hline
-    \texttt{DSL/DSLContext.select(TABLE).from(TABLE)} & 107 & 1.5 \\ \hline
-    Other/uncategorised & 429 & 5.9 \\
-\end{longtable}
-
-\subsubsection{Poor Man's Search Engine}
-
-As shown in Table~\ref{tab:poorMansSearchEngineCauses}, \texttt{Field.like} accounts for \num{273} of \num{583} Poor Man's Search Engine flags (\qty{46.8}{\percent}). The four largest categories contain \num{517} flags (\qty{88.7}{\percent}). The categories cover \qty{93.7}{\percent} of class flags; \num{37} flags (\qty{6.3}{\percent}) are other or uncategorised.
-
-The categories matching \texttt{Field.containsIgnoreCase}, \texttt{Field.likeIgnoreCase}, and \texttt{Field.contains} account for \qty{16.5}{\percent}, \qty{14.9}{\percent}, and \qty{10.5}{\percent} of class flags. Plain SQL \texttt{LIKE} fragments account for \qty{2.9}{\percent}, while \texttt{Field.likeRegex} accounts for \qty{2.1}{\percent}.
-
-\begin{longtable}[hp]{|p{8cm}|S[table-format=3.0, table-column-width=3cm]|S[table-format=2.1, table-column-width=3cm]|}
-	\caption{Distribution of Poor Man's Search Engine detector flags across post hoc manifestation categories.}
-	\label{tab:poorMansSearchEngineCauses}\\ \hline
-	{\thead[l]{Manifestation category}} & {\thead{Detector-flag\\count}} & {\thead{Share of\\class flags}} \\
-	\hline
-	\endfirsthead
-	\multicolumn{3}{l}
-	{\tablename\ \thetable\ -- \textit{Continues...}} \\
-	\hline
-	{\thead[l]{Manifestation category}} & {\thead{Detector-flag\\count}} & {\thead{Share of\\class flags}} \\
-	\hline
-	\endhead
-	\hline \multicolumn{3}{l}{\textit{Continues...}} \\
-	\endfoot
-	\hline
-	\endlastfoot
-    \texttt{Field.like} & 273 & 46.8 \\ \hline
-    \texttt{Field.containsIgnoreCase} & 96 & 16.5 \\ \hline
-    \texttt{Field.likeIgnoreCase} & 87 & 14.9 \\ \hline
-    \texttt{Field.contains} & 61 & 10.5 \\ \hline
-    Plain SQL \texttt{LIKE} & 17 & 2.9 \\ \hline
-    \texttt{Field.likeRegex} & 12 & 2.1 \\ \hline
-    Other/uncategorised & 37 & 6.3 \\
-\end{longtable}
+\noindent\textbf{Answer to RQ3.} The two leading Implicit Columns patterns comprised \qty{71.7}{\percent} of that class. Poor Man's Search Engine flags most often matched \texttt{like(}, at \qty{46.8}{\percent}.

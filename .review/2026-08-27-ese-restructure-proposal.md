@@ -219,6 +219,8 @@ Completion check: a reader can reconstruct the study population, reference data,
 
 ### Step 8: Rebuild the results around the three RQs
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-step-8-results.md`.
+
 Actions:
 
 - Present held-out occurrence localisation and class-specific errors under RQ1.
