@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1--7 were completed on 2026-08-28; see the corresponding reports in `.review/`.
+Status: in progress. Steps 1--8 were completed on 2026-08-28; see the corresponding reports in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -17,15 +17,15 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 | Section | Baseline TeXCount | Planned net addition | Approximate target |
 |---|---:|---:|---:|
 | Introduction | 384 | 68 | 452 |
-| Background and Related Work | 789 | 599 | 1,388 |
-| Study Design | 2,287 | 1,388 | 3,675 |
-| Results | 1,224 | 550 | 1,774 |
-| Discussion | 777 | 340 | 1,117 |
+| Background and Related Work | 789 | 556 | 1,345 |
+| Study Design | 2,287 | 1,336 | 3,623 |
+| Results | 1,224 | 559 | 1,783 |
+| Discussion | 777 | 267 | 1,044 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Net change** |  | **2,945** |  |
+| **Net change** |  | **2,786** |  |
 
-The section figures are planning controls, not quotas to fill with weak material. A section may finish up to roughly 10% above or below its allocation if the overall net addition remains within range. Step 3 finished 61 words below its provisional allocation, Step 5 finished 14 words below, and Step 6 finished 20 words above. The current execution budget is therefore 2,945 words. This remains inside the 2,850--3,150 target range, so no difference is a quota to fill elsewhere.
+The section figures are planning controls, not quotas to fill with weak material. Step 8 removed 159 TeXCount words of duplicated definitions, repeated table narration, thesis navigation, and mechanical summary while retaining the thesis-derived methodological and quantitative detail needed for the argument. The reconciled net addition is 2,786 words, 64 below the plan's tolerance. No material was added merely to cross that threshold: the compiled paper already exceeds the practical targets at 12,393 layout-extracted words and 31 pages. Step 9 will record this deviation in the final audit.
 
 ## Source-reuse protocol
 
@@ -185,6 +185,8 @@ Completion check: Threats remained at its 926-word baseline. Parallel consistenc
 
 ### Step 8: Reconcile the restored prose
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-8-reconciliation.md`.
+
 Actions:
 
 - Read the article linearly from Introduction through Conclusion, comparing every added paragraph with the paragraphs immediately before and after it.
@@ -194,7 +196,7 @@ Actions:
 - Apply a restrained language pass: remove generic throat-clearing, stacked signposting, false causal connectors, inflated novelty, repetitive three-item summaries, and claims about what an LLM "understands." Preserve the original author's viable wording instead of synonymising it.
 - Keep the current Abstract and Conclusion unchanged unless a restored passage exposes a factual inconsistency. Word-count pressure alone is not a reason to lengthen them.
 
-Completion check: at least 85% of the net addition is traceable to the legacy source ledger; no paragraph exists only to satisfy the numerical target; the title, abstract, RQs, direct answers, discussion, and conclusion remain claim-consistent.
+Completion check: all 19 restored paragraph units remain mapped to the legacy source ledger, and Step 8 introduced no new freestanding paragraph. The reconciliation removed 159 TeXCount words rather than adding padding to retain the numerical budget. The title, unchanged abstract, RQs, direct answers, Discussion, and unchanged Conclusion remain claim-consistent.
 
 ### Step 9: Build, inspect, and measure the final article
 

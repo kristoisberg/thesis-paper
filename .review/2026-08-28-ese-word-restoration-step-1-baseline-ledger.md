@@ -36,13 +36,13 @@ The per-section planning counts are the included-file values from the canonical 
 | Section | Included-file TeXCount | Planned net addition | Target |
 |---|---:|---:|---:|
 | Introduction | 384 | 68 | 452 |
-| Background and Related Work | 789 | 599 | 1,388 |
-| Study Design | 2,287 | 1,388 | 3,675 |
-| Results | 1,224 | 550 | 1,774 |
-| Discussion | 777 | 340 | 1,117 |
+| Background and Related Work | 789 | 556 | 1,345 |
+| Study Design | 2,287 | 1,336 | 3,623 |
+| Results | 1,224 | 559 | 1,783 |
+| Discussion | 777 | 267 | 1,044 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
-| **Current execution budget** |  | **2,945** |  |
+| **Current execution budget** |  | **2,786** |  |
 
 The paragraph audit moved 490 words into Study Design and removed the planned Threats expansion. The current Threats section covers manifest-search coverage, the GitHub result cap, single-run uncertainty, bounded gateway/provider change, missing metadata, and replay limits. It does not assert a caching effect because the evidence does not show that caching affected the single-pass runs. The audit also reduced Discussion because its tool comparison already follows Background. This allocation gives the largest share to procedural material whose original sentence structure remains usable.
 
@@ -152,7 +152,9 @@ Each row defines one candidate restored paragraph. The destination names an exis
 | R03 | Results RQ3, after `tab:apiManifestations` | `paper/chapters/07_results.tex:408-410,442-444` | Add selected lower-frequency source-fragment categories. | 95 | Completed in Step 5 with current fragment labels and precedence; made no resolved-call or API-risk claim. |
 | D01 | Discussion, before "Relation to existing detectors" | `paper/chapters/07_results.tex:61,87,91,115,123,147,155-157` | Interpret the single-run configuration trade-off. | 153 | Completed in Step 6. Preserved the reported Opus comparison sequence, cited the model and prompt designs, and retained the missing-output and single-run limits. |
 | D02 | Discussion, end of the implications subsection | `paper/chapters/08_analysis.tex:187,193,197,199` | Define bounded follow-up studies. | 187 | Completed in Step 6. Framed broader taxonomies, smaller or self-hosted models, other query builders, and preserved-flag analysis as experiments with specified measurements and no predicted gain. |
-|  |  |  | **Current execution budget** | **2,945** |  |
+|  |  |  | **Pre-reconciliation row total** | **2,945** |  |
+
+The row values record each restoration step's standalone delta before the cross-section reconciliation. Step 8 preserved every row's source mapping but edited boundaries shared with existing prose, so the final section deltas and 2,786-word current execution budget above supersede this pre-reconciliation sum.
 
 ## Fixed exclusions
 
@@ -188,3 +190,5 @@ Step 5 completed rows R01--R03 at a combined 550 words, 14 below their provision
 Step 6 completed rows D01--D02 at a combined 340 words, 20 above their provisional allocation and within the step tolerance. The resulting execution budget is 2,945 words. The main PDF reached 12,352 extracted words and 31 pages, so no further length restoration is planned.
 
 Step 7 audited every restored consequence against the five Threats to Validity categories. The section remained unchanged at 926 words; its SHA-256 remained `67b021d1d1f30133924d4b6f21828c63083a25810bdf1ff501e225080b4c48c7`. The stale metadata reference to an existing caching limitation was corrected without adding an unsupported cache-effect claim to the manuscript.
+
+Step 8 reconciled the 19 restored paragraph units in place. It removed 159 TeXCount words of duplicated definition, repeated table narration, thesis navigation, and mechanical summary, leaving a 2,786-word net restoration. Every retained unit remains attached to its named source row; the reconciliation added no freestanding paragraph and retained only short local citation, terminology, and transition corrections. The resulting paper contains 9,771 TeXCount words, 12,393 layout-extracted PDF words, and 31 pages.
