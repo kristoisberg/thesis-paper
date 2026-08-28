@@ -2,7 +2,7 @@
 
 Date: 2026-08-28
 
-Status: in progress. Steps 1--3 were completed on 2026-08-28; see the corresponding reports in `.review/`.
+Status: in progress. Steps 1--4 were completed on 2026-08-28; see the corresponding reports in `.review/`.
 
 Baseline: commit `098d195c58c72705ff5263af466f92561afa032f`.
 
@@ -18,8 +18,8 @@ The implementation target is a **net addition of 3,000 TeXCount-visible manuscri
 |---|---:|---:|---:|
 | Introduction | 384 | 68 | 452 |
 | Background and Related Work | 789 | 599 | 1,388 |
-| Study Design | 2,287 | 1,552 | 3,839 |
-| Results | 1,224 | 400 | 1,624 |
+| Study Design | 2,287 | 1,388 | 3,675 |
+| Results | 1,224 | 564 | 1,788 |
 | Discussion | 777 | 320 | 1,097 |
 | Threats to Validity | 926 | 0 | 926 |
 | Conclusion | 163 | 0 | 163 |
@@ -95,20 +95,22 @@ Do not restore the full 19-class taxonomy, prompt-engineering tutorial, promotio
 
 Completion check: Background gained 599 words, within the planned 594--726 range. Its final paragraph still identifies the output-unit gap; every restored tool description has a citation and is used by the synthesis.
 
-### Step 4: Restore procedural depth in Study Design (+1,552 words)
+### Step 4: Restore procedural depth in Study Design (+1,388 words)
+
+Status: completed on 2026-08-28. See `2026-08-28-ese-word-restoration-step-4-study-design.md`.
 
 Primary sources and sub-budgets:
 
-| Topic | Legacy source | Net addition |
+| Topic | Legacy source | Actual net addition |
 |---|---|---:|
-| Generated-class requirement and manifest-search rationale | `paper/chapters/03_dataset_creation.tex:11-15` | 292 |
-| Filtering and duplicate-review rationale | `paper/chapters/03_dataset_creation.tex:21-27` | 120 |
-| Relevant-file definition and size-stratum rationale | `paper/chapters/03_dataset_creation.tex:64-71,89-113` | 230 |
-| Selected operational-scope examples | `paper/chapters/03_dataset_creation.tex:117-131` | 100 |
-| Annotation records, iterative codebook, and washout procedure | `paper/chapters/03_dataset_creation.tex:137-160` | 250 |
-| Project-disjoint split roles and label-informed selection | `paper/chapters/03_dataset_creation.tex:203-217,235-239` | 170 |
-| Model-selection criteria | `paper/chapters/04_evaluation.tex:5-21` | 200 |
-| Prompt construction and refinement | `paper/chapters/04_evaluation.tex:33-58` | 190 |
+| Generated-class requirement and manifest-search rationale | `paper/chapters/03_dataset_creation.tex:11-15` | 254 |
+| Filtering and duplicate-review rationale | `paper/chapters/03_dataset_creation.tex:21-27` | 63 |
+| Relevant-file definition and size-stratum rationale | `paper/chapters/03_dataset_creation.tex:64-71,89-113` | 227 |
+| Selected operational-scope examples | `paper/chapters/03_dataset_creation.tex:117-131` | 60 |
+| Annotation records, iterative codebook, and washout procedure | `paper/chapters/03_dataset_creation.tex:137-160` | 214 |
+| Project-disjoint split roles and label-informed selection | `paper/chapters/03_dataset_creation.tex:203-217,235-239` | 135 |
+| Model-selection criteria | `paper/chapters/04_evaluation.tex:5-21` | 156 |
+| Prompt construction and refinement | `paper/chapters/04_evaluation.tex:33-58` | 279 |
 
 Actions:
 
@@ -122,14 +124,16 @@ Actions:
 
 Do not restore implementation architecture, CLI options, complete prompts, the complete 19-class codebook, the full split table, obsolete model parameters, or unpreserved validation-run details. The Step 13 disclosure about missing exact validation outputs remains unchanged.
 
-Completion check: Study Design gains 1,397--1,707 words; each addition lets a reader reconstruct or evaluate a decision; no detail is restored solely because it existed in the thesis.
+Completion check: Study Design gained 1,388 words, nine below the provisional tolerance. Padding and disallowed legacy detail remained excluded. The unused 164-word allocation moved to R01 in Step 5, whose legacy class-error narratives contain concrete source examples.
 
-### Step 5: Restore concrete result detail (+400 words)
+### Step 5: Restore concrete result detail (+564 words)
 
 Primary sources:
 
 - `paper/chapters/08_analysis.tex:31-35,38-40,45-49,52-58,61,71,74-81`
 - `paper/chapters/07_results.tex:390-400,408-410,442-444`
+
+Current sub-budgets are 384 words for R01 and 90 words each for R02 and R03. R01 includes the 164-word remainder from Step 4.
 
 Actions:
 
@@ -141,7 +145,7 @@ Actions:
 
 Do not restore classification-only results, the old RQ numbering, the IoU grid already assigned online, the large per-class tables, or unqualified occurrence/prevalence language.
 
-Completion check: Results gains 360--440 words; every sentence reports an observation, comparison, or direct answer; no discussion-level causal explanation appears in Results.
+Completion check: Results gains 508--620 words; every sentence reports an observation, comparison, or direct answer; no discussion-level causal explanation appears in Results.
 
 ### Step 6: Restore the Discussion's analytical chain (+320 words)
 
