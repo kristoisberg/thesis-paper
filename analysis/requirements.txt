@@ -1,0 +1,4 @@
+# Verified reconstruction environment: Python 3.14.7
+lxml==6.1.1
+numpy==2.5.1
+pandas==2.3.3

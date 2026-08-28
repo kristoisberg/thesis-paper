@@ -11,16 +11,31 @@
 \usepackage{siunitx}
 \usepackage[hidelinks]{hyperref}
 
+\hypersetup{
+  pdftitle={Online Resource 1: Supplementary Material for LLM-Based SQL Antipattern Detection in jOOQ Code: An Occurrence-Level Evaluation and Repository Study},
+  pdfauthor={Kristo Isberg; Erki Eessaar},
+  pdfsubject={Supplementary information for Empirical Software Engineering},
+  pdfkeywords={SQL antipatterns, jOOQ, large language models, reproducibility, supplementary material}
+}
+
 \geometry{margin=25mm}
 \sisetup{mode=text}
 
 \title{Online Resource 1: Supplementary Material for\\
-\emph{LLM-Based SQL Antipattern Detection in jOOQ Code}}
+\emph{LLM-Based SQL Antipattern Detection in jOOQ Code:\\
+An Occurrence-Level Evaluation and Repository Study}}
 \author{Kristo Isberg \and Erki Eessaar}
 \date{}
 
 \begin{document}
 \maketitle
+
+\begin{center}
+\emph{Empirical Software Engineering}\\[0.5em]
+Kristo Isberg, School of Information Technologies, Tallinn University of Technology, Tallinn, Estonia\\
+Erki Eessaar, Department of Software Science, School of Information Technologies, Tallinn University of Technology, Tallinn, Estonia\\
+Corresponding author: Kristo Isberg, \href{mailto:krisbe@taltech.ee}{krisbe@taltech.ee}
+\end{center}
 
 This supplement contains detailed material moved from the article and indexes the larger frozen replication resources. The full study artefacts are preserved at commit \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}. Detector source is preserved separately at commit \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}.
 
@@ -33,6 +48,72 @@ This supplement contains detailed material moved from the article and indexes th
     \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, co-detection matrices and heatmaps, and the ordered source-fragment categorisation procedure. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} reproduce the two compact diagnostics cited by the article.
     \item[Implementation.] Architecture, workflow, output, and command-line configuration details accompany the frozen \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{detector source} and the original thesis appendices.
 \end{description}
+
+\section{Reproducibility record}
+
+This record distinguishes preserved evidence from information that the original executions did not capture. No DOI-backed replication deposit existed when this record was prepared. The immutable commits below identify the surviving material. A repository DOI remains required.
+
+\subsection{Snapshots and preserved outputs}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
+    \caption{Immutable source snapshots and preserved outputs.}\label{tab:reproSnapshots}\\
+    \hline
+    \textbf{Resource} & \textbf{Identifier and archive date} & \textbf{Preserved evidence and boundary} \\ \hline
+    \endfirsthead
+    \caption[]{Immutable source snapshots and preserved outputs (continued).}\\
+    \hline
+    \textbf{Resource} & \textbf{Identifier and archive date} & \textbf{Preserved evidence and boundary} \\ \hline
+    \endhead
+    \hline
+    \endfoot
+    Study artefacts & \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}, 24 May 2026 & \path{datasets/test-set.csv} contains the \num{523} original test references. The executed \path{scripts/14-evaluate-tool-localisation.ipynb} contains all \num{536} held-out predictions. \path{datasets/analysis-results.csv} contains all \num{15931} positive corpus flags; per-project positive outputs also survive. \\
+    Released detector & \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}, 26 May 2026 & Source, tests, \path{package.json}, and \path{bun.lock}. This release postdates the April executions and does not identify the binary used for those runs. \\
+    Article analyses & \href{https://github.com/kristoisberg/thesis-paper/tree/07a81e58d0eb8abf1a6d4ef7e5286c59d08f2fa7/analysis}{\texttt{07a81e5}}, 28 August 2026 & \path{analysis/localisation_robustness.py} and \path{analysis/corpus_concentration.py} reproduce the article's localisation robustness and corpus-concentration calculations from the frozen study artefacts. \\
+\end{longtable}
+
+The preserved prediction tables contain the parsed class, file, span, code fragment, and explanation fields used in the analyses. Raw API response envelopes, request identifiers, negative-file outputs, failed responses, and complete request metadata were not archived. The source revisions of the \num{602} analysed repositories and the detector revision used for the executions are also unavailable.
+
+\subsection{Models, dates, settings, and retries}
+
+The validation notebooks called OpenRouter through the OpenAI Python SDK. They preserve four model slugs: \path{openai/gpt-5.2}, \path{z-ai/glm-5}, \path{anthropic/claude-opus-4.5}, and \path{openai/gpt-oss-120b}. Table~\ref{tab:validationRuns} gives the dashboard date and aggregate retry count for every model--prompt run. Dashboard time-zone information was not saved.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Validation execution date in 2026 and aggregate retries, shown as date/retries. ZS is Zero-Shot, FS is Few-Shot, CoT is Chain-of-Thought, and ToT is Tree-of-Thought.}
+    \label{tab:validationRuns}
+    \begin{tabular}{lrrrr}
+        \hline
+        \textbf{Prompt} & \textbf{GPT-5.2} & \textbf{GLM-5} & \textbf{Opus 4.5} & \textbf{gpt-oss-120B} \\
+        \hline
+        ZS  & 6 Mar/1  & 6 Mar/175 & 7 Mar/0 & 7 Mar/0 \\
+        FS  & 7 Mar/0  & 7 Mar/9   & 7 Mar/0 & 6 Mar/1 \\
+        CoT & 6 Mar/1  & 6 Mar/234 & 7 Mar/0 & 6 Mar/3 \\
+        ToT & 27 Mar/2 & 27 Mar/14 & 27 Mar/9 & 27 Mar/58 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+GPT-5.2 requests specified xhigh reasoning and temperature \num{0.0}; the archive does not show whether the backend applied the temperature value. GLM-5 used temperature \num{0.0} without a reasoning parameter, fixed Friendli as the backend, and disabled fallbacks. Claude Opus 4.5 used temperature \num{0.0} with reasoning disabled. gpt-oss-120B omitted the temperature parameter, requested high reasoning, and returned metadata with temperature \num{1.0}. Each model--prompt configuration ran once. The retry totals count empty or failed responses repeated by the notebooks.
+
+The held-out execution used \texttt{openrouter:anthropic/claude-opus-4.5}, temperature \num{0.0}, reasoning disabled, and the Zero-Shot prompts. Its dashboard record is dated 4 April 2026 at 15:00 and contains \num{502} requests for \num{502} files. The command allowed up to \num{1000} retries; the equal request and file counts show no additional attempts in the dashboard total. The corpus execution used the same model and generation settings on 15 April 2026 from 08:00 through 12:00. Its command allowed two retries and the dashboard records \num{18051} requests for \num{17450} files, a difference of \num{601} attempts. Per-request retry histories, final failure records, backend provider identifiers, and model snapshot identifiers are unavailable.
+
+The eight query and schema prompt files survive under \path{prompts/zero-shot/}, \path{prompts/few-shot/}, \path{prompts/chain-of-thought/}, and \path{prompts/tree-of-thought/}. The validation notebooks load these files directly. The held-out and corpus runs used prompts embedded in an unarchived binary, so byte identity with the preserved Zero-Shot files cannot be established.
+
+\subsection{Dependencies and analysis scripts}
+
+The original notebook archive contains 25 main notebooks and 16 model--prompt backups. Notebook metadata records Python \texttt{3.14.3}. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and \texttt{requests\_async}, but the original environment has no requirements or lock file. Exact original package versions are therefore unavailable. The released detector records Bun \texttt{1.2.21} and pins its JavaScript dependency graph in \path{bun.lock}; this later release cannot establish the original run environment.
+
+The article's reconstruction scripts were verified with Python \texttt{3.14.7}. Their direct third-party dependencies are pinned in \path{analysis/requirements.txt}. From the article repository root, the two commands are:
+
+\begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
+python analysis/localisation_robustness.py /path/to/masters-thesis
+python analysis/corpus_concentration.py \
+  /path/to/masters-thesis/datasets/analysis-results.csv \
+  --verify-frozen
+\end{lstlisting}
+
+The first command reconstructs the \num{536} predictions from the executed notebook, reproduces the primary \num{460}/\num{76}/\num{63} true-positive/false-positive/false-negative totals, evaluates four intersection-over-union thresholds, and runs the \num{10000}-iteration project bootstrap with seed \num{20260827}. The second verifies the frozen corpus CSV hash and reproduces the class-level repository-concentration results.
 
 \section{Equivalent SQL and jOOQ source representations}
 

@@ -17,9 +17,9 @@ main:
 	$(LATEXMK) $(LATEXMK_FLAGS) main.tex
 
 supplement:
-	$(LATEXMK) $(LATEXMK_FLAGS) supplementary.tex
+	$(LATEXMK) $(LATEXMK_FLAGS) -jobname=ESM_1 supplementary.tex
 
 clean:
 	$(LATEXMK) -C main.tex
-	$(LATEXMK) -C supplementary.tex
-	$(RM) paper/main.bbl paper/supplementary.bbl
+	$(LATEXMK) -C -jobname=ESM_1 supplementary.tex
+	$(RM) paper/main.bbl paper/ESM_1.bbl

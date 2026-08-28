@@ -275,6 +275,8 @@ Completion check: each retained float supports one claim, and the main PDF no lo
 
 ### Step 12: Complete reproducibility and journal declarations
 
+Status: partially completed on 2026-08-28. Verifiable metadata and the surviving reproducibility record are complete. DOI deposition and author confirmation of funding, competing interests, ethics, consent, author metadata, and final approval remain required. See `2026-08-28-ese-step-12-reproducibility-declarations.md`.
+
 Actions:
 
 - Freeze the replication package with a DOI and record repository commits, raw predictions, model/provider identifiers and dates, parameters, prompts, retries, dependencies, and analysis scripts.

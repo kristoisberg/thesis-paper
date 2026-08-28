@@ -13,6 +13,13 @@
 \usepackage{siunitx}
 \usepackage[hidelinks]{hyperref}
 
+\hypersetup{
+  pdftitle={LLM-Based SQL Antipattern Detection in jOOQ Code: An Occurrence-Level Evaluation and Repository Study},
+  pdfauthor={Kristo Isberg; Erki Eessaar},
+  pdfsubject={Manuscript for Empirical Software Engineering},
+  pdfkeywords={SQL antipatterns, jOOQ, large language models, static analysis, prompting, empirical software engineering}
+}
+
 \journalname{Empirical Software Engineering}
 
 \newcommand{\sotaModel}{OpenAI GPT-5.2 (reasoning)}
@@ -66,29 +73,32 @@ Many SQL antipattern detectors analyse SQL statements. jOOQ instead constructs q
 
 \section*{Statements and Declarations}
 
-\paragraph{Prior dissemination and relationship to the master's thesis}
-This article is based on Kristo Isberg's master's thesis, \emph{Detecting SQL Antipatterns in jOOQ Database Access Code Using Large Language Models}. The repository corpus, annotated dataset, detector implementation, model and prompt experiments, and large-scale measurements originate in that work.
+\subsection*{Prior dissemination and relationship to the master's thesis}
+This article is based on Kristo Isberg's master's thesis, \href{https://digikogu.taltech.ee/en/Item/37cea9cf-3d0f-4aef-935c-ecdab7db0dcd}{\emph{Detecting SQL Antipatterns in jOOQ Database Access Code Using Large Language Models}}. The repository corpus, annotated dataset, detector implementation, model and prompt experiments, and large-scale measurements originate in that work.
 
-\paragraph{Author contributions}
-Kristo Isberg conducted the study and drafted the manuscript. Erki Eessaar supervised the work and reviewed the manuscript.
+\subsection*{Author contributions}
+Kristo Isberg conducted the investigation and wrote the original draft. Erki Eessaar supervised the work and reviewed and edited the manuscript.
 
-\paragraph{Competing interests}
+\subsection*{Competing interests}
 [Financial and non-financial competing interests must be confirmed before submission.]
 
-\paragraph{Funding}
+\subsection*{Funding}
 [Funding sources and grant numbers, or the absence of funding, must be confirmed before submission.]
 
-\paragraph{Data availability}
+\subsection*{Data availability}
 The data supporting the findings, including the annotated dataset, experimental outputs, analysis results, prompts, and source-material references, are publicly available at commit \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}} and indexed in Online Resource~1.
 
-\paragraph{Code and materials availability}
-The SQL-antipattern detector and its source code are publicly available in the \href{https://github.com/kristoisberg/jooq-antipattern-detector}{detector repository}.
+\subsection*{Code and materials availability}
+The released SQL-antipattern detector source is available at commit \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}. The reconstruction scripts used for the article are available at commit \href{https://github.com/kristoisberg/thesis-paper/tree/07a81e58d0eb8abf1a6d4ef7e5286c59d08f2fa7/analysis}{\texttt{07a81e5}}.
 
-\paragraph{Ethics approval}
+\subsection*{Ethics approval}
 [Whether institutional ethics review was required for the analysis of public software repositories must be confirmed before submission.]
 
-\paragraph{Consent to participate}
+\subsection*{Consent to participate}
 [Applicability must be confirmed before submission.]
+
+\subsection*{Supplementary information}
+Online Resource~1 (\texttt{ESM\_1.pdf}): resource index, reproducibility record, source-representation example, detection-approach comparison, project-split support, and localisation-threshold sensitivity.
 
 \bibliographystyle{../template/spbasic}
 \bibliography{references}
