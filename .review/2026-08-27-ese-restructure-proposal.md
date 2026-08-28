@@ -192,6 +192,8 @@ Completion check: the paper compiles in the new order and contains the original 
 
 ### Step 6: Reduce and refocus the background
 
+Status: completed on 2026-08-28. See `2026-08-28-ese-step-6-background.md`.
+
 Actions:
 
 - Retain material needed to understand SQL antipatterns, jOOQ representation, detection methods, and localisation.
