@@ -9,7 +9,7 @@ Step 12 is partially complete. The repository now records every reproducibility 
 - Added PDF title, author, subject, and keyword metadata to the manuscript and Online Resource 1.
 - Added the exact article title, journal, affiliations, and corresponding-author contact to Online Resource 1.
 - Changed the supplementary build output to `paper/ESM_1.pdf` and added its manuscript caption.
-- Pinned the study artefacts at `d9b35e3`, released detector at `cf82fe5`, and article reconstruction scripts at `07a81e5`.
+- Pinned the study artefacts at `d9b35e3`, released detector at `cf82fe5`, and article reconstruction scripts with their dependencies at `96dc91b` (corrected during Step 13).
 - Recorded preserved prediction locations, model slugs, execution dates, parameters, validation retry totals, held-out and corpus request totals, prompts, dependencies, missing raw metadata, and analysis commands.
 - Added `analysis/requirements.txt` for the current reconstruction scripts.
 - Corrected the validation-method account to match the archived notebooks: GPT-5.2 requests include temperature `0.0`; gpt-oss-120B omits the parameter and preserved responses report `1.0`; only the GLM-5 notebooks record a fixed backend and disabled fallbacks.

@@ -22,4 +22,4 @@ supplement:
 clean:
 	$(LATEXMK) -C main.tex
 	$(LATEXMK) -C -jobname=ESM_1 supplementary.tex
-	$(RM) paper/main.bbl paper/ESM_1.bbl
+	$(RM) paper/main.bbl paper/ESM_1.bbl paper/supplementary.aux paper/supplementary.bbl paper/supplementary.blg paper/supplementary.fdb_latexmk paper/supplementary.fls paper/supplementary.log paper/supplementary.out paper/supplementary.pdf

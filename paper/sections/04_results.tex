@@ -4,12 +4,12 @@ We report the detector configuration selected on the validation partition before
 
 \subsection{Detector configuration selection}\label{sec:detectorSelectionResults}
 
-The validation comparison in Table~\ref{tab:configurationSelection} fixed Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled and temperature \num{0.0}, using the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. The reasoning-oriented prompts had an observed F1-score of \num{0.90} for Claude Opus 4.5, with higher costs and runtimes. We selected the simpler configuration for the held-out and corpus runs. Run-to-run uncertainty was not measured.
+Based on the validation comparison in Table~\ref{tab:configurationSelection}, we selected Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. The reasoning-oriented prompts had an observed F1-score of \num{0.90} for Claude Opus 4.5, with higher costs and runtimes. We selected the simpler configuration for the held-out and corpus runs. Run-to-run uncertainty was not measured.
 
-\begin{table}[H]
+\begin{table}[tbp]
     \centering
     \scriptsize
-    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics from one run over \num{20} validation repositories. Costs include value-added tax, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5.}
+    \caption{Originally reported validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics from one run over \num{20} validation repositories. Costs include value-added tax, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5. The exact run outputs underlying these aggregates were not preserved.}
     \label{tab:configurationSelection}
     \begin{tabular}{llrrrrr}
         \hline
@@ -87,7 +87,7 @@ A \num{10000}-replicate project-cluster bootstrap placed micro precision between
 
 \subsection{RQ2: How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?}\label{sec:rq2CorpusFlags}
 
-The selected detector produced \num{15931} positive flags across \num{17450} relevant Java files in the \num{602}-repository corpus. At least one retained class was flagged in \num{601} repositories, or \qty{99.8}{\percent}. Implicit Columns and ID Required dominated the output: together they accounted for \num{10886} flags, or \qty{68.3}{\percent} of all flags, and appeared in \qty{88.9}{\percent} and \qty{86.9}{\percent} of repositories, respectively. Table~\ref{tab:corpusFlags} reports class totals and repository coverage.
+The corpus run targeted \num{17450} relevant Java files in \num{602} repositories and produced \num{15931} positive flags. At least one retained class was flagged in \num{601} repositories, or \qty{99.8}{\percent}. Implicit Columns and ID Required dominated the output: together they accounted for \num{10886} flags, or \qty{68.3}{\percent} of all flags, and appeared in \qty{88.9}{\percent} and \qty{86.9}{\percent} of repositories, respectively. Table~\ref{tab:corpusFlags} reports class totals and repository coverage.
 
 The flags were concentrated within repositories. The highest-count \qty{10}{\percent} of flagged repositories contained \qty{59.1}{\percent} of all flags. Class-specific top-decile shares ranged from \qty{44.6}{\percent} for Poor Man's Search Engine to \qty{66.0}{\percent} for Keyless Entry. Consequently, a small group of high-count repositories contributes much of the unnormalised corpus output.
 
@@ -118,9 +118,9 @@ These counts do not estimate true antipattern prevalence. The corpus has no inde
 
 \subsection{RQ3: Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
 
-Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns among Implicit Columns and Poor Man's Search Engine flags. The two leading Implicit Columns patterns both selected all fields from a table. Together, they contained \num{5227} of \num{7289} flags, or \qty{71.7}{\percent}. Explicit field-array and asterisk patterns contributed a further \qty{12.9}{\percent}. The ordered categories covered \qty{94.1}{\percent} of the class flags.
+Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns among Implicit Columns and Poor Man's Search Engine flags. The two leading Implicit Columns patterns both selected all fields from a table. Together, they contained \num{5227} of \num{7289} flags, or \qty{71.7}{\percent}. Explicit field-array and asterisk patterns contributed a further \num{945} flags, or \qty{13.0}{\percent}. The reported recurring categories outside the combined catch-all accounted for \qty{94.1}{\percent} of the class flags.
 
-For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{273} of \num{583} flags, or \qty{46.8}{\percent}. The next three patterns matched case-insensitive or contains-style method names. These four categories contained \num{517} flags, or \qty{88.7}{\percent}. The full category scheme covered \qty{93.7}{\percent}.
+For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{273} of \num{583} flags, or \qty{46.8}{\percent}. The next three patterns matched case-insensitive or contains-style method names. These four categories contained \num{517} flags, or \qty{88.7}{\percent}. The reported recurring categories outside the combined catch-all accounted for \qty{93.7}{\percent}.
 
 \begin{table}[H]
     \centering
@@ -131,19 +131,19 @@ For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{2
         \hline
         \textbf{Flag class} & \textbf{Manifestation category} & \textbf{Flags} & \textbf{Share (\%)} \\
         \hline
-        \makecell[l]{Implicit\\Columns} & \texttt{selectFrom(TABLE)} fragment & 3417 & 46.9 \\
-        & \texttt{select().from(TABLE)} fragment & 1810 & 24.8 \\
+        \makecell[l]{Implicit\\Columns} & \texttt{selectFrom} fragment & 3417 & 46.9 \\
+        & \texttt{select()} fragment & 1810 & 24.8 \\
         & \texttt{fields()} fragment & 665 & 9.1 \\
         & \texttt{asterisk()} fragment & 280 & 3.8 \\
         & Other categorised patterns & 688 & 9.4 \\
-        & Other or uncategorised & 429 & 5.9 \\
+        & Sparse matched or uncategorised & 429 & 5.9 \\
         \hline
         \makecell[l]{Poor Man's\\Search Engine} & \texttt{like(} fragment & 273 & 46.8 \\
         & \texttt{containsIgnoreCase(} fragment & 96 & 16.5 \\
         & \texttt{likeIgnoreCase(} fragment & 87 & 14.9 \\
         & \texttt{contains(} fragment & 61 & 10.5 \\
         & Other categorised patterns & 29 & 5.0 \\
-        & Other or uncategorised & 37 & 6.3 \\
+        & Sparse matched or uncategorised & 37 & 6.3 \\
         \hline
     \end{tabular}
 \end{table}

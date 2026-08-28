@@ -287,6 +287,8 @@ Completion check: all ESE submission fields can be completed from the manuscript
 
 ### Step 13: Run the submission-readiness pass
 
+Status: partially completed on 2026-08-28. The manuscript, supplement, evidence checks, and reviewer audits pass; DOI deposition, author-confirmed declarations, and the unavailable exact validation-run outputs prevent the full ESE completion check from passing. See `2026-08-28-ese-step-13-submission-readiness.md`.
+
 Actions:
 
 - Build the paper from a clean state and inspect the PDF.

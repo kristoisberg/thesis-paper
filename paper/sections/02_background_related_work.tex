@@ -2,7 +2,6 @@
 
 Evaluating occurrence localisation requires explicit class definitions, a representation of jOOQ source, and an account of how the output unit differs from prior detectors.
 
-% Source: chapters/02_background.tex, SQL Antipatterns; reduced and operationalised in Step 6.
 \subsection{SQL antipatterns and evaluated classes}\label{sec:sqlAntipatterns}
 
 SQL antipatterns are recurring database-design or query-construction choices that impair properties such as performance, maintainability, portability, or data integrity \citetext{\citealp[p. 1]{karwin2023sql}; \citealp[p. 4]{alshemaimri2021survey}}. Karwin's catalogue, first published in 2010, provides the base definitions used in this study \nobreakcite{karwin2023sql}. Later work has proposed broader and vendor-specific taxonomies \nobreakcite{alshemaimri2021survey,10.1007/978-3-031-09070-7_26,10.1007/978-3-031-35311-6_51,factor2014sql,angelakos2025PostgreSQL}.
@@ -47,16 +46,14 @@ The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatte
     A jOOQ query or generated-DAO operation fetches all columns without an explicit projection. Calls within \texttt{fetchCount} or \texttt{fetchExists} are excluded \nobreakcite[Ch. 19]{karwin2023sql,jooq2025select}. \\
 \end{longtable}
 
-% Source: chapters/02_background.tex, jOOQ Object Oriented Querying; reduced in Step 6.
 \subsection{jOOQ source representation}\label{sec:jooq}
 
-jOOQ represents SQL as a Java domain-specific language \nobreakcite{jooq2025sql}. Its code generator maps database objects, including tables and constraints, to Java classes \nobreakcite{jooq2025codegen}. Projects may also execute plain SQL through its JDBC wrapper \nobreakcite{jooq2025execution}.
+jOOQ provides a Java domain-specific language (DSL) for constructing SQL \nobreakcite{jooq2025sql}. Its code generator maps database objects, including tables and constraints, to Java classes \nobreakcite{jooq2025codegen}. Projects may also execute plain SQL through its JDBC wrapper \nobreakcite{jooq2025execution}.
 
 Implicit Columns denotes a blind projection, such as \texttt{SELECT *}, whose result can change when a table's columns change \nobreakcite[Ch. 19]{karwin2023sql}. In jOOQ, the same projection can be expressed through chained \texttt{select(...)} and \texttt{from(TABLE)} calls. Online Resource~1 provides the paired SQL and jOOQ listings.
 
 A jOOQ statement is assembled from Java calls and may refer to schema information through generated classes. The corresponding SQL is produced at runtime \nobreakcite{jooq2025withgen}. Source-level detection must therefore interpret DSL calls and generated schema representations, rather than relying only on recoverable SQL strings.
 
-% Source: chapters/02_background.tex, Static Analysis for Antipattern Detection and Detection of SQL Antipatterns; synthesised in Step 6.
 \subsection{Detection approaches and the localisation gap}\label{sec:staticAnalysis}
 
 Static detectors commonly encode metric thresholds or rules over source representations such as abstract syntax trees (ASTs) \nobreakcite{DBLP:conf/icsm/Marinescu04,DBLP:journals/tse/MohaGDM10}. Metric and pattern rules can produce false positives when the required context is absent \nobreakcite[pp. 10--11]{DBLP:journals/jserd/PaivaDFS17}. Learned code-smell detectors instead infer patterns from annotated code \nobreakcite{DBLP:journals/ese/FontanaMZM16}.
@@ -65,4 +62,4 @@ Two SQL-antipattern tools illustrate extraction-and-parsing approaches for SQL e
 
 LLMs have been applied to code-quality detection \nobreakcite{blaauwendraad2025evaluating}. Language models have also been evaluated for PL/SQL smell detection \nobreakcite[p. 410]{de2025effectiveness}. These approaches use representations and output units different from the class-labelled jOOQ source spans evaluated here; Online Resource~1 provides the detailed comparison.
 
-A file may contain several occurrences of the same antipattern. File-level classification establishes only whether a class is present; it does not establish how many distinct occurrences the detector recovers or whether their source spans agree with the reference annotations. The reviewed work does not report occurrence-level localisation for the seven retained classes in jOOQ code. This study therefore evaluates same-file, same-class line-span agreement before using detector flags in the repository analysis.
+A file may contain several occurrences of the same antipattern. File-level classification establishes only whether a class is present; it does not establish how many distinct occurrences the detector recovers or whether their source spans agree with the reference annotations. The cited approaches do not report occurrence-level localisation for the seven retained classes in jOOQ code. This study therefore evaluates same-file, same-class line-span agreement before using detector flags in the repository analysis.

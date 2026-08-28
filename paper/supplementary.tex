@@ -45,7 +45,7 @@ This supplement contains detailed material moved from the article and indexes th
     \item[Repository mining.] The frozen repository contains the \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-github-search-terms.tex}{GitHub search strings}, \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-omitted-projects.tex}{omitted-project list}, and mining notebooks under \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts}{\texttt{scripts/}}.
     \item[Annotation materials.] The \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-annotated-antipatterns.tex}{full 19-class catalogue}, \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/diagrams/decision}{decision trees}, and reference datasets are preserved in the frozen repository.
     \item[Detector configuration.] All query and schema \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/prompts}{prompts}, model-selection detail, per-class configuration results, and configuration options are preserved with the study artefacts.
-    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, co-detection matrices and heatmaps, and the ordered source-fragment categorisation procedure. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} reproduce the two compact diagnostics cited by the article.
+    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, and co-detection matrices and heatmaps. The ordered source-fragment categorisation procedure and stored counts are in \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts/21-find-frequent-offenders.ipynb}{\texttt{scripts/21-find-frequent-offenders.ipynb}}. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} reproduce the two compact diagnostics cited by the article.
     \item[Implementation.] Architecture, workflow, output, and command-line configuration details accompany the frozen \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{detector source} and the original thesis appendices.
 \end{description}
 
@@ -53,10 +53,13 @@ This supplement contains detailed material moved from the article and indexes th
 
 This record distinguishes preserved evidence from information that the original executions did not capture. No DOI-backed replication deposit existed when this record was prepared. The immutable commits below identify the surviving material. A repository DOI remains required.
 
+\clearpage
 \subsection{Snapshots and preserved outputs}
 
+Table~\ref{tab:reproSnapshots} maps each immutable snapshot to the evidence it preserves and the limits of that evidence.
+
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
-    \caption{Immutable source snapshots and preserved outputs.}\label{tab:reproSnapshots}\\
+    \caption{Immutable source snapshots and preserved outputs. The identifier and date locate each snapshot; the final column states the evidence retained and its preservation boundary.}\label{tab:reproSnapshots}\\
     \hline
     \textbf{Resource} & \textbf{Identifier and archive date} & \textbf{Preserved evidence and boundary} \\ \hline
     \endfirsthead
@@ -68,14 +71,14 @@ This record distinguishes preserved evidence from information that the original 
     \endfoot
     Study artefacts & \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}, 24 May 2026 & \path{datasets/test-set.csv} contains the \num{523} original test references. The executed \path{scripts/14-evaluate-tool-localisation.ipynb} contains all \num{536} held-out predictions. \path{datasets/analysis-results.csv} contains all \num{15931} positive corpus flags; per-project positive outputs also survive. \\
     Released detector & \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}, 26 May 2026 & Source, tests, \path{package.json}, and \path{bun.lock}. This release postdates the April executions and does not identify the binary used for those runs. \\
-    Article analyses & \href{https://github.com/kristoisberg/thesis-paper/tree/07a81e58d0eb8abf1a6d4ef7e5286c59d08f2fa7/analysis}{\texttt{07a81e5}}, 28 August 2026 & \path{analysis/localisation_robustness.py} and \path{analysis/corpus_concentration.py} reproduce the article's localisation robustness and corpus-concentration calculations from the frozen study artefacts. \\
+    Article analyses & \href{https://github.com/kristoisberg/thesis-paper/tree/96dc91bfb3ce6a32a39bd29c7b4469a8ba0c9674/analysis}{\texttt{96dc91b}}, 28 August 2026 & \path{analysis/localisation_robustness.py}, \path{analysis/corpus_concentration.py}, and \path{analysis/requirements.txt} reproduce the article's localisation robustness and corpus-concentration calculations from the frozen study artefacts. \\
 \end{longtable}
 
 The preserved prediction tables contain the parsed class, file, span, code fragment, and explanation fields used in the analyses. Raw API response envelopes, request identifiers, negative-file outputs, failed responses, and complete request metadata were not archived. The source revisions of the \num{602} analysed repositories and the detector revision used for the executions are also unavailable.
 
 \subsection{Models, dates, settings, and retries}
 
-The validation notebooks called OpenRouter through the OpenAI Python SDK. They preserve four model slugs: \path{openai/gpt-5.2}, \path{z-ai/glm-5}, \path{anthropic/claude-opus-4.5}, and \path{openai/gpt-oss-120b}. Table~\ref{tab:validationRuns} gives the dashboard date and aggregate retry count for every model--prompt run. Dashboard time-zone information was not saved.
+The validation notebooks called OpenRouter \citep{openRouter2026homepage} through the OpenAI Python SDK \citep{openAiPython2026GitHub}. They preserve four model slugs: \path{openai/gpt-5.2} \citep{gpt52}, \path{z-ai/glm-5} \citep{DBLP:journals/corr/abs-2602-15763}, \path{anthropic/claude-opus-4.5} \citep{opus45Card}, and \path{openai/gpt-oss-120b} \citep{DBLP:journals/corr/abs-2508-10925}. Table~\ref{tab:validationRuns} gives the dashboard date and aggregate retry count for every model--prompt run. Dashboard time-zone information was not saved. The surviving notebook copies process \num{1159} files and do not reproduce the file count, costs, or runtimes in the article's originally reported validation table; the exact run outputs underlying that table are unavailable.
 
 \begin{table}[H]
     \centering
@@ -96,13 +99,13 @@ The validation notebooks called OpenRouter through the OpenAI Python SDK. They p
 
 GPT-5.2 requests specified xhigh reasoning and temperature \num{0.0}; the archive does not show whether the backend applied the temperature value. GLM-5 used temperature \num{0.0} without a reasoning parameter, fixed Friendli as the backend, and disabled fallbacks. Claude Opus 4.5 used temperature \num{0.0} with reasoning disabled. gpt-oss-120B omitted the temperature parameter, requested high reasoning, and returned metadata with temperature \num{1.0}. Each model--prompt configuration ran once. The retry totals count empty or failed responses repeated by the notebooks.
 
-The held-out execution used \texttt{openrouter:anthropic/claude-opus-4.5}, temperature \num{0.0}, reasoning disabled, and the Zero-Shot prompts. Its dashboard record is dated 4 April 2026 at 15:00 and contains \num{502} requests for \num{502} files. The command allowed up to \num{1000} retries; the equal request and file counts show no additional attempts in the dashboard total. The corpus execution used the same model and generation settings on 15 April 2026 from 08:00 through 12:00. Its command allowed two retries and the dashboard records \num{18051} requests for \num{17450} files, a difference of \num{601} attempts. Per-request retry histories, final failure records, backend provider identifiers, and model snapshot identifiers are unavailable.
+The held-out execution used \texttt{openrouter:anthropic/claude-opus-4.5}, temperature \num{0.0}, reasoning disabled, and the Zero-Shot prompts. Its dashboard record is dated 4 April 2026 at 15:00 and contains \num{502} requests for \num{502} files. The command allowed up to \num{1000} retries per file; the equal request and file counts show no additional attempts in the dashboard total. The corpus execution used the same model and generation settings on 15 April 2026 from 08:00 through 12:00. Its command allowed two retries per file and the dashboard records \num{18051} requests for \num{17450} files, a difference of \num{601} attempts. Per-request retry histories, final failure records, backend provider identifiers, and model snapshot identifiers are unavailable.
 
 The eight query and schema prompt files survive under \path{prompts/zero-shot/}, \path{prompts/few-shot/}, \path{prompts/chain-of-thought/}, and \path{prompts/tree-of-thought/}. The validation notebooks load these files directly. The held-out and corpus runs used prompts embedded in an unarchived binary, so byte identity with the preserved Zero-Shot files cannot be established.
 
 \subsection{Dependencies and analysis scripts}
 
-The original notebook archive contains 25 main notebooks and 16 model--prompt backups. Notebook metadata records Python \texttt{3.14.3}. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and \texttt{requests\_async}, but the original environment has no requirements or lock file. Exact original package versions are therefore unavailable. The released detector records Bun \texttt{1.2.21} and pins its JavaScript dependency graph in \path{bun.lock}; this later release cannot establish the original run environment.
+The original notebook archive contains 26 top-level notebooks and 16 model--prompt backups. Notebook metadata records Python \texttt{3.14.3} in 38 notebooks and \texttt{3.13.5} in four backups. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and \texttt{requests\_async}, but the original environment has no requirements or lock file. Exact original package versions are therefore unavailable. The released detector records Bun \texttt{1.2.21} and pins its JavaScript dependency graph in \path{bun.lock}; this later release cannot establish the original run environment.
 
 The article's reconstruction scripts were verified with Python \texttt{3.14.7}. Their direct third-party dependencies are pinned in \path{analysis/requirements.txt}. From the article repository root, the two commands are:
 
@@ -117,7 +120,7 @@ The first command reconstructs the \num{536} predictions from the executed noteb
 
 \section{Equivalent SQL and jOOQ source representations}
 
-The following fragments express the same Implicit Columns occurrence: both select every column from the \texttt{employee} table.
+The following fragments express the same Implicit Columns occurrence in SQL and jOOQ \citep{jooq2025sql}: both select every column from the \texttt{employee} table.
 
 \paragraph{SQL}
 \begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
@@ -132,10 +135,13 @@ var employee = dslContext.select(DSL.asterisk())
     .fetchOne();
 \end{lstlisting}
 
+\clearpage
 \section{Detection representations and output units}
 
+Table~\ref{tab:detectionApproaches} contrasts the representations and output units of prior detection approaches with the class-labelled source spans evaluated here.
+
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}}
-    \caption{Detection representations and output units relevant to jOOQ source analysis.}\label{tab:detectionApproaches}\\
+    \caption{Detection representations and output units relevant to jOOQ source analysis. API denotes application programming interface, AST denotes abstract syntax tree, and LLM denotes large language model; the comparison shows that this study evaluates multiple class-labelled source spans rather than statement warnings or file classifications.}\label{tab:detectionApproaches}\\
     \hline
     \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
     \endfirsthead
@@ -147,7 +153,7 @@ var employee = dslContext.select(DSL.asterisk())
     \endfoot
     SQL extraction and parsing &
     SQL recovered from host-language source or query logs; parsed-statement warnings \citep{sharma2018smelly,nagy2017static,DBLP:conf/sigmod/DintyalaNA20}. &
-    Does not directly expose occurrences represented by jOOQ domain-specific-language calls or generated schema classes. \\
+    Does not directly expose occurrences represented by jOOQ domain-specific language calls or generated schema classes. \\
     API or AST rules &
     Host-language syntax and application programming interface (API) patterns or abstract syntax tree (AST) nodes; warnings attached to matched source nodes \citep{DBLP:journals/tse/MohaGDM10}. &
     Can localise encoded patterns but requires explicit coverage of jOOQ idioms and cross-file relationships. \\
@@ -155,16 +161,19 @@ var employee = dslContext.select(DSL.asterisk())
     Source code and supplied context; prior work reports smell recognition or classification \citep{de2025effectiveness,blaauwendraad2025evaluating}. &
     Can return class-labelled spans, whose agreement and class-specific errors require empirical evaluation. \\
     This study &
-    Java domain-specific-language and generated schema code; multiple class-labelled source-line spans. &
+    Java domain-specific language and generated schema code; multiple class-labelled source-line spans. &
     Evaluates the occurrence output later counted as detector flags across repositories. \\
 \end{longtable}
 
 \section{Project-disjoint split support}\label{sec:splitSupport}
 
+Table~\ref{tab:splitSupport} shows the \num{21}/\num{20}/\num{20}-repository split and the sparse project support for several classes.
+
 \begin{table}[H]
     \centering
     \small
-    \caption{Occurrence and repository support in the project-disjoint split. Each cell gives occurrences followed by repositories in parentheses.}
+    \caption{Occurrence and repository support in the \num{21}-repository training, \num{20}-repository validation, and \num{20}-repository test partitions. Each cell gives occurrences followed by repositories in parentheses; several classes occur in only one to five projects per partition.}
+    \label{tab:splitSupport}
     \begin{tabular}{lrrrr}
         \hline
         \textbf{Class} & \textbf{Total} & \textbf{Training} & \textbf{Validation} & \textbf{Test} \\
@@ -182,9 +191,12 @@ var employee = dslContext.select(DSL.asterisk())
 
 \section{Intersection-over-union sensitivity}\label{sec:iouSensitivity}
 
+Table~\ref{tab:iouSensitivity} shows that pooled micro F1 varies by only \num{0.010} across the four tested localisation thresholds.
+
 \begin{table}[H]
     \centering
-    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union threshold. Each row applies the same one-to-one matching rule to all \num{536} predictions and the original reference spans.}
+    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union (IoU) threshold. TP, FP, and FN denote true positives, false positives, and false negatives. Each row applies the same one-to-one matching rule to all \num{536} predictions and the original reference spans; micro F1 spans \num{0.863}--\num{0.873}.}
+    \label{tab:iouSensitivity}
     \begin{tabular}{rrrrrrr}
         \hline
         \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
