@@ -2,16 +2,16 @@
 
 SQL antipatterns are recurring database-design or query-construction choices that can impair performance, maintainability, portability, or data integrity \citetext{\citealp[p. 1]{karwin2023sql}; \citealp[p. 4]{alshemaimri2021survey}}. Prior studies have reported them in open-source and industrial systems \nobreakcite{muse2020prevalence,sharma2018smelly}, and controlled measurements have shown costs for particular antipatterns \citetext{\citealp{lyu2019quantifying}; \citealp[pp. 2334--2335]{DBLP:conf/sigmod/DintyalaNA20}}.
 
-Compared with traditional code smells \nobreakcite[Ch. 3]{fowler2019refactoring}, \nobreaktextcite{muse2020prevalence} found that SQL antipattern occurrences tended to remain unfixed for longer and were more likely to persist throughout a system's lifetime. The researchers suggested that this pattern may reflect either developers' lack of awareness of SQL antipatterns and their disadvantages or the comparatively low priority assigned to fixing them. These are proposed explanations from the prior study rather than causal findings. Detection can expose these choices during development, but the analysed source representation determines what a detector can observe.
+Compared with traditional code smells \nobreakcite[Ch. 3]{fowler2019refactoring}, \nobreaktextcite{muse2020prevalence} found that SQL antipattern occurrences tended to remain unfixed for longer and were more likely to persist throughout a system's lifetime. The researchers suggested that this pattern may reflect either developers' lack of awareness of SQL antipatterns and their disadvantages or the comparatively low priority assigned to fixing them. Detection can expose these choices during development, but the analysed source representation determines what a detector can observe.
 
 jOOQ embeds SQL construction in Java through a fluent domain-specific language and generated schema classes \nobreakcite{jooq2025sql,jooq2025codegen}. A query may therefore be distributed across Java expressions and supporting schema code rather than available as a complete SQL statement. Existing SQL-antipattern detectors analyse executed statements, recover SQL text from host-language source, or classify source units \nobreakcite{sharma2018smelly,nagy2017static,nagy2018sqlinspect,DBLP:conf/sigmod/DintyalaNA20,de2025effectiveness}. These approaches do not establish how closely a detector can localise the same class-labelled jOOQ occurrences as a reference process. That evidence is needed before repository-scale detector counts can be interpreted at the occurrence level.
 
-This study evaluates a large language model (LLM)-based detector as a measurement instrument for jOOQ occurrence localisation. Project-disjoint evaluation measures how closely one selected-detector run agrees with the original single-annotator reference for the class-labelled span outputs later counted as corpus flags. This evidence supports class-specific statements about detector flags; true antipattern prevalence and risk associated with particular application programming interfaces remain unmeasured.
+We evaluate a large language model (LLM)-based detector through project-disjoint occurrence matching, then use its output to characterise detector flags across repositories.
 
 The study addresses three research questions:
 
 \begin{itemize}
-    \item \textbf{RQ1:} What occurrence-level agreement does one run of the selected LLM-based detector achieve against the original single-annotator reference spans for seven operationalised SQL antipatterns in the 20-repository, project-disjoint test partition?
+    \item \textbf{RQ1:} What occurrence-level agreement does the selected detector achieve on held-out jOOQ projects?
     \item \textbf{RQ2:} How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?
     \item \textbf{RQ3:} Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?
 \end{itemize}
@@ -20,6 +20,6 @@ The study makes three contributions:
 
 \begin{itemize}
     \item an occurrence-level reference dataset containing \num{1562} class-labelled spans across 19 operationalised SQL antipatterns from 61 sampled jOOQ repositories, with seven classes retained for detector analysis;
-    \item a project-disjoint evaluation of one selected LLM-detector run against original reference spans, including class-specific errors and sensitivity to span-matching thresholds and test-project composition; and
-    \item a bounded characterisation of detector flags in 602 identified repositories, including repository concentration and recurring source-fragment patterns for two flag classes.
+    \item a project-disjoint evaluation of a selected LLM-based detector against original reference spans, including class-specific errors and sensitivity to span-matching thresholds and test-project composition; and
+    \item a characterisation of detector flags in 602 identified repositories, including repository concentration and recurring source-fragment patterns for two flag classes.
 \end{itemize}

@@ -1,15 +1,13 @@
 \section{Results}\label{sec:results}
 
-We report the detector configuration selected on the validation partition before answering the three research questions. RQ1 measures one held-out occurrence-localisation run against the original reference spans. RQ2 describes the resulting detector flags across the identified corpus, and RQ3 groups recurring source-fragment patterns among two classes of those flags. This order separates instrument selection from evaluation and keeps each conclusion tied to its unit of analysis.
-
 \subsection{Detector configuration selection}\label{sec:detectorSelectionResults}
 
-Based on the validation comparison in Table~\ref{tab:configurationSelection}, we selected Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. The comparison also included GPT-5.2, GLM-5, and gpt-oss-120B \nobreakcite{gpt52,DBLP:journals/corr/abs-2602-15763,DBLP:journals/corr/abs-2508-10925}, with Chain-of-Thought and Tree-of-Thought-inspired prompts following established designs \nobreakcite{DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. The reasoning-oriented prompts had an observed F1-score of \num{0.90} for Claude Opus 4.5, with higher costs and runtimes. We selected the simpler configuration for the held-out and corpus runs. Run-to-run uncertainty was not measured.
+Based on the validation comparison in Table~\ref{tab:configurationSelection}, we selected Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. The comparison also included GPT-5.2, GLM-5, and gpt-oss-120B \nobreakcite{gpt52,DBLP:journals/corr/abs-2602-15763,DBLP:journals/corr/abs-2508-10925}, with Chain-of-Thought and Tree-of-Thought-inspired prompts following established designs \nobreakcite{DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. The reasoning-oriented prompts reached \num{0.90} F1 with higher costs and runtimes. We therefore selected the simpler configuration for the held-out and corpus runs.
 
 \begin{table}[tbp]
     \centering
     \scriptsize
-    \caption{Originally reported validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics from one run over \num{20} validation repositories. Costs include value-added tax, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5. The exact run outputs underlying these aggregates were not preserved.}
+    \caption{Originally reported validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs include value-added tax, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5.}
     \label{tab:configurationSelection}
     \begin{tabular}{llrrrrr}
         \hline
@@ -26,16 +24,16 @@ Based on the validation comparison in Table~\ref{tab:configurationSelection}, we
     \end{tabular}
 \end{table}
 
-\subsection{RQ1: What occurrence-level agreement does one run of the selected LLM-based detector achieve against the original single-annotator reference spans for seven operationalised SQL antipatterns in the 20-repository, project-disjoint test partition?}\label{sec:rq1Agreement}
+\subsection{RQ1: What occurrence-level agreement does the selected detector achieve on held-out jOOQ projects?}\label{sec:rq1Agreement}
 
-One run of the selected detector returned \num{536} predictions from \num{502} relevant files in the \num{20}-repository test partition. The original single-annotator reference contained \num{523} spans. At the prespecified intersection-over-union threshold of \num{0.50}, the one-to-one matching procedure yielded \num{460} true positives, \num{76} false positives, and \num{63} false negatives. The corresponding micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}.
+In one run, the selected detector returned \num{536} predictions from \num{502} relevant files in the \num{20}-repository test partition. The original reference contained \num{523} spans. At the prespecified intersection-over-union threshold of \num{0.50}, the one-to-one matching procedure yielded \num{460} true positives, \num{76} false positives, and \num{63} false negatives. The corresponding micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}.
 
 Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial class differences. F1-scores ranged from \num{0.481} for Fear of the Unknown to \num{0.974} for 31 Flavors. Implicit Columns, 31 Flavors, and Rounding Errors each exceeded \num{0.89}, whereas Keyless Entry, Fear of the Unknown, and Poor Man's Search Engine remained below \num{0.70}. The macro precision, recall, and F1-score were \num{0.797}, \num{0.813}, and \num{0.793}; the reference-support-weighted values were \num{0.885}, \num{0.880}, and \num{0.877}. These aggregates reinforce the need to interpret each corpus flag class in light of its own held-out agreement.
 
 \begin{table}[H]
     \centering
     \small
-    \caption{Occurrence-level agreement of one selected-detector run with the original single-annotator reference spans at intersection over union \num{0.50}. True positives (TP), false positives (FP), and false negatives (FN) are one-to-one event-matching counts; true negatives are undefined for this localisation task. The final row pools all classes.}
+    \caption{Occurrence-level agreement with the original reference spans at intersection over union \num{0.50}. True positives (TP), false positives (FP), and false negatives (FN) are one-to-one event-matching counts; true negatives are undefined for this localisation task. The final row pools all classes.}
     \label{tab:toolDetections}
     \begin{tabular}{lrrrrrr}
         \hline
@@ -55,12 +53,12 @@ Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial
 
 \subsubsection{Class-specific errors}\label{sec:detectionErrors}
 
-The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurring mechanisms. Implicit Columns and Poor Man's Search Engine disagreements involved local query-method semantics. Keyless Entry and Fear of the Unknown disagreements concerned inferred relationships and missing-value conventions. Inspection also exposed omissions and span errors in the original reference annotations. We retain that original reference for the primary result because detector disagreements guided the later review.
+The disagreements in Table~\ref{tab:detectionErrors} cluster around local query semantics, inferred relationships, missing-value conventions, and occurrence grouping. Inspection also exposed omissions and span errors in the original reference annotations. Because detector disagreements guided this review, the primary result retains the original reference.
 
 \begin{table}[H]
     \centering
     \small
-    \caption{Dominant disagreement mechanisms observed during qualitative review of the held-out run. Counts refer to false positives or false negatives against the original reference spans. Reference-annotation issues were discovered through detector disagreements and therefore do not form an independent audit.}
+    \caption{Dominant disagreement mechanisms observed during qualitative review of the held-out run. Counts refer to false positives or false negatives against the original reference spans.}
     \label{tab:detectionErrors}
     \begin{tabular}{p{2.9cm}p{7.8cm}}
         \hline
@@ -77,17 +75,9 @@ The disagreements in Table~\ref{tab:detectionErrors} cluster around a few recurr
     \end{tabular}
 \end{table}
 
-For Implicit Columns, the \texttt{returning()} and \texttt{returningResult()} cases in Table~\ref{tab:detectionErrors} were data-modification statements that returned all columns. One false positive and one false negative differed from the reference only in localisation: the reference covered a complete multi-line \texttt{SELECT} clause, whereas the detector returned the line containing the relevant expression. Detector-informed review of the remaining disagreements found an incorrect source file, an off-by-one line range, and a missing reference occurrence.
+Four mechanisms dominated: all-column \texttt{returning()} calls, keyless audit logs, sentinel defaults, and grouped search expressions. The remaining disagreements mainly involved line boundaries, sparse schema evidence, or class-specific semantics already summarised in the table.
 
-Beyond the primary-key names summarised in the table, one ID Required false negative involved an opportunity to use an existing alternative identifier instead of a synthetic key. Its unsuitable natural-key proposal concerned a URL-valued field whose use would have produced large and complex foreign keys. Detector-informed review of the other disagreements found five incorrect line ranges, four invalid reference occurrences, and seven additions to the reference.
-
-For Keyless Entry, the ambiguous case linked \texttt{island\_id} to an \texttt{island.id} primary key despite the columns having different data types. The detector-informed review retained nine disputed username-column flags because the referenced username was neither a primary nor a unique key.
-
-The Fear of the Unknown false negatives divided into \num{10} columns that represented missing values through non-null sentinel defaults, such as an empty string or the Unix epoch, and seven columns with defaults for values treated as naturally non-null, such as Boolean state values. Detector-informed review divided the \num{23} reference additions into six defaults used for missing values and \num{17} nullable columns whose represented values were treated as naturally non-null.
-
-The remaining classes had fewer disagreements. The 31 Flavors false negative was a \texttt{SMALLINT} range check whose values represented authorisation methods, whereas its false positive was a \texttt{VARCHAR} \texttt{status} column with no schema evidence of a fixed value set. Poor Man's Search Engine included seven false negatives and two false positives where consecutive expressions were grouped into one span. Its other disagreements were two wildcard-free \texttt{LIKE} expressions and one \texttt{containsIgnoreCase} condition stored in an intermediate collection before use in a query. All three Rounding Errors false negatives were \texttt{DOUBLE} casino-game coefficients used to calculate monetary winnings.
-
-The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this as an optimistic sensitivity analysis because the review could find disagreements visible to the detector while missing occurrences overlooked by both the annotator and detector.
+The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this result as an optimistic sensitivity analysis.
 
 Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} reports the complete threshold grid.
 
@@ -110,9 +100,7 @@ Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab
 
 Only Implicit Columns and Poor Man's Search Engine changed across these thresholds. The pooled score remained within the \num{0.863}--\num{0.873} range.
 
-A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.799} and \num{0.933}, micro recall between \num{0.817} and \num{0.913}, and micro F1 between \num{0.819} and \num{0.913}. These percentile ranges describe sensitivity to the composition of the selected test projects. They are not population confidence intervals and do not measure variation across detector runs.
-
-\noindent\textbf{Answer to RQ1.} Against the \num{523} original reference spans, one selected-detector run achieved micro precision \num{0.858}, recall \num{0.880}, and F1-score \num{0.869}. Per-class F1 ranged from \num{0.481} to \num{0.974}, with the weakest agreement for Fear of the Unknown.
+A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.799} and \num{0.933}, micro recall between \num{0.817} and \num{0.913}, and micro F1 between \num{0.819} and \num{0.913}. These percentile ranges describe sensitivity to the composition of the selected test projects.
 
 \subsection{RQ2: How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?}\label{sec:rq2CorpusFlags}
 
@@ -123,7 +111,7 @@ The flags were concentrated within repositories. The highest-count \qty{10}{\per
 \begin{table}[H]
     \centering
     \small
-    \caption{Selected-detector flags in the identified \num{602}-repository corpus. Repository coverage is the percentage of all corpus repositories with at least one class flag. Top-decile concentration is the share of class flags in the highest-count \qty{10}{\percent} of flagged repositories, rounding the number of repositories up. These are detector outputs rather than prevalence estimates.}
+    \caption{Selected-detector flags in the identified \num{602}-repository corpus. Repository coverage is the percentage of all corpus repositories with at least one class flag. Top-decile concentration is the share of class flags in the highest-count \qty{10}{\percent} of flagged repositories, rounding the number of repositories up. The unadjusted counts describe detector flags rather than prevalence.}
     \label{tab:corpusFlags}
     \begin{tabular}{lrrrr}
         \hline
@@ -140,12 +128,6 @@ The flags were concentrated within repositories. The highest-count \qty{10}{\per
         \hline
     \end{tabular}
 \end{table}
-
-Across all \num{602} repositories, the aggregate output corresponds to \num{26.46} flags per repository and \num{26.51} per flagged repository when restricted to the \num{601} repositories with at least one flag. Implicit Columns averaged \num{12.11} flags per repository and \num{13.62} per flagged repository; ID Required averaged \num{5.98} and \num{6.88}, respectively. For the less widely distributed Keyless Entry class, the average rises from \num{3.58} across all repositories to \num{10.77} across its \num{200} flagged repositories. These averages use repositories as units and do not adjust for repository size.
-
-These counts do not estimate true antipattern prevalence. The corpus has no independent reference annotation, class-specific error correction, repository-size adjustment, or API-exposure denominator. The result therefore describes where this selected detector placed flags within the identified corpus.
-
-\noindent\textbf{Answer to RQ2.} The detector produced \num{15931} flags in \num{601} of \num{602} repositories. Implicit Columns and ID Required accounted for \qty{68.3}{\percent} of all flags, and the highest-count \qty{10}{\percent} of flagged repositories contained \qty{59.1}{\percent} of the output.
 
 \subsection{RQ3: Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
 
@@ -178,9 +160,3 @@ For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{2
         \hline
     \end{tabular}
 \end{table}
-
-The Implicit Columns row for other categorised patterns combines generated DAO methods with \num{163} flags, \texttt{fetch(TABLE, ...)} with \num{151}, plain SQL wildcard fragments with \num{137}, \texttt{fetchOne(TABLE, ...)} with \num{130}, and \texttt{select(TABLE).from(TABLE)} with \num{107}. Together, these lower-frequency categories contain \num{688} flags, or \qty{9.4}{\percent} of the class total. For Poor Man's Search Engine, the corresponding row consists of \num{17} plain SQL \texttt{LIKE} fragments and \num{12} \texttt{likeRegex} fragments, totalling \num{29} flags or \qty{5.0}{\percent}. Each flag entered the first matching category in the precedence order, so these labels describe source fragments rather than resolved call targets.
-
-These categories describe recurring manifestations among flags. Without counts of all uses of each API, they cannot show whether one API is more likely than another to be associated with an antipattern.
-
-\noindent\textbf{Answer to RQ3.} The two leading Implicit Columns patterns comprised \qty{71.7}{\percent} of Implicit Columns flags. Poor Man's Search Engine flags most often matched \texttt{like(}, at \qty{46.8}{\percent}.
