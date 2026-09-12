@@ -30,7 +30,22 @@ These results remain measurements of detector output. Estimates of true antipatt
 
 ## Phase 1: reconstruct and freeze the source frame
 
-Create one deterministic script that reads the 602-repository allowlist and reuses the original relevant-file selection rules.
+Create one deterministic script that reads the 602-repository allowlist and ports the original relevant-file selection rules verbatim.
+
+### Authoritative selection logic
+
+Use `/home/kristoi/masters-thesis/scripts/25-count-relevant-files-in-full-set.ipynb` as the authoritative source for the full-corpus frame. It contains:
+
+- 22 `excluded_path_fragments` entries;
+- 3 `included_phrases` entries;
+- 22 `excluded_phrases` entries;
+- the `src/**/*.java` path restriction;
+- the exact path and content predicates used to obtain the reported 17,450-file total;
+- Latin-1 file decoding.
+
+The three lists are identical in `051-select-sample-projects-corrected.ipynb`, `09-evaluate-prompting-strategy.ipynb`, `11-select-files-for-reannotation.ipynb`, `23-count-relevant-files-in-validation-set.ipynb`, and `24-count-relevant-files-in-test-set.ipynb`. Preserve this equality as a self-check. Do not use the older lists in `05-select-sample-projects.ipynb`, which contain only 21 path exclusions and 18 content exclusions.
+
+The new script should keep one literal copy of the authoritative lists and assert a stable digest over their ordered values. It should not combine rules from multiple notebooks or infer new exclusions from the current source tree.
 
 For every selected file, record:
 
@@ -49,6 +64,8 @@ Produce a source manifest and an alignment report that joins every archived flag
 - [ ] All 602 names resolve to distinct directories.
 - [ ] None of the 43 excluded directories enters the source frame.
 - [ ] The reconstructed selection contains exactly 17,450 relevant files.
+- [ ] The ordered selection-list digest matches the authoritative rule set.
+- [ ] The authoritative lists still match the corrected sampling, evaluation, reannotation, validation-count, and test-count notebooks.
 - [ ] Every archived flag resolves to an allowlisted repository and file.
 - [ ] Every reported line span lies within its source file.
 - [ ] Each stored code fragment agrees with its source span after the documented whitespace normalization.
