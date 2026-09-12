@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reconstruct and verify the frozen source frame used for corpus analysis."""
+"""Reconstruct the corpus source frame and measure flag breadth and repetition."""
 
 import argparse
 import ast
@@ -7,7 +7,8 @@ import csv
 import glob
 import hashlib
 import json
-from collections import Counter
+import statistics
+from collections import Counter, defaultdict
 from pathlib import Path
 
 
@@ -22,6 +23,18 @@ EXPECTED_SOURCE_LOCATIONS = {
 EXPECTED_UNIQUE_FILES = 17_988
 EXPECTED_FLAGS = 15_931
 EXPECTED_RULE_SHA256 = "0e76695e8ff0705d6b8db74c500539d707926cbc8cb4df658ad4507d9d261b7b"
+SOURCE_ROLES = ("generated schema", "application/query source")
+
+CLASS_SOURCE_ROLES = (
+    ("Implicit Columns", "application/query source"),
+    ("ID Required", "generated schema"),
+    ("Keyless Entry", "generated schema"),
+    ("Fear of the Unknown", "generated schema"),
+    ("Fear of the Unknown", "application/query source"),
+    ("31 Flavors", "generated schema"),
+    ("Poor Man's Search Engine", "application/query source"),
+    ("Rounding Errors", "generated schema"),
+)
 
 EXCLUDED_PATH_FRAGMENTS = (
     "module-info.java",
@@ -120,6 +133,43 @@ PROJECT_RESULT_FIELDS = (
     "Line to",
     "Code fragment",
     "Explanation",
+)
+PHASE2_REPOSITORY_FIELDS = (
+    "analysis_label",
+    "antipattern",
+    "eligible_source_role",
+    "repository",
+    "eligible_files",
+    "flags",
+    "flagged_files",
+    "percent_eligible_files_flagged",
+    "flags_per_100_eligible_files",
+    "flags_per_flagged_file",
+)
+PHASE2_SUMMARY_FIELDS = (
+    "analysis_label",
+    "antipattern",
+    "eligible_source_role",
+    "repositories",
+    "repositories_with_eligible_files",
+    "flagged_repositories",
+    "total_flags",
+    "eligible_files",
+    "unique_flagged_files",
+    "all_relevant_files",
+    "percent_eligible_files_flagged",
+    "flags_per_100_eligible_files",
+    "flags_per_flagged_file",
+    "broad_flags_per_100_all_relevant_files",
+    "repository_q1_percent_eligible_files_flagged",
+    "repository_median_percent_eligible_files_flagged",
+    "repository_q3_percent_eligible_files_flagged",
+    "repository_q1_flags_per_100_eligible_files",
+    "repository_median_flags_per_100_eligible_files",
+    "repository_q3_flags_per_100_eligible_files",
+    "flagged_repository_q1_flags_per_flagged_file",
+    "flagged_repository_median_flags_per_flagged_file",
+    "flagged_repository_q3_flags_per_flagged_file",
 )
 
 
@@ -367,6 +417,121 @@ def reproduce_merged_results(project_results, names, name_to_project, frozen_fie
     return Counter(reconstructed) == Counter(frozen), hashes
 
 
+def format_rate(numerator, denominator, multiplier=1):
+    return "" if not denominator else f"{multiplier * numerator / denominator:.6f}"
+
+
+def quartiles(values):
+    q1, _, q3 = statistics.quantiles(values, n=4, method="inclusive")
+    return q1, statistics.median(values), q3
+
+
+def phase2_tables(names, manifest, alignments):
+    all_relevant_files = len(manifest)
+    eligible = Counter((row["repository"], row["source_role"]) for row in manifest)
+    flags = Counter(
+        (row["repository"], row["antipattern"], row["source_role"])
+        for row in alignments
+    )
+    flagged_files = defaultdict(set)
+    for row in alignments:
+        flagged_files[(row["repository"], row["antipattern"], row["source_role"])].add(
+            row["relative_path"]
+        )
+
+    units = [
+        (f"{antipattern} [{role}]", antipattern, role)
+        for antipattern, role in CLASS_SOURCE_ROLES
+    ]
+    units.append(
+        (
+            "Any retained class [broad detector-output density]",
+            "Any retained class",
+            "all relevant files",
+        )
+    )
+    repository_rows = []
+    summary_rows = []
+    for label, antipattern, role in units:
+        rows = []
+        for repository in names:
+            if role == "all relevant files":
+                file_count = sum(eligible[repository, source_role] for source_role in SOURCE_ROLES)
+                flag_count = sum(
+                    count
+                    for (repo, _, _), count in flags.items()
+                    if repo == repository
+                )
+                flagged = {
+                    path
+                    for (repo, _, _), paths in flagged_files.items()
+                    if repo == repository
+                    for path in paths
+                }
+            else:
+                file_count = eligible[repository, role]
+                flag_count = flags[repository, antipattern, role]
+                flagged = flagged_files[repository, antipattern, role]
+            row = {
+                "analysis_label": label,
+                "antipattern": antipattern,
+                "eligible_source_role": role,
+                "repository": repository,
+                "eligible_files": file_count,
+                "flags": flag_count,
+                "flagged_files": len(flagged),
+                "percent_eligible_files_flagged": format_rate(len(flagged), file_count, 100),
+                "flags_per_100_eligible_files": format_rate(flag_count, file_count, 100),
+                "flags_per_flagged_file": format_rate(flag_count, len(flagged)),
+            }
+            rows.append(row)
+            repository_rows.append(row)
+
+        eligible_rows = [row for row in rows if row["eligible_files"]]
+        flagged_rows = [row for row in rows if row["flagged_files"]]
+        breadth = [
+            100 * row["flagged_files"] / row["eligible_files"] for row in eligible_rows
+        ]
+        density = [100 * row["flags"] / row["eligible_files"] for row in eligible_rows]
+        repetition = [row["flags"] / row["flagged_files"] for row in flagged_rows]
+        breadth_q1, breadth_median, breadth_q3 = quartiles(breadth)
+        density_q1, density_median, density_q3 = quartiles(density)
+        repetition_q1, repetition_median, repetition_q3 = quartiles(repetition)
+        total_flags = sum(row["flags"] for row in rows)
+        total_files = sum(row["eligible_files"] for row in rows)
+        total_flagged_files = sum(row["flagged_files"] for row in rows)
+        summary_rows.append(
+            {
+                "analysis_label": label,
+                "antipattern": antipattern,
+                "eligible_source_role": role,
+                "repositories": len(rows),
+                "repositories_with_eligible_files": len(eligible_rows),
+                "flagged_repositories": len(flagged_rows),
+                "total_flags": total_flags,
+                "eligible_files": total_files,
+                "unique_flagged_files": total_flagged_files,
+                "all_relevant_files": all_relevant_files,
+                "percent_eligible_files_flagged": format_rate(total_flagged_files, total_files, 100),
+                "flags_per_100_eligible_files": format_rate(total_flags, total_files, 100),
+                "flags_per_flagged_file": format_rate(total_flags, total_flagged_files),
+                "broad_flags_per_100_all_relevant_files": format_rate(
+                    total_flags, all_relevant_files, 100
+                ),
+                "repository_q1_percent_eligible_files_flagged": f"{breadth_q1:.6f}",
+                "repository_median_percent_eligible_files_flagged": f"{breadth_median:.6f}",
+                "repository_q3_percent_eligible_files_flagged": f"{breadth_q3:.6f}",
+                "repository_q1_flags_per_100_eligible_files": f"{density_q1:.6f}",
+                "repository_median_flags_per_100_eligible_files": f"{density_median:.6f}",
+                "repository_q3_flags_per_100_eligible_files": f"{density_q3:.6f}",
+                "flagged_repository_q1_flags_per_flagged_file": f"{repetition_q1:.6f}",
+                "flagged_repository_median_flags_per_flagged_file": f"{repetition_median:.6f}",
+                "flagged_repository_q3_flags_per_flagged_file": f"{repetition_q3:.6f}",
+            }
+        )
+    return repository_rows, summary_rows
+
+
 def write_csv(path, fields, rows):
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
@@ -516,10 +681,96 @@ def main():
         },
     }
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-    print(json.dumps({"passed": summary["passed"], **summary["counts"]}, indent=2, sort_keys=True))
     if not summary["passed"]:
         raise SystemExit("Phase 1 acceptance checks failed; inspect corpus_phase1_summary.json")
+
+    repository_rows, phase2_rows = phase2_tables(names, manifest, alignments)
+    phase2_by_label = {row["analysis_label"]: row for row in phase2_rows}
+    overall = phase2_by_label["Any retained class [broad detector-output density]"]
+    id_required = phase2_by_label["ID Required [generated schema]"]
+    implicit_columns = phase2_by_label["Implicit Columns [application/query source]"]
+    phase2_checks = {
+        "all_flags_have_the_expected_class_source_role": set(
+            (row["antipattern"], row["source_role"]) for row in alignments
+        )
+        == set(CLASS_SOURCE_ROLES),
+        "any_class_has_7653_distinct_flagged_files": overall["unique_flagged_files"] == 7_653,
+        "pooled_flagged_file_yield_is_42_5_percent": round(
+            float(overall["percent_eligible_files_flagged"]), 1
+        )
+        == 42.5,
+        "flagged_files_average_2_08_flags": round(float(overall["flags_per_flagged_file"]), 2)
+        == 2.08,
+        "id_required_has_3591_flagged_files": id_required["unique_flagged_files"] == 3_591,
+        "id_required_has_about_1_flag_per_flagged_file": round(
+            float(id_required["flags_per_flagged_file"]), 2
+        )
+        == 1.00,
+        "implicit_columns_has_2607_flagged_files": implicit_columns["unique_flagged_files"]
+        == 2_607,
+        "implicit_columns_has_about_2_80_flags_per_flagged_file": round(
+            float(implicit_columns["flags_per_flagged_file"]), 2
+        )
+        == 2.80,
+        "density_decomposes_into_breadth_and_repetition": all(
+            not row["flags"]
+            or abs(
+                row["flags"] / row["eligible_files"]
+                - row["flagged_files"]
+                / row["eligible_files"]
+                * row["flags"]
+                / row["flagged_files"]
+            )
+            < 1e-12
+            for row in repository_rows
+        ),
+    }
+    phase2_repository_path = args.output_dir / "corpus_phase2_by_repository.csv"
+    phase2_summary_path = args.output_dir / "corpus_phase2_class_summary.csv"
+    phase2_checks_path = args.output_dir / "corpus_phase2_summary.json"
+    write_csv(phase2_repository_path, PHASE2_REPOSITORY_FIELDS, repository_rows)
+    write_csv(phase2_summary_path, PHASE2_SUMMARY_FIELDS, phase2_rows)
+    phase2_summary = {
+        "phase": 2,
+        "passed": all(phase2_checks.values()),
+        "checks": phase2_checks,
+        "rate_policy": (
+            "Repository rates include repositories with eligible files and no flags as zero. "
+            "Rates are blank when a repository has no eligible files. Repetition summaries "
+            "include only repositories with a flagged file."
+        ),
+        "quartile_method": (
+            "Python statistics.quantiles with n=4 and method='inclusive'; Q1 and Q3 bound "
+            "the reported interquartile range."
+        ),
+        "sha256": {
+            "inputs": {
+                manifest_path.name: sha256(manifest_path),
+                alignment_path.name: sha256(alignment_path),
+            },
+            "outputs": {
+                phase2_repository_path.name: sha256(phase2_repository_path),
+                phase2_summary_path.name: sha256(phase2_summary_path),
+            },
+        },
+    }
+    phase2_checks_path.write_text(
+        json.dumps(phase2_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+    print(
+        json.dumps(
+            {
+                "phase1_passed": summary["passed"],
+                "phase2_passed": phase2_summary["passed"],
+                **summary["counts"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+    if not phase2_summary["passed"]:
+        raise SystemExit("Phase 2 acceptance checks failed; inspect corpus_phase2_summary.json")
 
 
 if __name__ == "__main__":

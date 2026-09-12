@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "all_flags_have_the_expected_class_source_role": true,
+    "any_class_has_7653_distinct_flagged_files": true,
+    "density_decomposes_into_breadth_and_repetition": true,
+    "flagged_files_average_2_08_flags": true,
+    "id_required_has_3591_flagged_files": true,
+    "id_required_has_about_1_flag_per_flagged_file": true,
+    "implicit_columns_has_2607_flagged_files": true,
+    "implicit_columns_has_about_2_80_flags_per_flagged_file": true,
+    "pooled_flagged_file_yield_is_42_5_percent": true
+  },
+  "passed": true,
+  "phase": 2,
+  "quartile_method": "Python statistics.quantiles with n=4 and method='inclusive'; Q1 and Q3 bound the reported interquartile range.",
+  "rate_policy": "Repository rates include repositories with eligible files and no flags as zero. Rates are blank when a repository has no eligible files. Repetition summaries include only repositories with a flagged file.",
+  "sha256": {
+    "inputs": {
+      "corpus_flag_alignment.csv": "b035fd06e7c829da8f995770e769c7d3491d0d32794837ddc2191f960f78c728",
+      "corpus_source_manifest.csv": "8200f8990215912efba90a4f5ed431d52c79d7b20e11ce496457f34829c8a214"
+    },
+    "outputs": {
+      "corpus_phase2_by_repository.csv": "a88de1ee4719d1f8290d1418940a11151fb7cbe443023895002141493e4352a2",
+      "corpus_phase2_class_summary.csv": "7a91098968dc2b20afd86edf3cc505c2cd21fcd220818e5888a7c144639e451b"
+    }
+  }
+}

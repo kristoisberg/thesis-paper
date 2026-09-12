@@ -2,7 +2,7 @@
 
 Date: 2026-09-12
 
-Status: ready to continue — Phase 1 complete
+Status: Phases 1 and 2 complete; ready to continue.
 
 Scope: the 602-repository corpus, its exact source snapshot at `/run/media/kristoi/9327-3833/repositories/`, and the frozen detector flags in `/home/kristoi/masters-thesis/datasets/analysis-results.csv`.
 
@@ -119,11 +119,17 @@ Use generated-schema files as the file frame for database-design classes and app
 
 ### Expected checks from the frozen positive output
 
-- [ ] Any retained class has 7,653 distinct flagged files.
-- [ ] `7,653 / 17,988` gives a pooled flagged-file yield of 42.5%.
-- [ ] Flagged files contain 2.08 flags on average.
-- [ ] ID Required has 3,591 flagged files and approximately 1.00 flag per flagged file.
-- [ ] Implicit Columns has 2,607 flagged files and approximately 2.80 flags per flagged file.
+- [x] Any retained class has 7,653 distinct flagged files.
+- [x] `7,653 / 17,988` gives a pooled flagged-file yield of 42.5%.
+- [x] Flagged files contain 2.08 flags on average.
+- [x] ID Required has 3,591 flagged files and approximately 1.00 flag per flagged file.
+- [x] Implicit Columns has 2,607 flagged files and approximately 2.80 flags per flagged file.
+
+### Phase 2 execution results
+
+Across all relevant files, 7,653 of 17,988 files contain at least one retained flag (42.5%). These files contain 15,931 flags, or 2.08 flags per flagged file. The role-specific results separate two different patterns. ID Required affects 3,591 of 7,226 generated-schema files (49.7%) and almost never repeats within a file (1.00 flags per flagged file). Implicit Columns affects 2,607 of 10,762 application/query files (24.2%) but repeats within them (2.80 flags per flagged file).
+
+Fear of the Unknown is mainly a schema-side detector output. It affects 675 generated-schema files (9.34%) and 11 application/query files (0.10%), with 1.84 and 1.45 flags per flagged file, respectively. `analysis/corpus_phase2_class_summary.csv` reports pooled breadth, density, repetition, repository quartiles, and broad flags per 100 all-relevant files for every class-role frame. `analysis/corpus_phase2_by_repository.csv` retains all 602 repositories for later size analysis. Rates are blank when a repository has no eligible files; repetition quartiles include only repositories with at least one flagged file. The output SHA-256 values are recorded in `analysis/corpus_phase2_summary.json`.
 
 ## Phase 3: separate repository size from flag density
 
