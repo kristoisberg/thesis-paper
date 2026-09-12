@@ -253,7 +253,7 @@ At the prespecified IoU threshold of \num{0.50}, the micro precision, recall, an
     \end{tabular}
 \end{table}
 
-A \num{10000}-replicate project-cluster bootstrap gave percentile ranges of \num{0.799}--\num{0.933} for micro precision, \num{0.817}--\num{0.913} for micro recall, and \num{0.819}--\num{0.913} for micro F1. These are conditional project-composition sensitivity ranges for this selected split, not population confidence intervals. Several classes occur in few held-out projects, so class-level resamples are unstable and are not used for inference.
+A \num{10000}-replicate project-cluster bootstrap gave percentile ranges of \num{0.798}--\num{0.931} for micro precision, \num{0.820}--\num{0.913} for micro recall, and \num{0.820}--\num{0.912} for micro F1. These are conditional project-composition sensitivity ranges for this selected split, not population confidence intervals. Several classes occur in few held-out projects, so class-level resamples are unstable and are not used for inference.
 
 One original Keyless Entry annotation has a reversed span (lines \num{61}--\num{51}). It is treated as invalid and unmatched, contributing one FP and one FN. The source revision needed to recover its intended endpoint is unavailable, so the span was not silently repaired.
 

@@ -110,13 +110,14 @@ The original notebook archive contains 26 top-level notebooks and 16 model--prom
 The article's reconstruction scripts were verified with Python \texttt{3.14.7}. Their direct third-party dependencies are pinned in \path{analysis/requirements.txt}. From the article repository root, the two commands are:
 
 \begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
-python analysis/localisation_robustness.py /path/to/masters-thesis
+python analysis/localisation_robustness.py /path/to/masters-thesis \
+  --bootstrap 10000 --seed 123456
 python analysis/corpus_concentration.py \
   /path/to/masters-thesis/datasets/analysis-results.csv \
   --verify-frozen
 \end{lstlisting}
 
-The first command reconstructs the \num{536} predictions from the executed notebook, reproduces the primary \num{460}/\num{76}/\num{63} true-positive/false-positive/false-negative totals, evaluates four intersection-over-union thresholds, and runs the \num{10000}-iteration project bootstrap with seed \num{20260827}. The second verifies the frozen corpus CSV hash and reproduces the class-level repository-concentration results.
+The first command reconstructs the \num{536} predictions from the executed notebook, reproduces the primary \num{460}/\num{76}/\num{63} true-positive/false-positive/false-negative totals, evaluates four intersection-over-union thresholds, and runs the \num{10000}-iteration project bootstrap with seed \num{123456}. The second verifies the frozen corpus CSV hash and reproduces the class-level repository-concentration results.
 
 \section{Equivalent SQL and jOOQ source representations}
 

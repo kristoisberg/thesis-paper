@@ -204,7 +204,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("artifact_root", type=Path)
     parser.add_argument("--bootstrap", type=int, default=10_000)
-    parser.add_argument("--seed", type=int, default=20_260_827)
+    parser.add_argument("--seed", type=int, default=123_456)
     args = parser.parse_args()
 
     reference, predictions = load_data(args.artifact_root)
