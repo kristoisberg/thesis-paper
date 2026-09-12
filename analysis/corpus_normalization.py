@@ -219,6 +219,30 @@ PHASE3_CONCENTRATION_FIELDS = (
     "top_to_remaining_density_ratio_min",
     "top_to_remaining_density_ratio_max",
 )
+PHASE4_CLASS_FIELDS = (
+    "analysis_label",
+    "antipattern",
+    "eligible_source_role",
+    "raw_rows",
+    "canonical_events",
+    "exact_content_events",
+    "representative_copy_min_events",
+    "representative_copy_max_events",
+    "raw_eligible_files",
+    "unique_file_contents",
+    "raw_flagged_files",
+    "unique_flagged_contents",
+    "representative_copy_min_flagged_contents",
+    "representative_copy_max_flagged_contents",
+    "raw_percent_eligible_files_flagged",
+    "exact_content_percent_flagged",
+    "raw_flags_per_100_eligible_files",
+    "canonical_events_per_100_eligible_files",
+    "exact_content_events_per_100_contents",
+    "raw_flags_per_flagged_file",
+    "canonical_events_per_flagged_file",
+    "exact_content_events_per_flagged_content",
+)
 
 
 def sha256(path):
@@ -716,6 +740,242 @@ def phase2_tables(names, manifest, alignments):
     return repository_rows, summary_rows
 
 
+def phase4_tables(names, manifest, alignments):
+    content_counts = Counter(row["sha256"] for row in manifest)
+    content_roles = defaultdict(set)
+    for row in manifest:
+        content_roles[row["sha256"]].add(row["source_role"])
+    assert all(len(roles) == 1 for roles in content_roles.values())
+    role_by_content = {digest: next(iter(roles)) for digest, roles in content_roles.items()}
+
+    canonical_events = {}
+    for row in alignments:
+        key = (
+            row["repository"],
+            row["relative_path"],
+            row["antipattern"],
+            row["source_role"],
+            row["line_from"],
+            row["line_to"],
+        )
+        canonical_events.setdefault(key, row)
+
+    exact_event_occurrences = defaultdict(list)
+    for row in canonical_events.values():
+        key = (
+            row["source_sha256"],
+            row["antipattern"],
+            row["source_role"],
+            row["line_from"],
+            row["line_to"],
+        )
+        exact_event_occurrences[key].append(row)
+
+    events_by_file = defaultdict(set)
+    for row in canonical_events.values():
+        events_by_file[row["repository"], row["relative_path"]].add(
+            (
+                row["antipattern"],
+                row["source_role"],
+                row["line_from"],
+                row["line_to"],
+            )
+        )
+    files_by_content = defaultdict(list)
+    for row in manifest:
+        files_by_content[row["sha256"]].append(
+            (row["repository"], row["relative_path"])
+        )
+    representative_min_events = Counter()
+    representative_max_events = Counter()
+    representative_min_flagged = Counter()
+    representative_max_flagged = Counter()
+    inconsistent_duplicate_groups = 0
+    partially_observed_exact_events = 0
+    groups_with_flagged_and_unflagged_copies = 0
+    for files in files_by_content.values():
+        event_sets = [events_by_file[file] for file in files]
+        if len(files) > 1 and len({frozenset(events) for events in event_sets}) > 1:
+            inconsistent_duplicate_groups += 1
+        if len(files) > 1 and any(event_sets) and any(not events for events in event_sets):
+            groups_with_flagged_and_unflagged_copies += 1
+        union_events = set().union(*event_sets)
+        partially_observed_exact_events += sum(
+            sum(event in events for events in event_sets) < len(event_sets)
+            for event in union_events
+        )
+        total_counts = [len(events) for events in event_sets]
+        representative_min_events[OVERALL_LABEL] += min(total_counts)
+        representative_max_events[OVERALL_LABEL] += max(total_counts)
+        representative_min_flagged[OVERALL_LABEL] += bool(min(total_counts))
+        representative_max_flagged[OVERALL_LABEL] += bool(max(total_counts))
+        for class_role in CLASS_SOURCE_ROLES:
+            counts = [
+                sum(event[:2] == class_role for event in events)
+                for events in event_sets
+            ]
+            representative_min_events[class_role] += min(counts)
+            representative_max_events[class_role] += max(counts)
+            representative_min_flagged[class_role] += bool(min(counts))
+            representative_max_flagged[class_role] += bool(max(counts))
+
+    raw_eligible = Counter(row["source_role"] for row in manifest)
+    exact_eligible = Counter(role_by_content.values())
+    raw_flags = Counter(
+        (row["antipattern"], row["source_role"]) for row in alignments
+    )
+    canonical_flags = Counter(
+        (row["antipattern"], row["source_role"])
+        for row in canonical_events.values()
+    )
+    exact_flags = Counter(
+        (antipattern, role)
+        for _, antipattern, role, _, _ in exact_event_occurrences
+    )
+    raw_flagged = defaultdict(set)
+    for row in alignments:
+        raw_flagged[row["antipattern"], row["source_role"]].add(
+            (row["repository"], row["relative_path"])
+        )
+    exact_flagged = defaultdict(set)
+    for digest, antipattern, role, _, _ in exact_event_occurrences:
+        exact_flagged[antipattern, role].add(digest)
+
+    units = [
+        (f"{antipattern} [{role}]", antipattern, role)
+        for antipattern, role in CLASS_SOURCE_ROLES
+    ]
+    units.append((OVERALL_LABEL, "Any retained class", "all relevant files"))
+    class_rows = []
+    for label, antipattern, role in units:
+        if role == "all relevant files":
+            representative_key = OVERALL_LABEL
+            raw_row_count = len(alignments)
+            canonical_count = len(canonical_events)
+            exact_count = len(exact_event_occurrences)
+            raw_file_count = len(manifest)
+            exact_file_count = len(content_counts)
+            raw_flagged_count = len(
+                {(row["repository"], row["relative_path"]) for row in alignments}
+            )
+            exact_flagged_count = len(
+                {row["source_sha256"] for row in canonical_events.values()}
+            )
+        else:
+            key = (antipattern, role)
+            representative_key = key
+            raw_row_count = raw_flags[key]
+            canonical_count = canonical_flags[key]
+            exact_count = exact_flags[key]
+            raw_file_count = raw_eligible[role]
+            exact_file_count = exact_eligible[role]
+            raw_flagged_count = len(raw_flagged[key])
+            exact_flagged_count = len(exact_flagged[key])
+        class_rows.append(
+            {
+                "analysis_label": label,
+                "antipattern": antipattern,
+                "eligible_source_role": role,
+                "raw_rows": raw_row_count,
+                "canonical_events": canonical_count,
+                "exact_content_events": exact_count,
+                "representative_copy_min_events": representative_min_events[
+                    representative_key
+                ],
+                "representative_copy_max_events": representative_max_events[
+                    representative_key
+                ],
+                "raw_eligible_files": raw_file_count,
+                "unique_file_contents": exact_file_count,
+                "raw_flagged_files": raw_flagged_count,
+                "unique_flagged_contents": exact_flagged_count,
+                "representative_copy_min_flagged_contents": (
+                    representative_min_flagged[representative_key]
+                ),
+                "representative_copy_max_flagged_contents": (
+                    representative_max_flagged[representative_key]
+                ),
+                "raw_percent_eligible_files_flagged": format_rate(
+                    raw_flagged_count, raw_file_count, 100
+                ),
+                "exact_content_percent_flagged": format_rate(
+                    exact_flagged_count, exact_file_count, 100
+                ),
+                "raw_flags_per_100_eligible_files": format_rate(
+                    raw_row_count, raw_file_count, 100
+                ),
+                "canonical_events_per_100_eligible_files": format_rate(
+                    canonical_count, raw_file_count, 100
+                ),
+                "exact_content_events_per_100_contents": format_rate(
+                    exact_count, exact_file_count, 100
+                ),
+                "raw_flags_per_flagged_file": format_rate(
+                    raw_row_count, raw_flagged_count
+                ),
+                "canonical_events_per_flagged_file": format_rate(
+                    canonical_count, raw_flagged_count
+                ),
+                "exact_content_events_per_flagged_content": format_rate(
+                    exact_count, exact_flagged_count
+                ),
+            }
+        )
+
+    eligible_weights = Counter()
+    for row in manifest:
+        weight = 1 / content_counts[row["sha256"]]
+        eligible_weights[row["repository"], row["source_role"]] += weight
+    flag_weights = Counter()
+    for occurrences in exact_event_occurrences.values():
+        weight = 1 / len(occurrences)
+        for row in occurrences:
+            flag_weights[row["repository"], row["antipattern"], row["source_role"]] += weight
+
+    weighted_repository_rows = []
+    for label, antipattern, role in units:
+        for repository in names:
+            if role == "all relevant files":
+                eligible_files = sum(
+                    eligible_weights[repository, source_role]
+                    for source_role in SOURCE_ROLES
+                )
+                flags = sum(
+                    count
+                    for (repo, _, _), count in flag_weights.items()
+                    if repo == repository
+                )
+            else:
+                eligible_files = eligible_weights[repository, role]
+                flags = flag_weights[repository, antipattern, role]
+            weighted_repository_rows.append(
+                {
+                    "analysis_label": label,
+                    "antipattern": antipattern,
+                    "eligible_source_role": role,
+                    "repository": repository,
+                    "eligible_files": eligible_files,
+                    "flags": flags,
+                }
+            )
+    copy_sensitivity = {
+        "duplicate_groups_with_inconsistent_event_sets": inconsistent_duplicate_groups,
+        "exact_content_events_observed_in_only_some_copies": (
+            partially_observed_exact_events
+        ),
+        "duplicate_groups_with_flagged_and_unflagged_copies": (
+            groups_with_flagged_and_unflagged_copies
+        ),
+    }
+    return (
+        class_rows,
+        weighted_repository_rows,
+        content_counts,
+        canonical_events,
+        copy_sensitivity,
+    )
+
+
 def write_csv(path, fields, rows):
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
@@ -1129,6 +1389,317 @@ def main():
     phase3_summary_path.write_text(
         json.dumps(phase3_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
+    if not phase3_summary["passed"]:
+        raise SystemExit("Phase 3 acceptance checks failed; inspect corpus_phase3_summary.json")
+
+    (
+        phase4_rows,
+        weighted_repository_rows,
+        content_counts,
+        canonical_events,
+        copy_sensitivity,
+    ) = phase4_tables(names, manifest, alignments)
+    _, exact_concentration_rows, exact_top_deciles = phase3_tables(
+        weighted_repository_rows, manifest
+    )
+    phase4_by_label = {row["analysis_label"]: row for row in phase4_rows}
+    exact_concentration_by_label = {
+        row["analysis_label"]: row for row in exact_concentration_rows
+    }
+    exact_overall = phase4_by_label[OVERALL_LABEL]
+    exact_overall_concentration = exact_concentration_by_label[OVERALL_LABEL]
+    phase4_class_rows = [
+        row for row in phase4_rows if row["analysis_label"] != OVERALL_LABEL
+    ]
+
+    def phase4_ranking(field, denominator=None):
+        return [
+            row["analysis_label"]
+            for row in sorted(
+                phase4_class_rows,
+                key=lambda row: (
+                    -float(row[field])
+                    / (float(row[denominator]) if denominator else 1),
+                    row["analysis_label"],
+                ),
+            )
+        ]
+
+    raw_total_ranking = phase4_ranking("raw_rows")
+    canonical_total_ranking = phase4_ranking("canonical_events")
+    exact_total_ranking = phase4_ranking("exact_content_events")
+    raw_density_ranking = phase4_ranking("raw_flags_per_100_eligible_files")
+    canonical_density_ranking = phase4_ranking(
+        "canonical_events_per_100_eligible_files"
+    )
+    exact_density_ranking = phase4_ranking(
+        "exact_content_events_per_100_contents"
+    )
+    raw_breadth_ranking = phase4_ranking("raw_percent_eligible_files_flagged")
+    exact_breadth_ranking = phase4_ranking("exact_content_percent_flagged")
+    raw_repetition_ranking = phase4_ranking("raw_flags_per_flagged_file")
+    canonical_repetition_ranking = phase4_ranking(
+        "canonical_events_per_flagged_file"
+    )
+    representative_min_total_ranking = phase4_ranking(
+        "representative_copy_min_events"
+    )
+    representative_max_total_ranking = phase4_ranking(
+        "representative_copy_max_events"
+    )
+    representative_min_breadth_ranking = phase4_ranking(
+        "representative_copy_min_flagged_contents", "unique_file_contents"
+    )
+    representative_max_breadth_ranking = phase4_ranking(
+        "representative_copy_max_flagged_contents", "unique_file_contents"
+    )
+
+    duplicate_groups = sum(count > 1 for count in content_counts.values())
+    files_in_duplicate_groups = sum(
+        count for count in content_counts.values() if count > 1
+    )
+    redundant_file_copies = len(manifest) - len(content_counts)
+    flags_in_duplicate_files = sum(
+        content_counts[row["source_sha256"]] > 1 for row in alignments
+    )
+    exact_top_flag_share = float(
+        exact_overall_concentration["top_decile_flag_share_percent"]
+    )
+    exact_max_top_file_share = float(
+        exact_overall_concentration["top_decile_eligible_file_share_max_percent"]
+    )
+    exact_min_density_ratio = float(
+        exact_overall_concentration["top_to_remaining_density_ratio_min"]
+    )
+    concentration_interpretation_preserved = (
+        exact_top_flag_share > exact_max_top_file_share
+        and exact_min_density_ratio > 1
+    )
+    exact_implicit = phase4_by_label[
+        "Implicit Columns [application/query source]"
+    ]
+    exact_id = phase4_by_label["ID Required [generated schema]"]
+    phase2_headline_preserved = (
+        float(exact_implicit["exact_content_events_per_100_contents"])
+        > float(exact_id["exact_content_events_per_100_contents"])
+        and float(exact_id["exact_content_percent_flagged"])
+        > float(exact_implicit["exact_content_percent_flagged"])
+        and float(exact_implicit["exact_content_events_per_flagged_content"])
+        > float(exact_id["exact_content_events_per_flagged_content"])
+    )
+    representative_copy_phase2_headline_preserved = (
+        exact_implicit["representative_copy_min_events"]
+        / exact_implicit["unique_file_contents"]
+        > exact_id["representative_copy_max_events"]
+        / exact_id["unique_file_contents"]
+        and exact_id["representative_copy_min_flagged_contents"]
+        / exact_id["unique_file_contents"]
+        > exact_implicit["representative_copy_max_flagged_contents"]
+        / exact_implicit["unique_file_contents"]
+        and exact_implicit["representative_copy_min_events"]
+        / exact_implicit["representative_copy_max_flagged_contents"]
+        > exact_id["representative_copy_max_events"]
+        / exact_id["representative_copy_min_flagged_contents"]
+    )
+    representative_copy_total_ordering_preserved = all(
+        phase4_by_label[higher]["representative_copy_min_events"]
+        > phase4_by_label[lower]["representative_copy_max_events"]
+        for higher, lower in zip(raw_total_ranking, raw_total_ranking[1:])
+    )
+    raw_and_canonical_ordering_preserved = (
+        raw_total_ranking == canonical_total_ranking
+        and raw_density_ranking == canonical_density_ranking
+        and raw_repetition_ranking == canonical_repetition_ranking
+    )
+    exact_content_weighting_preserves_headlines = (
+        phase2_headline_preserved and concentration_interpretation_preserved
+    )
+    phase4_checks = {
+        "content_hashes_have_one_source_role": len(
+            {(row["sha256"], row["source_role"]) for row in manifest}
+        )
+        == len(content_counts),
+        "unique_contents_and_redundant_copies_reconstruct_manifest": (
+            len(content_counts) + redundant_file_copies == len(manifest)
+        ),
+        "canonical_sensitivity_collapses_the_six_repeated_class_span_keys": (
+            len(alignments) - len(canonical_events) == 6
+        ),
+        "exact_content_events_do_not_exceed_canonical_events": (
+            int(exact_overall["exact_content_events"])
+            <= int(exact_overall["canonical_events"])
+        ),
+        "repository_weights_preserve_one_unit_per_unique_content": abs(
+            exact_overall_concentration["eligible_files"]
+            - exact_overall["unique_file_contents"]
+        )
+        < 1e-9,
+        "repository_weights_preserve_one_unit_per_exact_event": abs(
+            exact_overall_concentration["total_flags"]
+            - exact_overall["exact_content_events"]
+        )
+        < 1e-9,
+        "raw_rows_and_canonical_events_preserve_substantive_ordering": (
+            raw_and_canonical_ordering_preserved
+        ),
+        "exact_content_weighting_does_not_reverse_a_headline_result": (
+            exact_content_weighting_preserves_headlines
+        ),
+        "representative_copy_event_ranges_preserve_total_ordering": (
+            representative_copy_total_ordering_preserved
+        ),
+        "representative_copy_ranges_do_not_reverse_the_phase2_headline": (
+            representative_copy_phase2_headline_preserved
+        ),
+    }
+    phase4_table_path = args.output_dir / "corpus_phase4_exact_duplicate_sensitivity.csv"
+    phase4_summary_path = args.output_dir / "corpus_phase4_summary.json"
+    write_csv(phase4_table_path, PHASE4_CLASS_FIELDS, phase4_rows)
+    phase4_summary = {
+        "phase": 4,
+        "passed": all(phase4_checks.values()),
+        "checks": phase4_checks,
+        "counts": {
+            "relevant_file_occurrences": len(manifest),
+            "unique_file_contents": len(content_counts),
+            "duplicate_content_groups": duplicate_groups,
+            "files_in_duplicate_groups": files_in_duplicate_groups,
+            "files_in_duplicate_groups_percent": round(
+                100 * files_in_duplicate_groups / len(manifest), 6
+            ),
+            "redundant_file_copies": redundant_file_copies,
+            "redundant_file_copies_percent": round(
+                100 * redundant_file_copies / len(manifest), 6
+            ),
+            "raw_flags_in_duplicate_files": flags_in_duplicate_files,
+            "raw_flags_in_duplicate_files_percent": round(
+                100 * flags_in_duplicate_files / len(alignments), 6
+            ),
+            "raw_rows": len(alignments),
+            "canonical_events": len(canonical_events),
+            "exact_content_events": int(exact_overall["exact_content_events"]),
+            "representative_copy_min_events": int(
+                exact_overall["representative_copy_min_events"]
+            ),
+            "representative_copy_max_events": int(
+                exact_overall["representative_copy_max_events"]
+            ),
+            **copy_sensitivity,
+        },
+        "methods": {
+            "duplicate_file": (
+                "A relevant file is in a duplicate group when its SHA-256 occurs more than "
+                "once. Files in duplicate groups counts every occurrence; redundant copies "
+                "counts occurrences beyond the first in each group."
+            ),
+            "canonical_event": (
+                "Canonical events are unique by repository, relative path, class, source role, "
+                "and inclusive line span. This is a sensitivity definition: the six repeated "
+                "keys have different explanations, and raw rows remain the published total."
+            ),
+            "exact_content_event": (
+                "Exact-content events are unique by source SHA-256, class, source role, and "
+                "inclusive line span. The reported count takes the union of observed events "
+                "across byte-identical copies, so each content and occurrence span contributes "
+                "at most once."
+            ),
+            "representative_copy_sensitivity": (
+                "Some byte-identical copies have different detector outputs. The table therefore "
+                "reports the minimum and maximum event and flagged-content totals obtained by "
+                "selecting one physical copy within each content group."
+            ),
+            "repository_weighting": (
+                "Each unique content contributes one file divided equally among its physical "
+                "copies. Each exact-content event contributes one event divided equally among "
+                "the canonical copied-file occurrences that report it. This preserves global "
+                "unique-content totals without assigning a copied item to an arbitrary repository."
+            ),
+            "approximate_clones": (
+                "Approximate clone detection was not run because exact duplicates did not "
+                "reverse either headline result."
+            ),
+        },
+        "ordering": {
+            "raw_row_total_ranking": raw_total_ranking,
+            "canonical_event_total_ranking": canonical_total_ranking,
+            "exact_content_event_total_ranking": exact_total_ranking,
+            "raw_pooled_density_ranking": raw_density_ranking,
+            "canonical_pooled_density_ranking": canonical_density_ranking,
+            "exact_content_pooled_density_ranking": exact_density_ranking,
+            "raw_breadth_ranking": raw_breadth_ranking,
+            "exact_content_breadth_ranking": exact_breadth_ranking,
+            "raw_repetition_ranking": raw_repetition_ranking,
+            "canonical_repetition_ranking": canonical_repetition_ranking,
+            "representative_copy_min_total_ranking": representative_min_total_ranking,
+            "representative_copy_max_total_ranking": representative_max_total_ranking,
+            "representative_copy_total_ordering_preserved_for_all_selections": (
+                representative_copy_total_ordering_preserved
+            ),
+            "representative_copy_min_breadth_ranking": (
+                representative_min_breadth_ranking
+            ),
+            "representative_copy_max_breadth_ranking": (
+                representative_max_breadth_ranking
+            ),
+            "raw_and_canonical_ordering_preserved": (
+                raw_and_canonical_ordering_preserved
+            ),
+            "exact_total_ordering_preserved": raw_total_ranking == exact_total_ranking,
+            "exact_density_ordering_preserved": (
+                raw_density_ranking == exact_density_ranking
+            ),
+            "exact_breadth_ordering_preserved": (
+                raw_breadth_ranking == exact_breadth_ranking
+            ),
+        },
+        "concentration": {
+            "raw": {
+                key: overall_concentration[key]
+                for key in PHASE3_CONCENTRATION_FIELDS
+                if key not in {"analysis_label", "antipattern", "eligible_source_role"}
+            },
+            "exact_content_weighted": {
+                key: (
+                    round(value, 6) if isinstance(value, float) else value
+                )
+                for key, value in exact_overall_concentration.items()
+                if key not in {"analysis_label", "antipattern", "eligible_source_role"}
+            },
+            "top_decile_repository_overlap": len(
+                selected_top_deciles[OVERALL_LABEL]
+                & exact_top_deciles[OVERALL_LABEL]
+            ),
+            "interpretation_preserved": concentration_interpretation_preserved,
+        },
+        "decision_gate": {
+            "raw_row_and_canonical_event_ordering_preserved": (
+                raw_and_canonical_ordering_preserved
+            ),
+            "phase2_breadth_repetition_headline_preserved": phase2_headline_preserved,
+            "representative_copy_ranges_preserve_phase2_headline": (
+                representative_copy_phase2_headline_preserved
+            ),
+            "phase3_size_and_excess_density_headline_preserved": (
+                concentration_interpretation_preserved
+            ),
+            "exact_content_weighting_does_not_reverse_headlines": (
+                exact_content_weighting_preserves_headlines
+            ),
+        },
+        "sha256": {
+            "inputs": {
+                manifest_path.name: sha256(manifest_path),
+                alignment_path.name: sha256(alignment_path),
+                phase3_concentration_path.name: sha256(phase3_concentration_path),
+            },
+            "outputs": {
+                phase4_table_path.name: sha256(phase4_table_path),
+            },
+        },
+    }
+    phase4_summary_path.write_text(
+        json.dumps(phase4_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     print(
         json.dumps(
@@ -1136,14 +1707,15 @@ def main():
                 "phase1_passed": summary["passed"],
                 "phase2_passed": phase2_summary["passed"],
                 "phase3_passed": phase3_summary["passed"],
+                "phase4_passed": phase4_summary["passed"],
                 **summary["counts"],
             },
             indent=2,
             sort_keys=True,
         )
     )
-    if not phase3_summary["passed"]:
-        raise SystemExit("Phase 3 acceptance checks failed; inspect corpus_phase3_summary.json")
+    if not phase4_summary["passed"]:
+        raise SystemExit("Phase 4 acceptance checks failed; inspect corpus_phase4_summary.json")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,255 @@
+{
+  "checks": {
+    "canonical_sensitivity_collapses_the_six_repeated_class_span_keys": true,
+    "content_hashes_have_one_source_role": true,
+    "exact_content_events_do_not_exceed_canonical_events": true,
+    "exact_content_weighting_does_not_reverse_a_headline_result": true,
+    "raw_rows_and_canonical_events_preserve_substantive_ordering": true,
+    "repository_weights_preserve_one_unit_per_exact_event": true,
+    "repository_weights_preserve_one_unit_per_unique_content": true,
+    "representative_copy_event_ranges_preserve_total_ordering": true,
+    "representative_copy_ranges_do_not_reverse_the_phase2_headline": true,
+    "unique_contents_and_redundant_copies_reconstruct_manifest": true
+  },
+  "concentration": {
+    "exact_content_weighted": {
+      "cutoff_flags": 51.0,
+      "cutoff_ties_included": 1,
+      "eligible_files": 17367.0,
+      "flagged_repositories": 601,
+      "remaining_eligible_files": 8664.0,
+      "remaining_flags": 6232.0,
+      "remaining_flags_per_100_eligible_files": "71.929825",
+      "repositories_tied_at_cutoff": 3,
+      "top_decile_eligible_file_share_max_percent": "50.325330",
+      "top_decile_eligible_file_share_min_percent": "50.112282",
+      "top_decile_eligible_file_share_percent": "50.112282",
+      "top_decile_eligible_files": 8703.0,
+      "top_decile_flag_share_percent": "59.413872",
+      "top_decile_flags": 9123.0,
+      "top_decile_flags_per_100_eligible_files": "104.825922",
+      "top_decile_repositories": 61,
+      "top_to_remaining_density_ratio": "1.457336",
+      "top_to_remaining_density_ratio_max": "1.457336",
+      "top_to_remaining_density_ratio_min": "1.444969",
+      "total_flags": 15355.0
+    },
+    "interpretation_preserved": true,
+    "raw": {
+      "cutoff_flags": 54,
+      "cutoff_ties_included": 2,
+      "eligible_files": 17988,
+      "flagged_repositories": 601,
+      "remaining_eligible_files": 9341,
+      "remaining_flags": 6510,
+      "remaining_flags_per_100_eligible_files": "69.692752",
+      "repositories_tied_at_cutoff": 3,
+      "top_decile_eligible_file_share_max_percent": "49.571937",
+      "top_decile_eligible_file_share_min_percent": "48.070936",
+      "top_decile_eligible_file_share_percent": "48.070936",
+      "top_decile_eligible_files": 8647,
+      "top_decile_flag_share_percent": "59.136275",
+      "top_decile_flags": 9421,
+      "top_decile_flags_per_100_eligible_files": "108.951081",
+      "top_decile_repositories": 61,
+      "top_to_remaining_density_ratio": "1.563306",
+      "top_to_remaining_density_ratio_max": "1.563306",
+      "top_to_remaining_density_ratio_min": "1.472151",
+      "total_flags": 15931
+    },
+    "top_decile_repository_overlap": 58
+  },
+  "counts": {
+    "canonical_events": 15925,
+    "duplicate_content_groups": 488,
+    "duplicate_groups_with_flagged_and_unflagged_copies": 3,
+    "duplicate_groups_with_inconsistent_event_sets": 8,
+    "exact_content_events": 15355,
+    "exact_content_events_observed_in_only_some_copies": 21,
+    "files_in_duplicate_groups": 1109,
+    "files_in_duplicate_groups_percent": 6.165221,
+    "raw_flags_in_duplicate_files": 1080,
+    "raw_flags_in_duplicate_files_percent": 6.779235,
+    "raw_rows": 15931,
+    "redundant_file_copies": 621,
+    "redundant_file_copies_percent": 3.452302,
+    "relevant_file_occurrences": 17988,
+    "representative_copy_max_events": 15349,
+    "representative_copy_min_events": 15340,
+    "unique_file_contents": 17367
+  },
+  "decision_gate": {
+    "exact_content_weighting_does_not_reverse_headlines": true,
+    "phase2_breadth_repetition_headline_preserved": true,
+    "phase3_size_and_excess_density_headline_preserved": true,
+    "raw_row_and_canonical_event_ordering_preserved": true,
+    "representative_copy_ranges_preserve_phase2_headline": true
+  },
+  "methods": {
+    "approximate_clones": "Approximate clone detection was not run because exact duplicates did not reverse either headline result.",
+    "canonical_event": "Canonical events are unique by repository, relative path, class, source role, and inclusive line span. This is a sensitivity definition: the six repeated keys have different explanations, and raw rows remain the published total.",
+    "duplicate_file": "A relevant file is in a duplicate group when its SHA-256 occurs more than once. Files in duplicate groups counts every occurrence; redundant copies counts occurrences beyond the first in each group.",
+    "exact_content_event": "Exact-content events are unique by source SHA-256, class, source role, and inclusive line span. The reported count takes the union of observed events across byte-identical copies, so each content and occurrence span contributes at most once.",
+    "repository_weighting": "Each unique content contributes one file divided equally among its physical copies. Each exact-content event contributes one event divided equally among the canonical copied-file occurrences that report it. This preserves global unique-content totals without assigning a copied item to an arbitrary repository.",
+    "representative_copy_sensitivity": "Some byte-identical copies have different detector outputs. The table therefore reports the minimum and maximum event and flagged-content totals obtained by selecting one physical copy within each content group."
+  },
+  "ordering": {
+    "canonical_event_total_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "canonical_pooled_density_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "canonical_repetition_ranking": [
+      "Implicit Columns [application/query source]",
+      "Rounding Errors [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [application/query source]",
+      "31 Flavors [generated schema]",
+      "ID Required [generated schema]"
+    ],
+    "exact_breadth_ordering_preserved": true,
+    "exact_content_breadth_ranking": [
+      "ID Required [generated schema]",
+      "Implicit Columns [application/query source]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "31 Flavors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "exact_content_event_total_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "exact_content_pooled_density_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "31 Flavors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "exact_density_ordering_preserved": false,
+    "exact_total_ordering_preserved": true,
+    "raw_and_canonical_ordering_preserved": true,
+    "raw_breadth_ranking": [
+      "ID Required [generated schema]",
+      "Implicit Columns [application/query source]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "31 Flavors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "raw_pooled_density_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "raw_repetition_ranking": [
+      "Implicit Columns [application/query source]",
+      "Rounding Errors [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [application/query source]",
+      "31 Flavors [generated schema]",
+      "ID Required [generated schema]"
+    ],
+    "raw_row_total_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "representative_copy_max_breadth_ranking": [
+      "ID Required [generated schema]",
+      "Implicit Columns [application/query source]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "31 Flavors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "representative_copy_max_total_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "representative_copy_min_breadth_ranking": [
+      "ID Required [generated schema]",
+      "Implicit Columns [application/query source]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "31 Flavors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "representative_copy_min_total_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "representative_copy_total_ordering_preserved_for_all_selections": true
+  },
+  "passed": true,
+  "phase": 4,
+  "sha256": {
+    "inputs": {
+      "corpus_flag_alignment.csv": "b035fd06e7c829da8f995770e769c7d3491d0d32794837ddc2191f960f78c728",
+      "corpus_phase3_concentration.csv": "7a5c900e7d22e3e638a7d12960203ee239902e175345f1d0a3d5a41ecb1fd2c9",
+      "corpus_source_manifest.csv": "8200f8990215912efba90a4f5ed431d52c79d7b20e11ce496457f34829c8a214"
+    },
+    "outputs": {
+      "corpus_phase4_exact_duplicate_sensitivity.csv": "15c16d4e23a18faa68dbe3fe9c5f931d7620f0194650f04c226e351fb985355d"
+    }
+  }
+}

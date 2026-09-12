@@ -2,7 +2,7 @@
 
 Date: 2026-09-12
 
-Status: Phases 1 through 3 complete. Ready to continue.
+Status: Phases 1 through 4 complete. Ready to continue.
 
 Scope: the 602-repository corpus, its exact source snapshot at `/run/media/kristoi/9327-3833/repositories/`, and the frozen detector flags in `/home/kristoi/masters-thesis/datasets/analysis-results.csv`.
 
@@ -182,10 +182,20 @@ Approximate clone detection is out of scope unless exact duplicates materially a
 
 ### Decision gate
 
-- [ ] Raw-row and canonical-event analyses preserve the same substantive ordering.
-- [ ] Exact-content weighting does not reverse a headline result.
+- [x] Raw-row and canonical-event analyses preserve the same substantive ordering.
+- [x] Exact-content weighting does not reverse a headline result.
 
 Any reversal becomes a main robustness finding rather than a footnote.
+
+### Phase 4 execution results
+
+Of the 17,988 relevant file occurrences, 1,109 (6.17%) belong to 488 exact-duplicate groups. These groups contain 621 copies beyond their first occurrence, or 3.45% of the source frame. They contain 1,080 of the 15,931 raw flags (6.78%). Six class-and-span keys occur twice with different explanations; collapsing these keys as a sensitivity definition gives 15,925 canonical events while retaining 15,931 as the published raw total. Taking the union of class-and-span events across byte-identical copies gives 15,355 exact-content events across 17,367 unique file contents.
+
+Eight duplicate groups have inconsistent detector event sets, including three groups with both flagged and unflagged copies. Twenty-one union events occur in only some copies. Selecting one physical representative within every content group gives between 15,340 and 15,349 events, depending on the representatives. Neither endpoint changes the class-total ordering or the breadth--repetition headline.
+
+The exact-content class totals are 7,062 for Implicit Columns, 3,422 for ID Required, 2,105 for Keyless Entry, 1,197 for schema-side Fear of the Unknown, 601 for Rounding Errors, 573 for Poor Man's Search Engine, 379 for 31 Flavors, and 16 for query-side Fear of the Unknown. Raw-row, canonical-event, and exact-content totals have the same class ordering. The breadth ordering also remains unchanged. Exact-content density moves 31 Flavors narrowly above Poor Man's Search Engine, 5.50 versus 5.47 events per 100 eligible contents, but this lower-ranked swap does not affect the interpretation. Implicit Columns remains broad and repetitive, while ID Required remains broader but almost never repeats within a content.
+
+After fractional attribution of shared contents and events to their repositories, the highest-count decile contains 59.4% of exact-content events and 50.1--50.3% of eligible unique-content weight across cutoff ties. Its density is 1.44--1.46 times that of the remaining repositories. Thus repository size and excess density both continue to explain concentration. The exact-content result does not reverse either headline finding, so approximate clone detection remains out of scope. `analysis/corpus_phase4_exact_duplicate_sensitivity.csv` reports the class totals, breadth, density, and repetition comparison. Methods, concentration results, decision gates, and output hashes are recorded in `analysis/corpus_phase4_summary.json`.
 
 ## Phase 5: optional class-specific exposure denominators
 
