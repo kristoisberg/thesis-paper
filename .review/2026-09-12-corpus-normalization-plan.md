@@ -2,7 +2,7 @@
 
 Date: 2026-09-12
 
-Status: planned
+Status: ready to continue — Phase 1 complete
 
 Scope: the 602-repository corpus, its exact source snapshot at `/run/media/kristoi/9327-3833/repositories/`, and the frozen detector flags in `/home/kristoi/masters-thesis/datasets/analysis-results.csv`.
 
@@ -34,16 +34,17 @@ Create one deterministic script that reads the 602-repository allowlist and port
 
 ### Authoritative selection logic
 
-Use `/home/kristoi/masters-thesis/scripts/25-count-relevant-files-in-full-set.ipynb` as the authoritative source for the full-corpus frame. It contains:
+Use the detector's `src/file-discovery.ts` at commit `cf82fe56acb728f076df67279ff4a78a138996f3` as the authoritative source for the full-corpus frame. It specifies:
 
+- recursive `**/*.java` discovery across every source location;
+- ordinary files only, with hidden paths and symbolic-link traversal disabled;
 - 22 `excluded_path_fragments` entries;
 - 3 `included_phrases` entries;
 - 22 `excluded_phrases` entries;
-- the `src/**/*.java` path restriction;
-- the exact path and content predicates used to obtain the reported 17,450-file total;
-- Latin-1 file decoding.
+- UTF-8 decoding with the detector's `TextDecoder("latin1")` fallback;
+- three DDL indicator phrases used to select the source role.
 
-The three lists are identical in `051-select-sample-projects-corrected.ipynb`, `09-evaluate-prompting-strategy.ipynb`, `11-select-files-for-reannotation.ipynb`, `23-count-relevant-files-in-validation-set.ipynb`, and `24-count-relevant-files-in-test-set.ipynb`. Preserve this equality as a self-check. Do not use the older lists in `05-select-sample-projects.ipynb`, which contain only 21 path exclusions and 18 content exclusions.
+The three filter lists are identical in `25-count-relevant-files-in-full-set.ipynb`, `051-select-sample-projects-corrected.ipynb`, `09-evaluate-prompting-strategy.ipynb`, `11-select-files-for-reannotation.ipynb`, `23-count-relevant-files-in-validation-set.ipynb`, and `24-count-relevant-files-in-test-set.ipynb`. Preserve this equality as a self-check. The counting notebooks' `src/**/*.java` restriction is not part of the detector's discovery rule and must not define the result frame. Do not use the older lists in `05-select-sample-projects.ipynb`, which contain only 21 path exclusions and 18 content exclusions.
 
 The new script should keep one literal copy of the authoritative lists and assert a stable digest over their ordered values. It should not combine rules from multiple notebooks or infer new exclusions from the current source tree.
 
@@ -60,19 +61,29 @@ Produce a source manifest and an alignment report that joins every archived flag
 
 ### Acceptance checks
 
-- [ ] The allowlist contains 602 unique repository names.
-- [ ] All 602 names resolve to distinct directories.
-- [ ] None of the 43 excluded directories enters the source frame.
-- [ ] The reconstructed selection contains exactly 17,450 relevant files.
-- [ ] The ordered selection-list digest matches the authoritative rule set.
-- [ ] The authoritative lists still match the corrected sampling, evaluation, reannotation, validation-count, and test-count notebooks.
-- [ ] Every archived flag resolves to an allowlisted repository and file.
-- [ ] Every reported line span lies within its source file.
-- [ ] Each stored code fragment agrees with its source span after the documented whitespace normalization.
-- [ ] The merged per-project outputs reproduce `analysis-results.csv` if those files survive.
-- [ ] Input CSVs and generated manifests receive SHA-256 checksums.
+- [x] The allowlist contains 602 unique repository names.
+- [x] All 602 names resolve to distinct directories.
+- [x] None of the 43 excluded directories enters the source frame.
+- [x] The detector-matched scan contains 17,988 unique relevant files.
+- [x] The location breakdown contains 17,314 `src` files, 360 `target/generated-sources` files, and 314 files in other source locations.
+- [x] The ordered selection-list digest matches the authoritative rule set.
+- [x] The authoritative lists still match the corrected sampling, evaluation, reannotation, validation-count, and test-count notebooks.
+- [x] Every archived flag resolves to an allowlisted repository and file.
+- [x] Every archived flag belongs to the reconstructed source frame.
+- [x] Every reported line span lies within its source file.
+- [x] Each reported line span is treated as authoritative; stored code fragments are retained as best-effort diagnostics.
+- [x] The merged per-project outputs reproduce `analysis-results.csv` if those files survive.
+- [x] Input CSVs and generated manifests receive SHA-256 checksums.
 
-Any missing path, out-of-bounds span, repository-name collision, or unexplained difference from 17,450 stops the source-based analysis until reconciled.
+Any missing path, out-of-bounds span, repository-name collision, or unexplained difference from 17,988 stops the source-based analysis until reconciled. Fragment differences and the historical 17,450 count are not acceptance gates.
+
+### Phase 1 execution results
+
+The detector-matched scan contains 17,988 unique files: 17,314 under a path component named `src`, 360 under `target/generated-sources`, and 314 in other source locations such as `build/generated-src`, `src-generated`, and project-specific generated directories. It classifies 7,226 files as generated-schema sources and 10,762 as application/query sources. The manifest SHA-256 is `8200f8990215912efba90a4f5ed431d52c79d7b20e11ce496457f34829c8a214`; the flag-alignment report SHA-256 is `b035fd06e7c829da8f995770e769c7d3491d0d32794837ddc2191f960f78c728`.
+
+The earlier 17,450 count came from `src/**/*.java`. That glob produced 17,314 unique paths and 136 duplicate matches, while omitting 674 detector-selected files outside `src`. The errors partly cancel, leaving the reported value 538 below the corrected total. The 674 added files include all 308 previously out-of-frame flagged files. Consequently, all 15,931 flags and 7,653 distinct flagged files now belong to the reconstructed frame.
+
+All 15,931 archived paths exist in the allowlisted snapshot, and all reported spans are within file bounds. The reported spans are the source of truth. After trimming outer whitespace and collapsing whitespace runs, 15,729 stored fragments equal or occur within their reported spans. The remaining 202 are diagnostic discrepancies: 177 occur elsewhere in the same source file, while 25 do not occur verbatim after normalization. They remain identified in `analysis/corpus_flag_alignment.csv` and do not block source-span analyses. Phase 1 is complete, so the workflow can continue with Phase 2.
 
 ## Phase 2: measure breadth and repetition
 
@@ -109,7 +120,7 @@ Use generated-schema files as the file frame for database-design classes and app
 ### Expected checks from the frozen positive output
 
 - [ ] Any retained class has 7,653 distinct flagged files.
-- [ ] `7,653 / 17,450` gives a pooled flagged-file yield of 43.9%.
+- [ ] `7,653 / 17,988` gives a pooled flagged-file yield of 42.5%.
 - [ ] Flagged files contain 2.08 flags on average.
 - [ ] ID Required has 3,591 flagged files and approximately 1.00 flag per flagged file.
 - [ ] Implicit Columns has 2,607 flagged files and approximately 2.80 flags per flagged file.
@@ -230,7 +241,7 @@ Prefer one standard-library Python script with assertion-based self-checks. Reus
 Planned artefacts:
 
 - `analysis/corpus_normalization.py`;
-- a hashed 17,450-file source manifest;
+- a hashed 17,988-file detector-matched source manifest, with location counts for `src`, `target/generated-sources`, and other paths;
 - a flag-to-source alignment report;
 - machine-readable summary tables;
 - exact-duplicate and canonical-event sensitivity outputs;

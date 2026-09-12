@@ -13,7 +13,7 @@ Prioritize these result groups:
 
 - detector evaluation: corrected and uncorrected localisation/classification performance;
 - model/prompt selection: enough evidence to justify the final detector configuration;
-- prevalence: 15,931 occurrences across 602 projects and 17,450 relevant files;
+- prevalence: 15,931 occurrences across 602 projects and 17,988 unique detector-selected files;
 - common antipatterns: Implicit Columns and ID Required in nearly 90% of projects;
 - co-occurrence: Jaccard, conditional probability, and Spearman patterns;
 - API associations: `selectFrom`, `select().from`, `Field.like`, `contains`, and related jOOQ methods.
