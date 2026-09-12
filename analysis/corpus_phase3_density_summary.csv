@@ -1,0 +1,46 @@
+analysis_label,antipattern,eligible_source_role,scope,repositories,repositories_with_eligible_files,flagged_repositories,total_flags,eligible_files,pooled_flags_per_100_eligible_files,repository_equal_mean_flags_per_100_eligible_files,repository_p10_flags_per_100_eligible_files,repository_q1_flags_per_100_eligible_files,repository_median_flags_per_100_eligible_files,repository_q3_flags_per_100_eligible_files,repository_p90_flags_per_100_eligible_files,spearman_raw_flags_vs_eligible_files
+Implicit Columns [application/query source],Implicit Columns,application/query source,all repositories,602,601,535,7289,10762,67.729047,92.629818,0.000000,27.272727,66.666667,125.000000,200.000000,0.574358
+Implicit Columns [application/query source],Implicit Columns,application/query source,excluding highest-count decile,548,547,481,3309,6263,52.834105,84.724542,0.000000,25.000000,60.000000,116.666667,187.142857,0.473826
+Implicit Columns [application/query source],Implicit Columns,application/query source,small repositories,473,472,414,2686,3327,80.733393,93.070787,0.000000,33.333333,71.428571,125.000000,200.000000,0.502461
+Implicit Columns [application/query source],Implicit Columns,application/query source,medium repositories,93,93,86,2071,2957,70.037200,97.184296,2.364130,14.705882,50.000000,122.580645,168.750000,0.124237
+Implicit Columns [application/query source],Implicit Columns,application/query source,large repositories,36,36,35,2532,4478,56.543100,75.082483,13.899614,26.588983,54.195804,94.425676,163.679719,0.453035
+ID Required [generated schema],ID Required,generated schema,all repositories,602,601,523,3597,7226,49.778577,59.899307,0.000000,33.333333,66.666667,100.000000,100.000000,0.669544
+ID Required [generated schema],ID Required,generated schema,excluding highest-count decile,549,548,470,1444,3590,40.222841,58.501033,0.000000,26.547619,66.666667,100.000000,100.000000,0.572985
+ID Required [generated schema],ID Required,generated schema,small repositories,473,472,402,1143,1946,58.735868,62.459523,0.000000,33.333333,66.666667,100.000000,100.000000,0.570326
+ID Required [generated schema],ID Required,generated schema,medium repositories,93,93,88,958,1881,50.930356,52.400337,10.222222,20.689655,50.000000,88.000000,100.000000,0.551087
+ID Required [generated schema],ID Required,generated schema,large repositories,36,36,33,1496,3399,44.012945,45.704366,2.140152,16.458333,35.315355,80.972222,90.662879,0.600567
+Keyless Entry [generated schema],Keyless Entry,generated schema,all repositories,602,601,200,2153,7226,29.795184,17.763466,0.000000,0.000000,0.000000,20.000000,66.666667,0.477251
+Keyless Entry [generated schema],Keyless Entry,generated schema,excluding highest-count decile,582,581,180,732,5123,14.288503,14.898680,0.000000,0.000000,0.000000,14.285714,57.894737,0.414133
+Keyless Entry [generated schema],Keyless Entry,generated schema,small repositories,473,472,123,338,1946,17.368962,13.961043,0.000000,0.000000,0.000000,7.280220,56.984127,0.353929
+Keyless Entry [generated schema],Keyless Entry,generated schema,medium repositories,93,93,49,616,1881,32.748538,30.388955,0.000000,0.000000,4.347826,47.619048,95.752688,0.351856
+Keyless Entry [generated schema],Keyless Entry,generated schema,large repositories,36,36,28,1199,3399,35.275081,35.001603,0.000000,0.954106,11.530330,45.360792,75.252525,0.454677
+Fear of the Unknown [generated schema],Fear of the Unknown,generated schema,all repositories,602,601,197,1240,7226,17.160255,20.586661,0.000000,0.000000,0.000000,11.666667,66.666667,0.411374
+Fear of the Unknown [generated schema],Fear of the Unknown,generated schema,excluding highest-count decile,582,581,177,540,5974,9.039170,15.779332,0.000000,0.000000,0.000000,9.090909,50.000000,0.358669
+Fear of the Unknown [generated schema],Fear of the Unknown,generated schema,small repositories,473,472,119,347,1946,17.831449,19.402256,0.000000,0.000000,0.000000,6.610577,61.384615,0.250905
+Fear of the Unknown [generated schema],Fear of the Unknown,generated schema,medium repositories,93,93,47,484,1881,25.730994,27.977511,0.000000,0.000000,3.030303,20.000000,85.294118,0.256411
+Fear of the Unknown [generated schema],Fear of the Unknown,generated schema,large repositories,36,36,31,409,3399,12.032951,17.022490,0.000000,2.222222,7.010870,14.096870,47.437739,0.297451
+Fear of the Unknown [application/query source],Fear of the Unknown,application/query source,all repositories,602,601,10,16,10762,0.148671,0.170572,0.000000,0.000000,0.000000,0.000000,0.000000,0.103616
+Fear of the Unknown [application/query source],Fear of the Unknown,application/query source,excluding highest-count decile,601,600,9,12,10729,0.111846,0.150654,0.000000,0.000000,0.000000,0.000000,0.000000,0.091207
+Fear of the Unknown [application/query source],Fear of the Unknown,application/query source,small repositories,473,472,5,6,3327,0.180343,0.135125,0.000000,0.000000,0.000000,0.000000,0.000000,0.081581
+Fear of the Unknown [application/query source],Fear of the Unknown,application/query source,medium repositories,93,93,4,9,2957,0.304363,0.401565,0.000000,0.000000,0.000000,0.000000,0.000000,-0.014565
+Fear of the Unknown [application/query source],Fear of the Unknown,application/query source,large repositories,36,36,1,1,4478,0.022331,0.038580,0.000000,0.000000,0.000000,0.000000,0.000000,-0.056957
+31 Flavors [generated schema],31 Flavors,generated schema,all repositories,602,601,87,390,7226,5.397177,4.702825,0.000000,0.000000,0.000000,0.000000,14.285714,0.323520
+31 Flavors [generated schema],31 Flavors,generated schema,excluding highest-count decile,593,592,78,184,6492,2.834258,4.062785,0.000000,0.000000,0.000000,0.000000,10.000000,0.280863
+31 Flavors [generated schema],31 Flavors,generated schema,small repositories,473,472,53,121,1946,6.217883,4.772317,0.000000,0.000000,0.000000,0.000000,13.111111,0.278044
+31 Flavors [generated schema],31 Flavors,generated schema,medium repositories,93,93,17,98,1881,5.209995,4.179816,0.000000,0.000000,0.000000,0.000000,15.885167,0.223165
+31 Flavors [generated schema],31 Flavors,generated schema,large repositories,36,36,17,171,3399,5.030891,5.142818,0.000000,0.000000,0.000000,3.345281,14.295977,0.385186
+Poor Man's Search Engine [application/query source],Poor Man's Search Engine,application/query source,all repositories,602,601,114,583,10762,5.417209,4.274197,0.000000,0.000000,0.000000,0.000000,12.500000,0.447737
+Poor Man's Search Engine [application/query source],Poor Man's Search Engine,application/query source,excluding highest-count decile,590,589,102,323,9177,3.519669,3.483316,0.000000,0.000000,0.000000,0.000000,10.870871,0.405003
+Poor Man's Search Engine [application/query source],Poor Man's Search Engine,application/query source,small repositories,473,472,51,150,3327,4.508566,3.330891,0.000000,0.000000,0.000000,0.000000,5.882353,0.288972
+Poor Man's Search Engine [application/query source],Poor Man's Search Engine,application/query source,medium repositories,93,93,44,206,2957,6.966520,7.176029,0.000000,0.000000,0.000000,10.204082,22.628205,0.293563
+Poor Man's Search Engine [application/query source],Poor Man's Search Engine,application/query source,large repositories,36,36,19,227,4478,5.069227,9.145586,0.000000,0.000000,0.489089,11.679537,32.233065,0.221704
+Rounding Errors [generated schema],Rounding Errors,generated schema,all repositories,602,601,86,663,7226,9.175201,7.625848,0.000000,0.000000,0.000000,0.000000,15.000000,0.268777
+Rounding Errors [generated schema],Rounding Errors,generated schema,excluding highest-count decile,593,592,77,243,6200,3.919355,6.404355,0.000000,0.000000,0.000000,0.000000,9.909091,0.217130
+Rounding Errors [generated schema],Rounding Errors,generated schema,small repositories,473,472,48,123,1946,6.320658,7.138103,0.000000,0.000000,0.000000,0.000000,5.000000,0.123010
+Rounding Errors [generated schema],Rounding Errors,generated schema,medium repositories,93,93,23,234,1881,12.440191,8.645321,0.000000,0.000000,0.000000,0.000000,22.064516,0.301147
+Rounding Errors [generated schema],Rounding Errors,generated schema,large repositories,36,36,15,306,3399,9.002648,11.387088,0.000000,0.000000,0.000000,5.463198,24.117557,0.309581
+Any retained class [broad detector-output density],Any retained class,all relevant files,all repositories,602,602,601,15931,17988,88.564599,93.630202,27.323232,51.282051,83.457711,120.000000,169.923077,0.778014
+Any retained class [broad detector-output density],Any retained class,all relevant files,excluding highest-count decile,541,541,540,6510,9341,69.692752,87.958812,25.925926,50.000000,80.000000,112.500000,155.555556,0.705275
+Any retained class [broad detector-output density],Any retained class,all relevant files,small repositories,473,473,472,4914,5273,93.191731,94.346976,33.333333,58.823529,84.615385,120.000000,168.717949,0.699778
+Any retained class [broad detector-output density],Any retained class,all relevant files,medium repositories,93,93,93,4676,4838,96.651509,92.887678,19.457995,39.473684,73.809524,130.882353,174.545455,0.398395
+Any retained class [broad detector-output density],Any retained class,all relevant files,large repositories,36,36,36,6341,7877,80.500190,86.130778,19.528501,50.532038,84.690453,103.875646,154.418481,0.512840

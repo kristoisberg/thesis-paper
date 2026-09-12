@@ -2,7 +2,7 @@
 
 Date: 2026-09-12
 
-Status: Phases 1 and 2 complete; ready to continue.
+Status: Phases 1 through 3 complete. Ready to continue.
 
 Scope: the 602-repository corpus, its exact source snapshot at `/run/media/kristoi/9327-3833/repositories/`, and the frozen detector flags in `/home/kristoi/masters-thesis/datasets/analysis-results.csv`.
 
@@ -133,7 +133,7 @@ Fear of the Unknown is mainly a schema-side detector output. It affects 675 gene
 
 ## Phase 3: separate repository size from flag density
 
-Calculate every class measure within each repository before aggregation. Include all 602 repositories in repository-equal summaries, including the repository with no flags.
+Calculate every class measure within each repository before aggregation. Retain records for all 602 repositories. Repository-equal rate summaries include repositories with at least one eligible file. Eligible repositories with no flags contribute zero.
 
 Report:
 
@@ -151,9 +151,19 @@ The 602 repositories form the complete identified corpus. Report their distribut
 
 ### Decision gate
 
-- [ ] Compare the pooled and repository-equal class rankings.
-- [ ] Compare raw-count and file-normalized concentration.
-- [ ] Keep a new headline result only when it adds information beyond the published repository-coverage and top-decile measures.
+- [x] Compare the pooled and repository-equal class rankings.
+- [x] Compare raw-count and file-normalized concentration.
+- [x] Keep a new headline result only when it adds information beyond the published repository-coverage and top-decile measures.
+
+### Phase 3 execution results
+
+Across all 602 repositories, the detector produced 88.56 flags per 100 relevant files. The repository-equal mean is 93.63, and the median is 83.46. The interquartile interval runs from 51.28 to 120.00 flags per 100 files. P10 and P90 are 27.32 and 169.92. The Spearman correlation between raw flags and eligible-file count is 0.778.
+
+The fixed 31-file and 94-file boundaries classify 473 repositories as small, 93 as medium, and 36 as large. Their pooled densities are 93.19, 96.65, and 80.50 flags per 100 relevant files. Large repositories contain 7,877 of 17,988 relevant files and 6,341 of 15,931 flags. Their 43.8% share of files accompanies 39.8% of flags, and their pooled density is lower than the densities in the other strata.
+
+The 61 highest-count repositories contain 59.1% of flags. Three repositories tie at the cutoff. Across the possible tie selections, the group contains between 48.1% and 49.6% of eligible files, and its density is between 1.47 and 1.56 times that of the remaining repositories. These shares show contributions from both file volume and higher density. This decomposition adds information beyond the published 59.1% raw-count share and supports a new headline result.
+
+Repository weighting changes two parts of the class-role ranking. Fear of the Unknown in generated schemas moves above Keyless Entry, and 31 Flavors moves above Poor Man's Search Engine. Implicit Columns and ID Required remain first and second. `analysis/corpus_phase3_density_summary.csv` contains whole-corpus results, size-stratum results, and results after excluding each class-role frame's highest-count decile. The size strata use total all-relevant-file counts. Class densities use role-specific eligible-file counts. `analysis/corpus_phase3_concentration.csv` contains the raw-count and eligible-file concentration measures. Methods, checks, rankings, and output hashes are recorded in `analysis/corpus_phase3_summary.json`.
 
 If normalization yields the same interpretation as the raw analysis, report it as a concise robustness result rather than expanding the paper around it.
 

@@ -1,0 +1,71 @@
+{
+  "checks": {
+    "all_requested_correlations_are_defined": true,
+    "cutoff_tie_bounds_contain_selected_results": true,
+    "each_top_decile_selection_is_reproducible": true,
+    "fixed_size_strata_partition_the_corpus": true,
+    "reported_overall_top_decile_flag_share_is_59_1_percent": true,
+    "repository_without_flags_is_included": true,
+    "strata_preserve_flags_and_eligible_files": true,
+    "top_decile_exclusion_preserves_flags_and_eligible_files": true,
+    "whole_corpus_summaries_include_602_repositories": true
+  },
+  "decision_gate": {
+    "headline_result": "The highest-count decile contains 59.1% of flags and between 48.1% and 49.6% of eligible files across cutoff ties. Its flag density is between 1.47 and 1.56 times that of the remaining repositories.",
+    "new_headline_result_supported": true,
+    "overall_top_decile_eligible_file_share_max_percent": 49.571937,
+    "overall_top_decile_eligible_file_share_min_percent": 48.070936,
+    "overall_top_decile_eligible_file_share_percent": 48.070936,
+    "overall_top_decile_flag_share_percent": 59.136275,
+    "overall_top_to_remaining_density_ratio": 1.563306,
+    "overall_top_to_remaining_density_ratio_max": 1.563306,
+    "overall_top_to_remaining_density_ratio_min": 1.472151,
+    "pooled_density_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Rounding Errors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "31 Flavors [generated schema]",
+      "Fear of the Unknown [application/query source]"
+    ],
+    "rankings_are_identical": false,
+    "repository_equal_mean_density_ranking": [
+      "Implicit Columns [application/query source]",
+      "ID Required [generated schema]",
+      "Fear of the Unknown [generated schema]",
+      "Keyless Entry [generated schema]",
+      "Rounding Errors [generated schema]",
+      "31 Flavors [generated schema]",
+      "Poor Man's Search Engine [application/query source]",
+      "Fear of the Unknown [application/query source]"
+    ]
+  },
+  "methods": {
+    "correlation": "Spearman rank correlation across all repositories in each scope, including zero counts. Python statistics.correlation averages tied ranks.",
+    "percentiles": "Python statistics.quantiles with method='inclusive'; the table reports P10, Q1, median, Q3, and P90.",
+    "repository_equal": "Means and percentiles include zero-flag repositories with eligible files. Repositories without eligible files have undefined density and are omitted.",
+    "top_decile": "Each analysis label has its own selection. We take the ceiling of 10% of repositories with at least one flag, ranked by raw flag count. Repository name breaks cutoff ties deterministically. The concentration table also gives bounds across every possible cutoff-tie selection."
+  },
+  "passed": true,
+  "phase": 3,
+  "sha256": {
+    "inputs": {
+      "corpus_phase2_by_repository.csv": "a88de1ee4719d1f8290d1418940a11151fb7cbe443023895002141493e4352a2",
+      "corpus_source_manifest.csv": "8200f8990215912efba90a4f5ed431d52c79d7b20e11ce496457f34829c8a214"
+    },
+    "outputs": {
+      "corpus_phase3_concentration.csv": "7a5c900e7d22e3e638a7d12960203ee239902e175345f1d0a3d5a41ecb1fd2c9",
+      "corpus_phase3_density_summary.csv": "598681f34f558054c2b6cb9f92daac656e8dfb2f76a5e85069ad2a9866236334"
+    }
+  },
+  "size_strata": {
+    "counts": {
+      "large": 36,
+      "medium": 93,
+      "small": 473
+    },
+    "definition": "Strata use total all-relevant files per repository. Small repositories have at most 31 files, medium repositories have 32-94 files, and large repositories have more than 94 files. Class densities use role-specific eligible-file counts."
+  }
+}

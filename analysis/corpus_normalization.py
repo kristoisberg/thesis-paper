@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reconstruct the corpus source frame and measure flag breadth and repetition."""
+"""Reconstruct the corpus source frame and analyze normalized detector output."""
 
 import argparse
 import ast
@@ -7,6 +7,7 @@ import csv
 import glob
 import hashlib
 import json
+import math
 import statistics
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -24,6 +25,9 @@ EXPECTED_UNIQUE_FILES = 17_988
 EXPECTED_FLAGS = 15_931
 EXPECTED_RULE_SHA256 = "0e76695e8ff0705d6b8db74c500539d707926cbc8cb4df658ad4507d9d261b7b"
 SOURCE_ROLES = ("generated schema", "application/query source")
+SMALL_MAX_FILES = 31
+MEDIUM_MAX_FILES = 94
+OVERALL_LABEL = "Any retained class [broad detector-output density]"
 
 CLASS_SOURCE_ROLES = (
     ("Implicit Columns", "application/query source"),
@@ -170,6 +174,50 @@ PHASE2_SUMMARY_FIELDS = (
     "flagged_repository_q1_flags_per_flagged_file",
     "flagged_repository_median_flags_per_flagged_file",
     "flagged_repository_q3_flags_per_flagged_file",
+)
+PHASE3_DENSITY_FIELDS = (
+    "analysis_label",
+    "antipattern",
+    "eligible_source_role",
+    "scope",
+    "repositories",
+    "repositories_with_eligible_files",
+    "flagged_repositories",
+    "total_flags",
+    "eligible_files",
+    "pooled_flags_per_100_eligible_files",
+    "repository_equal_mean_flags_per_100_eligible_files",
+    "repository_p10_flags_per_100_eligible_files",
+    "repository_q1_flags_per_100_eligible_files",
+    "repository_median_flags_per_100_eligible_files",
+    "repository_q3_flags_per_100_eligible_files",
+    "repository_p90_flags_per_100_eligible_files",
+    "spearman_raw_flags_vs_eligible_files",
+)
+PHASE3_CONCENTRATION_FIELDS = (
+    "analysis_label",
+    "antipattern",
+    "eligible_source_role",
+    "flagged_repositories",
+    "top_decile_repositories",
+    "cutoff_flags",
+    "repositories_tied_at_cutoff",
+    "cutoff_ties_included",
+    "total_flags",
+    "top_decile_flags",
+    "top_decile_flag_share_percent",
+    "eligible_files",
+    "top_decile_eligible_files",
+    "top_decile_eligible_file_share_percent",
+    "top_decile_eligible_file_share_min_percent",
+    "top_decile_eligible_file_share_max_percent",
+    "top_decile_flags_per_100_eligible_files",
+    "remaining_flags",
+    "remaining_eligible_files",
+    "remaining_flags_per_100_eligible_files",
+    "top_to_remaining_density_ratio",
+    "top_to_remaining_density_ratio_min",
+    "top_to_remaining_density_ratio_max",
 )
 
 
@@ -426,6 +474,142 @@ def quartiles(values):
     return q1, statistics.median(values), q3
 
 
+def size_stratum(file_count):
+    if file_count <= SMALL_MAX_FILES:
+        return "small"
+    return "medium" if file_count <= MEDIUM_MAX_FILES else "large"
+
+
+def density_summary(rows, scope):
+    eligible_rows = [row for row in rows if row["eligible_files"]]
+    densities = [100 * row["flags"] / row["eligible_files"] for row in eligible_rows]
+    deciles = statistics.quantiles(densities, n=10, method="inclusive")
+    q1, median, q3 = quartiles(densities)
+    file_counts = [row["eligible_files"] for row in rows]
+    flag_counts = [row["flags"] for row in rows]
+    correlation = (
+        statistics.correlation(file_counts, flag_counts, method="ranked")
+        if len(set(file_counts)) > 1 and len(set(flag_counts)) > 1
+        else None
+    )
+    return {
+        "analysis_label": rows[0]["analysis_label"],
+        "antipattern": rows[0]["antipattern"],
+        "eligible_source_role": rows[0]["eligible_source_role"],
+        "scope": scope,
+        "repositories": len(rows),
+        "repositories_with_eligible_files": len(eligible_rows),
+        "flagged_repositories": sum(bool(row["flags"]) for row in rows),
+        "total_flags": sum(flag_counts),
+        "eligible_files": sum(file_counts),
+        "pooled_flags_per_100_eligible_files": format_rate(
+            sum(flag_counts), sum(file_counts), 100
+        ),
+        "repository_equal_mean_flags_per_100_eligible_files": f"{statistics.mean(densities):.6f}",
+        "repository_p10_flags_per_100_eligible_files": f"{deciles[0]:.6f}",
+        "repository_q1_flags_per_100_eligible_files": f"{q1:.6f}",
+        "repository_median_flags_per_100_eligible_files": f"{median:.6f}",
+        "repository_q3_flags_per_100_eligible_files": f"{q3:.6f}",
+        "repository_p90_flags_per_100_eligible_files": f"{deciles[-1]:.6f}",
+        "spearman_raw_flags_vs_eligible_files": (
+            "" if correlation is None else f"{correlation:.6f}"
+        ),
+    }
+
+
+def phase3_tables(repository_rows, manifest):
+    corpus_files = Counter(row["repository"] for row in manifest)
+    by_label = defaultdict(list)
+    for row in repository_rows:
+        by_label[row["analysis_label"]].append(row)
+
+    density_rows = []
+    concentration_rows = []
+    selected_top_deciles = {}
+    for label, rows in by_label.items():
+        flagged_rows = [row for row in rows if row["flags"]]
+        top_count = math.ceil(len(flagged_rows) * 0.10)
+        ranked = sorted(flagged_rows, key=lambda row: (-row["flags"], row["repository"]))
+        top_rows = ranked[:top_count]
+        top_repositories = {row["repository"] for row in top_rows}
+        selected_top_deciles[label] = top_repositories
+        remaining_rows = [row for row in rows if row["repository"] not in top_repositories]
+        cutoff = top_rows[-1]["flags"]
+        tied = sum(row["flags"] == cutoff for row in flagged_rows)
+        included_ties = sum(row["flags"] == cutoff for row in top_rows)
+        above_cutoff = [row for row in flagged_rows if row["flags"] > cutoff]
+        cutoff_rows = [row for row in flagged_rows if row["flags"] == cutoff]
+        total_flags = sum(row["flags"] for row in rows)
+        total_files = sum(row["eligible_files"] for row in rows)
+        top_flags = sum(row["flags"] for row in top_rows)
+        top_files = sum(row["eligible_files"] for row in top_rows)
+        remaining_flags = sum(row["flags"] for row in remaining_rows)
+        remaining_files = sum(row["eligible_files"] for row in remaining_rows)
+        top_density = 100 * top_flags / top_files
+        remaining_density = 100 * remaining_flags / remaining_files
+        fixed_top_files = sum(row["eligible_files"] for row in above_cutoff)
+        tied_file_counts = sorted(row["eligible_files"] for row in cutoff_rows)
+        min_top_files = fixed_top_files + sum(tied_file_counts[:included_ties])
+        max_top_files = fixed_top_files + sum(tied_file_counts[-included_ties:])
+        min_density_ratio = (top_flags / max_top_files) / (
+            remaining_flags / (total_files - max_top_files)
+        )
+        max_density_ratio = (top_flags / min_top_files) / (
+            remaining_flags / (total_files - min_top_files)
+        )
+
+        concentration_rows.append(
+            {
+                "analysis_label": label,
+                "antipattern": rows[0]["antipattern"],
+                "eligible_source_role": rows[0]["eligible_source_role"],
+                "flagged_repositories": len(flagged_rows),
+                "top_decile_repositories": top_count,
+                "cutoff_flags": cutoff,
+                "repositories_tied_at_cutoff": tied,
+                "cutoff_ties_included": included_ties,
+                "total_flags": total_flags,
+                "top_decile_flags": top_flags,
+                "top_decile_flag_share_percent": format_rate(top_flags, total_flags, 100),
+                "eligible_files": total_files,
+                "top_decile_eligible_files": top_files,
+                "top_decile_eligible_file_share_percent": format_rate(
+                    top_files, total_files, 100
+                ),
+                "top_decile_eligible_file_share_min_percent": format_rate(
+                    min_top_files, total_files, 100
+                ),
+                "top_decile_eligible_file_share_max_percent": format_rate(
+                    max_top_files, total_files, 100
+                ),
+                "top_decile_flags_per_100_eligible_files": f"{top_density:.6f}",
+                "remaining_flags": remaining_flags,
+                "remaining_eligible_files": remaining_files,
+                "remaining_flags_per_100_eligible_files": f"{remaining_density:.6f}",
+                "top_to_remaining_density_ratio": f"{top_density / remaining_density:.6f}",
+                "top_to_remaining_density_ratio_min": f"{min_density_ratio:.6f}",
+                "top_to_remaining_density_ratio_max": f"{max_density_ratio:.6f}",
+            }
+        )
+        scopes = [
+            ("all repositories", rows),
+            ("excluding highest-count decile", remaining_rows),
+        ]
+        scopes.extend(
+            (
+                f"{stratum} repositories",
+                [
+                    row
+                    for row in rows
+                    if size_stratum(corpus_files[row["repository"]]) == stratum
+                ],
+            )
+            for stratum in ("small", "medium", "large")
+        )
+        density_rows.extend(density_summary(scope_rows, scope) for scope, scope_rows in scopes)
+    return density_rows, concentration_rows, selected_top_deciles
+
+
 def phase2_tables(names, manifest, alignments):
     all_relevant_files = len(manifest)
     eligible = Counter((row["repository"], row["source_role"]) for row in manifest)
@@ -445,7 +629,7 @@ def phase2_tables(names, manifest, alignments):
     ]
     units.append(
         (
-            "Any retained class [broad detector-output density]",
+            OVERALL_LABEL,
             "Any retained class",
             "all relevant files",
         )
@@ -686,7 +870,7 @@ def main():
 
     repository_rows, phase2_rows = phase2_tables(names, manifest, alignments)
     phase2_by_label = {row["analysis_label"]: row for row in phase2_rows}
-    overall = phase2_by_label["Any retained class [broad detector-output density]"]
+    overall = phase2_by_label[OVERALL_LABEL]
     id_required = phase2_by_label["ID Required [generated schema]"]
     implicit_columns = phase2_by_label["Implicit Columns [application/query source]"]
     phase2_checks = {
@@ -757,20 +941,209 @@ def main():
     phase2_checks_path.write_text(
         json.dumps(phase2_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
+    if not phase2_summary["passed"]:
+        raise SystemExit("Phase 2 acceptance checks failed; inspect corpus_phase2_summary.json")
+
+    phase3_rows, concentration_rows, selected_top_deciles = phase3_tables(
+        repository_rows, manifest
+    )
+    whole_corpus = {
+        row["analysis_label"]: row
+        for row in phase3_rows
+        if row["scope"] == "all repositories"
+    }
+    without_top_decile = {
+        row["analysis_label"]: row
+        for row in phase3_rows
+        if row["scope"] == "excluding highest-count decile"
+    }
+    concentration_by_label = {row["analysis_label"]: row for row in concentration_rows}
+    stratum_rows = [
+        row
+        for row in phase3_rows
+        if row["scope"] in {"small repositories", "medium repositories", "large repositories"}
+    ]
+    stratum_counts = {
+        row["scope"].removesuffix(" repositories"): row["repositories"]
+        for row in stratum_rows
+        if row["analysis_label"] == OVERALL_LABEL
+    }
+    class_labels = [
+        f"{antipattern} [{role}]" for antipattern, role in CLASS_SOURCE_ROLES
+    ]
+    pooled_ranking = sorted(
+        class_labels,
+        key=lambda label: -float(
+            whole_corpus[label]["pooled_flags_per_100_eligible_files"]
+        ),
+    )
+    repository_equal_ranking = sorted(
+        class_labels,
+        key=lambda label: -float(
+            whole_corpus[label]["repository_equal_mean_flags_per_100_eligible_files"]
+        ),
+    )
+    overall_concentration = concentration_by_label[OVERALL_LABEL]
+    phase3_checks = {
+        "whole_corpus_summaries_include_602_repositories": all(
+            row["repositories"] == EXPECTED_REPOSITORIES for row in whole_corpus.values()
+        ),
+        "repository_without_flags_is_included": (
+            whole_corpus[OVERALL_LABEL]["repositories"] == 602
+            and whole_corpus[OVERALL_LABEL]["flagged_repositories"] == 601
+        ),
+        "fixed_size_strata_partition_the_corpus": stratum_counts
+        == {"small": 473, "medium": 93, "large": 36},
+        "strata_preserve_flags_and_eligible_files": all(
+            sum(
+                row[field]
+                for row in stratum_rows
+                if row["analysis_label"] == label
+            )
+            == whole_corpus[label][field]
+            for label in whole_corpus
+            for field in ("total_flags", "eligible_files")
+        ),
+        "top_decile_exclusion_preserves_flags_and_eligible_files": all(
+            concentration_by_label[label][top_field]
+            + without_top_decile[label][summary_field]
+            == whole_corpus[label][summary_field]
+            for label in whole_corpus
+            for top_field, summary_field in (
+                ("top_decile_flags", "total_flags"),
+                ("top_decile_eligible_files", "eligible_files"),
+            )
+        ),
+        "reported_overall_top_decile_flag_share_is_59_1_percent": round(
+            float(overall_concentration["top_decile_flag_share_percent"]), 1
+        )
+        == 59.1,
+        "all_requested_correlations_are_defined": all(
+            row["spearman_raw_flags_vs_eligible_files"] for row in phase3_rows
+        ),
+        "each_top_decile_selection_is_reproducible": all(
+            len(selected_top_deciles[label])
+            == concentration_by_label[label]["top_decile_repositories"]
+            for label in whole_corpus
+        ),
+        "cutoff_tie_bounds_contain_selected_results": all(
+            float(row[minimum]) <= float(row[selected]) <= float(row[maximum])
+            for row in concentration_rows
+            for minimum, selected, maximum in (
+                (
+                    "top_decile_eligible_file_share_min_percent",
+                    "top_decile_eligible_file_share_percent",
+                    "top_decile_eligible_file_share_max_percent",
+                ),
+                (
+                    "top_to_remaining_density_ratio_min",
+                    "top_to_remaining_density_ratio",
+                    "top_to_remaining_density_ratio_max",
+                ),
+            )
+        ),
+    }
+    phase3_density_path = args.output_dir / "corpus_phase3_density_summary.csv"
+    phase3_concentration_path = args.output_dir / "corpus_phase3_concentration.csv"
+    phase3_summary_path = args.output_dir / "corpus_phase3_summary.json"
+    write_csv(phase3_density_path, PHASE3_DENSITY_FIELDS, phase3_rows)
+    write_csv(
+        phase3_concentration_path,
+        PHASE3_CONCENTRATION_FIELDS,
+        concentration_rows,
+    )
+    top_flag_share = float(overall_concentration["top_decile_flag_share_percent"])
+    top_file_share = float(overall_concentration["top_decile_eligible_file_share_percent"])
+    min_top_file_share = float(
+        overall_concentration["top_decile_eligible_file_share_min_percent"]
+    )
+    max_top_file_share = float(
+        overall_concentration["top_decile_eligible_file_share_max_percent"]
+    )
+    density_ratio = float(overall_concentration["top_to_remaining_density_ratio"])
+    min_density_ratio = float(overall_concentration["top_to_remaining_density_ratio_min"])
+    max_density_ratio = float(overall_concentration["top_to_remaining_density_ratio_max"])
+    new_headline_result_supported = top_flag_share > max_top_file_share and min_density_ratio > 1
+    phase3_summary = {
+        "phase": 3,
+        "passed": all(phase3_checks.values()),
+        "checks": phase3_checks,
+        "size_strata": {
+            "definition": (
+                "Strata use total all-relevant files per repository. Small repositories have "
+                "at most 31 files, medium repositories have 32-94 files, and large repositories "
+                "have more than 94 files. Class densities use role-specific eligible-file counts."
+            ),
+            "counts": stratum_counts,
+        },
+        "methods": {
+            "repository_equal": (
+                "Means and percentiles include zero-flag repositories with eligible files. "
+                "Repositories without eligible files have undefined density and are omitted."
+            ),
+            "percentiles": (
+                "Python statistics.quantiles with method='inclusive'; the table reports P10, "
+                "Q1, median, Q3, and P90."
+            ),
+            "correlation": (
+                "Spearman rank correlation across all repositories in each scope, including "
+                "zero counts. Python statistics.correlation averages tied ranks."
+            ),
+            "top_decile": (
+                "Each analysis label has its own selection. We take the ceiling of 10% of "
+                "repositories with at least one flag, ranked by raw flag count. Repository name "
+                "breaks cutoff ties deterministically. The concentration table also gives bounds "
+                "across every possible cutoff-tie selection."
+            ),
+        },
+        "decision_gate": {
+            "pooled_density_ranking": pooled_ranking,
+            "repository_equal_mean_density_ranking": repository_equal_ranking,
+            "rankings_are_identical": pooled_ranking == repository_equal_ranking,
+            "overall_top_decile_flag_share_percent": top_flag_share,
+            "overall_top_decile_eligible_file_share_percent": top_file_share,
+            "overall_top_decile_eligible_file_share_min_percent": min_top_file_share,
+            "overall_top_decile_eligible_file_share_max_percent": max_top_file_share,
+            "overall_top_to_remaining_density_ratio": density_ratio,
+            "overall_top_to_remaining_density_ratio_min": min_density_ratio,
+            "overall_top_to_remaining_density_ratio_max": max_density_ratio,
+            "new_headline_result_supported": new_headline_result_supported,
+            "headline_result": (
+                f"The highest-count decile contains {top_flag_share:.1f}% of flags and "
+                f"between {min_top_file_share:.1f}% and {max_top_file_share:.1f}% of eligible "
+                f"files across cutoff ties. Its flag density is between {min_density_ratio:.2f} "
+                f"and {max_density_ratio:.2f} times that of the remaining repositories."
+            ),
+        },
+        "sha256": {
+            "inputs": {
+                manifest_path.name: sha256(manifest_path),
+                phase2_repository_path.name: sha256(phase2_repository_path),
+            },
+            "outputs": {
+                phase3_density_path.name: sha256(phase3_density_path),
+                phase3_concentration_path.name: sha256(phase3_concentration_path),
+            },
+        },
+    }
+    phase3_summary_path.write_text(
+        json.dumps(phase3_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     print(
         json.dumps(
             {
                 "phase1_passed": summary["passed"],
                 "phase2_passed": phase2_summary["passed"],
+                "phase3_passed": phase3_summary["passed"],
                 **summary["counts"],
             },
             indent=2,
             sort_keys=True,
         )
     )
-    if not phase2_summary["passed"]:
-        raise SystemExit("Phase 2 acceptance checks failed; inspect corpus_phase2_summary.json")
+    if not phase3_summary["passed"]:
+        raise SystemExit("Phase 3 acceptance checks failed; inspect corpus_phase3_summary.json")
 
 
 if __name__ == "__main__":
