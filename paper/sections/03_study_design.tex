@@ -2,7 +2,7 @@
 
 \subsection{Study overview}
 
-The study connects an occurrence-level detector evaluation to a repository-level description of detector output. We first identified open-source Java repositories that use jOOQ and retain generated schema classes. We then annotated a size-stratified sample, partitioned its projects into training, validation, and test sets, selected one detector configuration on the validation set, and evaluated it on the held-out test set. Finally, we applied the selected detector to the full identified corpus and coded recurring source-fragment patterns among two classes of flags.
+The study connects an occurrence-level detector evaluation to a repository-level description of detector output. We first identified open-source Java repositories that use jOOQ and retain generated schema classes. We then annotated a size-stratified sample, partitioned its projects into training, validation, and test sets, selected one detector configuration on the validation set, and evaluated it on the held-out test set. Finally, we applied the selected detector to the full identified corpus. As an exploratory part of this corpus analysis, we coded recurring source-fragment patterns among two query classes.
 
 Reference and predicted occurrences are class-labelled line spans within files, which the held-out evaluation matches one to one. The corpus analysis measures flag counts, flagged-file breadth, within-file repetition, and file-normalised density across source roles and repositories.
 
@@ -107,7 +107,7 @@ The selected set comprised OpenAI GPT-5.2 \nobreakcite{gpt52}, Z.ai GLM-5 \nobre
 
 We compared these four models and four prompting configurations on the \num{20}-repository validation set, originally reported as containing \num{823} relevant files. Validation requests used the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub} through OpenRouter \nobreakcite{openRouter2026homepage}. GPT-5.2 requested xhigh reasoning and temperature \num{0.0}; GLM-5 used temperature \num{0.0} without a reasoning parameter; Claude Opus 4.5 used temperature \num{0.0} with reasoning disabled; and gpt-oss-120B used high reasoning without a temperature parameter, with preserved response metadata reporting temperature \num{1.0}. We ran each model-prompt pair once and selected the final configuration by observed agreement, cost, and runtime.\label{sec:models}
 
-The final detector recursively selected relevant Java files, attached key-definition context where available, submitted a structured request for each file, retried failures, and retained each returned class-labelled span. We executed one primary run on the \num{20} held-out projects, targeting \num{502} relevant files. The run cost \usd{14.34}, took \num{386} seconds, and returned \num{536} predictions. The corpus execution was recorded as using the same model, settings, and Zero-Shot prompt family. It produced the flags used for RQ2 and RQ3.
+The final detector recursively selected relevant Java files, attached key-definition context where available, submitted a structured request for each file, retried failures, and retained each returned class-labelled span. We executed one primary run on the \num{20} held-out projects, targeting \num{502} relevant files. The run cost \usd{14.34}, took \num{386} seconds, and returned \num{536} predictions. The corpus execution was recorded as using the same model, settings, and Zero-Shot prompt family. It produced the flags used for RQ2 and the exploratory source-fragment analysis.
 
 \subsection{Localisation evaluation and error analysis}
 
@@ -123,7 +123,7 @@ Two robustness procedures test the primary result. First, we repeat the one-to-o
 
 We manually reviewed unmatched references and predictions to classify recurring semantic and localisation errors. This detector-informed review produced a revised set of \num{563} reference events. It could miss occurrences absent from both the detector output and original annotations. Because detector disagreements guided the revision, we retain the original annotations as the primary reference and report revised-reference results as an optimistic sensitivity analysis.
 
-\subsection{Corpus measures and source-fragment coding}\label{sec:corpusMeasures}
+\subsection{Corpus measures and exploratory source-fragment coding}\label{sec:corpusMeasures}
 
 The corpus execution covered all \num{602} repositories, including the \num{61} sampled repositories, and produced \num{15931} positive flags. We reconstructed its source frame from the analysis snapshot using the released detector's recursive \path{**/*.java} discovery and file filters, then removed duplicate paths. The resulting frame contains \num{17988} distinct repository-relative relevant file paths: \num{17314} under a \texttt{src} path component, \num{360} under \path{target/generated-sources}, and \num{314} in other source locations. The earlier \num{17450}-file count used a narrower \path{src/**/*.java} scan that emitted \num{136} duplicate paths and omitted \num{674} detector-selected files. We use the reconstructed file-occurrence frame for all file-normalised results.
 
@@ -135,9 +135,9 @@ To separate repository size from density, we retain all \num{602} repository rec
 
 Finally, we test sensitivity to repeated content. A relevant file occurrence belongs to an exact-duplicate group when its SHA-256 appears more than once. Exact-content events are unique by content hash, class, source role, and inclusive line span. We weight each unique content and event once across its physical copies when calculating repository concentration. This procedure covers byte-identical files; modified clones remain outside the sensitivity analysis.
 
-The execution was recorded as using the selected model, settings, and Zero-Shot prompt family. These measures describe detector output in the identified corpus. Estimating antipattern prevalence or API-specific risk requires an independent corpus audit, class-specific error estimates, and class-specific API-opportunity denominators.
+The execution was recorded as using the selected model, settings, and Zero-Shot prompt family. The corpus analysis describes detector output; prevalence and API-specific risk estimates would require an independent audit, class-specific error estimates, and class-specific API-opportunity denominators.
 
-For Implicit Columns and Poor Man's Search Engine, we assigned one post hoc source-fragment category to each detector flag. The coding procedure applies a fixed, precedence-ordered list of string and regular-expression matches to the code fragment returned by the detector. The first matching pattern determines the category. We report leading patterns individually, pool remaining recurring matched patterns as other categorised patterns, and combine sparse matched patterns with fragments having no match in a sparse or uncategorised group. Because the procedure operates on returned fragments without resolving source-level call targets, the categories describe fragments associated with flags. Online Resource~1 provides the ordered patterns.
+For Implicit Columns and Poor Man's Search Engine, we assigned one exploratory source-fragment category to each detector flag. A fixed, precedence-ordered list of string and regular-expression patterns was applied to the code fragment returned by the detector, with the first matching pattern determining the category. We report leading patterns individually, pool the remaining recurring matches as other categorised patterns, and combine sparse or unmatched fragments in one group. Online Resource~1 provides the ordered patterns.
 
 \subsection{Reproducibility and AI-use disclosure}
 

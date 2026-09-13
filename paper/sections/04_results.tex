@@ -102,7 +102,7 @@ Only Implicit Columns and Poor Man's Search Engine changed across these threshol
 
 A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.798} and \num{0.931}, micro recall between \num{0.820} and \num{0.913}, and micro F1 between \num{0.820} and \num{0.912}. These percentile ranges describe sensitivity to the composition of the selected test projects.
 
-\subsection{RQ2: How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across eligible files and repositories?}\label{sec:rq2CorpusFlags}
+\subsection{RQ2: How are the selected detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus, including recurring source-fragment patterns for two query classes?}\label{sec:rq2CorpusFlags}
 
 The reconstructed corpus frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
 
@@ -110,7 +110,7 @@ The reconstructed corpus frame contains \num{17988} relevant file occurrences in
     \centering
     \scriptsize
     \setlength{\tabcolsep}{2pt}
-    \caption{Selected-detector output in the identified \num{602}-repository corpus. G denotes the \num{7226} generated-schema files and A the \num{10762} application/query files; All contains \num{17988} relevant file occurrences. Repository coverage and file breadth give counts followed by percentages in parentheses. The two Fear of the Unknown repository counts overlap in two repositories. Repetition is flags per flagged file. Pooled and repository-equal densities are flags per 100 eligible files; the latter gives each eligible repository equal weight and includes zero-flag repositories. These are detector-output measures rather than prevalence estimates.}
+    \caption{Selected-detector output in the identified \num{602}-repository corpus. G denotes the \num{7226} generated-schema files and A the \num{10762} application/query files; All contains \num{17988} relevant file occurrences. Repository coverage and file breadth give counts followed by percentages in parentheses. The two Fear of the Unknown repository counts overlap in two repositories. Repetition is flags per flagged file. Pooled and repository-equal densities are flags per 100 eligible files; the latter gives each eligible repository equal weight and includes zero-flag repositories.}
     \label{tab:corpusFlags}
     \begin{tabular}{lrrrrr}
         \hline
@@ -137,16 +137,16 @@ Repository size therefore explains part of the raw concentration. The 61 highest
 
 Exact-content sensitivity preserves both headline results. Of the \num{17988} file occurrences, \num{1109}, or \qty{6.17}{\percent}, belong to \num{488} exact-duplicate groups and contain \num{1080}, or \qty{6.78}{\percent}, of the raw flags. The groups contain \num{621} copies beyond their first occurrences. Taking the union of class-and-span events across byte-identical copies yields \num{15355} exact-content events over \num{17367} unique contents. Eight groups have inconsistent event sets, but selecting one physical representative from each group yields \numrange{15340}{15349} events without changing the interpretation. ID Required remains broader with almost no repetition, and Implicit Columns remains narrower and repetitive. The highest-count decile contains \qty{59.4}{\percent} of exact-content events, \qtyrange{50.1}{50.3}{\percent} of eligible unique-content weight, and \numrange{1.44}{1.46} times the remaining density. Byte-identical copies therefore do not explain the conclusions.
 
-\subsection{RQ3: Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
+\subsubsection{Exploratory source-fragment strata}\label{sec:fragmentStrata}
 
-Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns among Implicit Columns and Poor Man's Search Engine flags. The two leading Implicit Columns patterns both selected all fields from a table. Together, they contained \num{5227} of \num{7289} flags, or \qty{71.7}{\percent}. Explicit field-array and asterisk patterns contributed a further \num{945} flags, or \qty{13.0}{\percent}. The reported recurring categories outside the combined catch-all accounted for \qty{94.1}{\percent} of the class flags.
+Table~\ref{tab:apiManifestations} groups recurring source-fragment patterns among Implicit Columns and Poor Man's Search Engine flags. The two leading Implicit Columns patterns both selected all fields from a table. Together, they contained \num{5227} of \num{7289} flags, or \qty{71.7}{\percent}. Explicit field-array and asterisk patterns contributed a further \num{945} flags, or \qty{13.0}{\percent}. Named recurring categories accounted for \qty{94.1}{\percent} of the class flags.
 
-For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{273} of \num{583} flags, or \qty{46.8}{\percent}. The next three patterns matched case-insensitive or contains-style method names. These four categories contained \num{517} flags, or \qty{88.7}{\percent}. The reported recurring categories outside the combined catch-all accounted for \qty{93.7}{\percent}.
+For Poor Man's Search Engine, fragments matching \texttt{like(} contained \num{273} of \num{583} flags, or \qty{46.8}{\percent}. The next three patterns matched case-insensitive or contains-style method names. These four categories contained \num{517} flags, or \qty{88.7}{\percent}. Named recurring categories accounted for \qty{93.7}{\percent}.
 
 \begin{table}[H]
     \centering
     \small
-    \caption{Recurring post hoc source-fragment categories among detector flags for two query antipatterns. Categories are precedence-ordered string or regular-expression matches over detector-returned code fragments. Shares use the class flag total as denominator; they do not measure API-specific risk.}
+    \caption{Exploratory source-fragment categories among detector flags for two query antipatterns. Categories use precedence-ordered string or regular-expression matches over detector-returned code fragments. Shares use each class's total flag count as denominator.}
     \label{tab:apiManifestations}
     \begin{tabular}{p{2.2cm}p{5.3cm}rr}
         \hline
