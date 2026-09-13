@@ -12,7 +12,7 @@ The study addresses three research questions:
 
 \begin{itemize}
     \item \textbf{RQ1:} What occurrence-level agreement does the selected detector achieve on held-out jOOQ projects?
-    \item \textbf{RQ2:} How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?
+    \item \textbf{RQ2:} How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across eligible files and repositories?
     \item \textbf{RQ3:} Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?
 \end{itemize}
 
@@ -21,5 +21,5 @@ The study makes three contributions:
 \begin{itemize}
     \item an occurrence-level reference dataset containing \num{1562} class-labelled spans across 19 operationalised SQL antipatterns from 61 sampled jOOQ repositories, with seven classes retained for detector analysis;
     \item a project-disjoint evaluation of a selected LLM-based detector against original reference spans, including class-specific errors and sensitivity to span-matching thresholds and test-project composition; and
-    \item a characterisation of detector flags in 602 identified repositories, including repository concentration and recurring source-fragment patterns for two flag classes.
+    \item a file-normalised characterisation of detector flags in 602 identified repositories, separating flagged-file breadth from within-file repetition and testing repository-size and exact-content sensitivity, together with recurring source-fragment patterns for two flag classes.
 \end{itemize}

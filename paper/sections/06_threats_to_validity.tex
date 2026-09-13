@@ -6,7 +6,9 @@ The seven antipattern classes follow study-specific operational definitions deri
 
 The primary matching rule treats class-labelled line spans as events and requires one-to-one overlap at intersection over union \num{0.50}. It captures class, occurrence count, and approximate localisation, but does not test whether differently grouped events are semantically equivalent. True negatives are undefined, and the threshold analysis tests robustness only to the chosen span boundary.
 
-The corpus measures count flags and repositories with flags. They include no correction for class-specific error, repository size, or relevant API exposure, so they do not estimate prevalence. The post hoc categories also describe returned source fragments without resolved call targets or API-risk denominators.
+The corpus measures normalise flags by role-eligible files and report both file-pooled and repository-equal summaries. Role eligibility remains broader than a class-specific API opportunity: an application/query file may contain no eligible projection or search predicate, and a generated-schema file may expose several database objects. The measures also retain detector errors observed in the held-out evaluation. They therefore describe detector-output density, breadth, and repetition rather than antipattern prevalence or API risk. The post hoc categories likewise use returned fragments without resolved call targets or exposure denominators.
+
+The exact-content sensitivity identifies byte-identical files by SHA-256. Modified clones can still receive repeated weight, and repositories may share related code whose bytes differ. The unchanged exact-content results bound the effect of exact copies alone.
 
 \subsection{Internal validity}
 
@@ -14,7 +16,7 @@ The primary evaluation retains the original annotations, whereas the sensitivity
 
 Class retention and project partitioning were data-dependent. The support rule used the complete \num{61}-repository annotation set, and the split was selected from \num{1000000} seeds using per-class occurrence balance. Project-disjoint assignment prevents file overlap, but the retained classes and split composition remain adapted to the observed sample.
 
-The preliminary sampling frame contained one duplicate repository and an incomplete path list for excluding irrelevant generated files. Later corrections improved the corpus run but could not alter the sample or partitions. Model and prompt selection also used one validation partition and one observed run per configuration, making the choice sensitive to that partition and execution.
+The preliminary sampling frame contained one duplicate repository and an incomplete path list for excluding irrelevant generated files. These conditions remain part of the sample and partitions. The corpus reconstruction corrected file accounting without changing the \num{15931} frozen detector-output rows. Model and prompt selection also used one validation partition and one observed run per configuration, making the choice sensitive to that partition and execution.
 
 \subsection{External validity}
 
@@ -36,4 +38,4 @@ The repeat-annotation exercise measures the same annotator's consistency after 3
 
 The selected detector was run once on the held-out partition and once on the corpus, leaving run-to-run variance unmeasured. The hosted model and gateway can also change, so reproduction depends on continued service access as well as preserved local artefacts.
 
-The surviving artefacts support inspection and partial reruns, but not exact reconstruction of the original requests and source states.
+The corpus source snapshot survives without Git history, and its manifest preserves repository-relative paths and SHA-256 content hashes. The surviving artefacts support source-level inspection and deterministic normalisation. Exact reconstruction of the original model requests remains unavailable.

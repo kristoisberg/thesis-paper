@@ -102,32 +102,40 @@ Only Implicit Columns and Poor Man's Search Engine changed across these threshol
 
 A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.798} and \num{0.931}, micro recall between \num{0.820} and \num{0.913}, and micro F1 between \num{0.820} and \num{0.912}. These percentile ranges describe sensitivity to the composition of the selected test projects.
 
-\subsection{RQ2: How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across repositories?}\label{sec:rq2CorpusFlags}
+\subsection{RQ2: How frequently does the selected detector flag each of the seven SQL antipatterns in the 602-repository corpus, and how are those flags distributed across eligible files and repositories?}\label{sec:rq2CorpusFlags}
 
-The reconstructed corpus frame contains \num{17988} unique relevant Java files in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}. Implicit Columns and ID Required dominated the output: together they accounted for \num{10886} flags, or \qty{68.3}{\percent} of all flags, and appeared in \qty{88.9}{\percent} and \qty{86.9}{\percent} of repositories, respectively. Table~\ref{tab:corpusFlags} reports class totals and repository coverage.
-
-The flags were concentrated within repositories. The highest-count \qty{10}{\percent} of flagged repositories contained \qty{59.1}{\percent} of all flags. Class-specific top-decile shares ranged from \qty{44.6}{\percent} for Poor Man's Search Engine to \qty{66.0}{\percent} for Keyless Entry. Consequently, a small group of high-count repositories contributes much of the unnormalised corpus output.
+The reconstructed corpus frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
 
 \begin{table}[H]
     \centering
-    \small
-    \caption{Selected-detector flags in the identified \num{602}-repository corpus. Repository coverage is the percentage of all corpus repositories with at least one class flag. Top-decile concentration is the share of class flags in the highest-count \qty{10}{\percent} of flagged repositories, rounding the number of repositories up. The unadjusted counts describe detector flags rather than prevalence.}
+    \scriptsize
+    \setlength{\tabcolsep}{2pt}
+    \caption{Selected-detector output in the identified \num{602}-repository corpus. G denotes the \num{7226} generated-schema files and A the \num{10762} application/query files; All contains \num{17988} relevant file occurrences. Repository coverage and file breadth give counts followed by percentages in parentheses. The two Fear of the Unknown repository counts overlap in two repositories. Repetition is flags per flagged file. Pooled and repository-equal densities are flags per 100 eligible files; the latter gives each eligible repository equal weight and includes zero-flag repositories. These are detector-output measures rather than prevalence estimates.}
     \label{tab:corpusFlags}
-    \begin{tabular}{lrrrr}
+    \begin{tabular}{lrrrrr}
         \hline
-        \textbf{Antipattern} & \textbf{Flags} & \makecell{\textbf{Repositories}\\\textbf{flagged}} & \makecell{\textbf{Coverage}\\\textbf{(\%)}} & \makecell{\textbf{Top-decile}\\\textbf{share (\%)}} \\
+        \makecell[l]{\textbf{Antipattern}\\\textbf{and role}} & \textbf{Flags} & \makecell{\textbf{Repository}\\\textbf{coverage}} & \makecell{\textbf{File}\\\textbf{breadth}} & \makecell{\textbf{Repeti-}\\\textbf{tion}} & \makecell{\textbf{Density}\\\textbf{pooled / repo.}} \\
         \hline
-        Implicit Columns & 7289 & 535 & 88.9 & 54.6 \\
-        ID Required & 3597 & 523 & 86.9 & 59.9 \\
-        Keyless Entry & 2153 & 200 & 33.2 & 66.0 \\
-        Fear of the Unknown & 1256 & 205 & 34.1 & 56.8 \\
-        31 Flavors & 390 & 87 & 14.5 & 52.8 \\
-        Poor Man's Search Engine & 583 & 114 & 18.9 & 44.6 \\
-        Rounding Errors & 663 & 86 & 14.3 & 63.3 \\
-        \textbf{Any retained class} & \textbf{15931} & \textbf{601} & \textbf{99.8} & \textbf{59.1} \\
+        Implicit Columns (A) & 7289 & 535 (88.9) & 2607 (24.2) & 2.80 & 67.73 / 92.63 \\
+        ID Required (G) & 3597 & 523 (86.9) & 3591 (49.7) & 1.00 & 49.78 / 59.90 \\
+        Keyless Entry (G) & 2153 & 200 (33.2) & 1269 (17.6) & 1.70 & 29.80 / 17.76 \\
+        Fear of the Unknown (G) & 1240 & 197 (32.7) & 675 (9.3) & 1.84 & 17.16 / 20.59 \\
+        Fear of the Unknown (A) & 16 & 10 (1.7) & 11 (0.1) & 1.45 & 0.15 / 0.17 \\
+        31 Flavors (G) & 390 & 87 (14.5) & 292 (4.0) & 1.34 & 5.40 / 4.70 \\
+        \makecell[l]{Poor Man's Search Engine (A)} & 583 & 114 (18.9) & 319 (3.0) & 1.83 & 5.42 / 4.27 \\
+        Rounding Errors (G) & 663 & 86 (14.3) & 343 (4.7) & 1.93 & 9.18 / 7.63 \\
+        \textbf{Any retained class (All)} & \textbf{15931} & \textbf{601 (99.8)} & \textbf{7653 (42.5)} & \textbf{2.08} & \textbf{88.56 / 93.63} \\
         \hline
     \end{tabular}
 \end{table}
+
+Table~\ref{tab:corpusFlags} separates class totals, repository coverage, flagged-file breadth, within-file repetition, and density in the corresponding source-role frame. The two most frequent classes have different output structures. ID Required flags cover \num{3591} of \num{7226} generated-schema files, or \qty{49.7}{\percent}, and average \num{1.00} per flagged file. Implicit Columns flags cover \num{2607} of \num{10762} application/query files, or \qty{24.2}{\percent}, and average \num{2.80} flags per flagged file. The first class is therefore broader across its eligible file frame, whereas the second repeats more within flagged files. Implicit Columns and ID Required together account for \num{10886} flags, or \qty{68.3}{\percent} of the output.
+
+Across all repositories, pooled density is \num{88.56} flags per 100 relevant files. The repository-equal mean is \num{93.63}, and the median is \num{83.46}, with an interquartile interval of \numrange{51.28}{120.00}. Raw flag count correlates with relevant-file count at Spearman $\rho=\num{0.778}$. Large repositories contain \qty{43.8}{\percent} of relevant files and \qty{39.8}{\percent} of flags. Their broad density is \num{80.50}, below the small- and medium-repository densities of \num{93.19} and \num{96.65}.
+
+Repository size therefore explains part of the raw concentration. The 61 highest-count repositories contain \qty{59.1}{\percent} of all flags and \qtyrange{48.1}{49.6}{\percent} of relevant files across the three-way cutoff tie. Their density is \numrange{1.47}{1.56} times that of the remaining repositories. High-count repositories combine greater file volume with higher density, while the large stratum as a whole has the lowest pooled density.
+
+Exact-content sensitivity preserves both headline results. Of the \num{17988} file occurrences, \num{1109}, or \qty{6.17}{\percent}, belong to \num{488} exact-duplicate groups and contain \num{1080}, or \qty{6.78}{\percent}, of the raw flags. The groups contain \num{621} copies beyond their first occurrences. Taking the union of class-and-span events across byte-identical copies yields \num{15355} exact-content events over \num{17367} unique contents. Eight groups have inconsistent event sets, but selecting one physical representative from each group yields \numrange{15340}{15349} events without changing the interpretation. ID Required remains broader with almost no repetition, and Implicit Columns remains narrower and repetitive. The highest-count decile contains \qty{59.4}{\percent} of exact-content events, \qtyrange{50.1}{50.3}{\percent} of eligible unique-content weight, and \numrange{1.44}{1.46} times the remaining density. Byte-identical copies therefore do not explain the conclusions.
 
 \subsection{RQ3: Which recurring source-fragment patterns are most frequent among detector flags for Implicit Columns and Poor Man's Search Engine in the 602-repository corpus?}\label{sec:rq3ApiPatterns}
 

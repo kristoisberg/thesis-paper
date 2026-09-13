@@ -37,7 +37,7 @@ Erki Eessaar, Department of Software Science, School of Information Technologies
 Corresponding author: Kristo Isberg, \href{mailto:krisbe@taltech.ee}{krisbe@taltech.ee}
 \end{center}
 
-This supplement contains supporting detail and indexes the larger frozen replication resources. The full study artefacts are preserved at commit \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}. Detector source is preserved separately at commit \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}.
+This supplement contains supporting detail and indexes the larger frozen replication resources. The full study artefacts are preserved at commit \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}. Detector source is preserved separately at commit \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}. Article analyses and generated corpus-normalisation tables are preserved at commit \href{https://github.com/kristoisberg/thesis-paper/tree/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis}{\texttt{bb3bf60}}.
 
 \section{Resource index}
 
@@ -45,7 +45,7 @@ This supplement contains supporting detail and indexes the larger frozen replica
     \item[Repository mining.] The frozen repository contains the \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-github-search-terms.tex}{GitHub search strings}, \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-omitted-projects.tex}{omitted-project list}, and mining notebooks under \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts}{\texttt{scripts/}}.
     \item[Annotation materials.] The \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-annotated-antipatterns.tex}{full 19-class catalogue}, \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/diagrams/decision}{decision trees}, and reference datasets are preserved in the frozen repository.
     \item[Detector configuration.] All query and schema \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/prompts}{prompts}, model-selection detail, per-class configuration results, and configuration options are preserved with the study artefacts.
-    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, and co-detection matrices and heatmaps. The ordered source-fragment categorisation procedure and stored counts are in \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts/21-find-frequent-offenders.ipynb}{\texttt{scripts/21-find-frequent-offenders.ipynb}}. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} provide stand-alone copies of two compact diagnostics also reported in the article.
+    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, and co-detection matrices and heatmaps. The ordered source-fragment categorisation procedure and stored counts are in \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts/21-find-frequent-offenders.ipynb}{\texttt{scripts/21-find-frequent-offenders.ipynb}}. The article repository contains the \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_normalization.py}{corpus-normalisation script}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase2_class_summary.csv}{class-level breadth and repetition table}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_density_summary.csv}{repository-density table}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_concentration.csv}{concentration decomposition}, and \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase4_exact_duplicate_sensitivity.csv}{exact-content sensitivity table}. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} provide stand-alone copies of two compact diagnostics also reported in the article.
     \item[Implementation.] Architecture, workflow, output, and command-line configuration details accompany the frozen \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{detector source} and the original thesis appendices.
 \end{description}
 
@@ -71,10 +71,10 @@ Table~\ref{tab:reproSnapshots} maps each immutable snapshot to the evidence it p
     \endfoot
     Study artefacts & \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44}{\texttt{d9b35e3}}, 24 May 2026 & \path{datasets/test-set.csv} contains the \num{523} original test references. The executed \path{scripts/14-evaluate-tool-localisation.ipynb} contains all \num{536} held-out predictions. \path{datasets/analysis-results.csv} contains all \num{15931} positive corpus flags; per-project positive outputs also survive. \\
     Released detector & \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{\texttt{cf82fe5}}, 26 May 2026 & Source, tests, \path{package.json}, and \path{bun.lock}. This release postdates the April executions and does not identify the binary used for those runs. \\
-    Article analyses & \href{https://github.com/kristoisberg/thesis-paper/tree/96dc91bfb3ce6a32a39bd29c7b4469a8ba0c9674/analysis}{\texttt{96dc91b}}, 28 August 2026 & \path{analysis/localisation_robustness.py}, \path{analysis/corpus_concentration.py}, and \path{analysis/requirements.txt} reproduce the article's localisation robustness and corpus-concentration calculations from the frozen study artefacts. \\
+    Article analyses & \href{https://github.com/kristoisberg/thesis-paper/tree/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis}{\texttt{bb3bf60}}, 12 September 2026 & \path{analysis/localisation_robustness.py}, \path{analysis/corpus_concentration.py}, \path{analysis/corpus_normalization.py}, and \path{analysis/requirements.txt} reproduce the article's localisation robustness, source-frame reconstruction, normalised corpus measures, and exact-content sensitivity from the frozen study artefacts and retained source snapshot. \\
 \end{longtable}
 
-The preserved prediction tables contain the parsed class, file, span, code fragment, and explanation fields used in the analyses. Raw API response envelopes, request identifiers, negative-file outputs, failed responses, and complete request metadata were not archived. The source revisions of the \num{602} analysed repositories and the detector revision used for the executions are also unavailable.
+The preserved prediction tables contain the parsed class, file, span, code fragment, and explanation fields used in the analyses. Raw API response envelopes, request identifiers, negative-file outputs, failed responses, and complete request metadata were not archived. The source snapshot for the \num{602} analysed repositories survives without Git history. The corpus manifest records a repository-relative path and SHA-256 content hash for every selected file. The detector revision used for the executions remains unavailable.
 
 \subsection{Models, dates, settings, and retries}
 
@@ -107,7 +107,7 @@ The eight query and schema prompt files survive under \path{prompts/zero-shot/},
 
 The original notebook archive contains 26 top-level notebooks and 16 model--prompt backups. Notebook metadata records Python \texttt{3.14.3} in 38 notebooks and \texttt{3.13.5} in four backups. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and \texttt{requests\_async}, but the original environment has no requirements or lock file. Exact original package versions are therefore unavailable. The released detector records Bun \texttt{1.2.21} and pins its JavaScript dependency graph in \path{bun.lock}; this later release cannot establish the original run environment.
 
-The article's reconstruction scripts were verified with Python \texttt{3.14.7}. Their direct third-party dependencies are pinned in \path{analysis/requirements.txt}. From the article repository root, the two commands are:
+The article's reconstruction scripts were verified with Python \texttt{3.14.7}. Their direct third-party dependencies are pinned in \path{analysis/requirements.txt}. The corpus-normalisation script uses the Python standard library. From the article repository root, the three commands are:
 
 \begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
 python analysis/localisation_robustness.py /path/to/masters-thesis \
@@ -115,9 +115,39 @@ python analysis/localisation_robustness.py /path/to/masters-thesis \
 python analysis/corpus_concentration.py \
   /path/to/masters-thesis/datasets/analysis-results.csv \
   --verify-frozen
+python analysis/corpus_normalization.py /path/to/repositories \
+  /path/to/masters-thesis/datasets/final-repositories-corrected.csv \
+  /path/to/masters-thesis/datasets/analysis-results.csv \
+  --output-dir analysis
 \end{lstlisting}
 
-The first command reconstructs the \num{536} predictions from the executed notebook, reproduces the primary \num{460}/\num{76}/\num{63} true-positive/false-positive/false-negative totals, evaluates four intersection-over-union thresholds, and runs the \num{10000}-iteration project bootstrap with seed \num{123456}. The second verifies the frozen corpus CSV hash and reproduces the class-level repository-concentration results.
+The first command reconstructs the \num{536} predictions from the executed notebook, reproduces the primary \num{460}/\num{76}/\num{63} true-positive/false-positive/false-negative totals, evaluates four intersection-over-union thresholds, and runs the \num{10000}-iteration project bootstrap with seed \num{123456}. The second verifies the frozen corpus CSV hash and reproduces the original class-level repository-concentration results. The third scans the retained source snapshot, verifies the allowlist and frozen flags, reconstructs the \num{17988}-file frame, and writes all Phase 1--4 normalisation artefacts. Every phase has assertion-based acceptance checks and a JSON summary with methods and checksums.
+
+\subsection{Corpus-normalisation artefacts and checksums}
+
+The generated tables and their SHA-256 values are recorded below. The linked analysis directory also contains the Phase 1--4 JSON summaries, input hashes, selection-rule digest, methods, and acceptance checks.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.50\textwidth}>{\raggedright\arraybackslash}p{0.40\textwidth}}
+    \caption{Corpus-normalisation artefacts at article commit \texttt{bb3bf60}. Each hash is split across two lines for typesetting. The \href{https://github.com/kristoisberg/thesis-paper/tree/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis}{analysis directory} contains the JSON records of methods and acceptance checks.}\label{tab:normalizationArtefacts}\\
+    \hline
+    \textbf{Artefact} & \textbf{SHA-256} \\ \hline
+    \endfirsthead
+    \caption[]{Corpus-normalisation artefacts and SHA-256 values (continued).}\\
+    \hline
+    \textbf{Artefact} & \textbf{SHA-256} \\ \hline
+    \endhead
+    \hline
+    \endfoot
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_source_manifest.csv}{\path{analysis/corpus_source_manifest.csv}} & \shortstack[l]{\texttt{8200f8990215912efba90a4f5ed431d5}\\\texttt{2c79d7b20e11ce496457f34829c8a214}} \\
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_flag_alignment.csv}{\path{analysis/corpus_flag_alignment.csv}} & \shortstack[l]{\texttt{b035fd06e7c829da8f995770e769c7d3}\\\texttt{491d0d32794837ddc2191f960f78c728}} \\
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase2_by_repository.csv}{\path{analysis/corpus_phase2_by_repository.csv}} & \shortstack[l]{\texttt{a88de1ee4719d1f8290d1418940a1115}\\\texttt{1fb7cbe443023895002141493e4352a2}} \\
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase2_class_summary.csv}{\path{analysis/corpus_phase2_class_summary.csv}} & \shortstack[l]{\texttt{7a91098968dc2b20afd86edf3cc505c2}\\\texttt{cd21fcd220818e5888a7c144639e451b}} \\
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_density_summary.csv}{\path{analysis/corpus_phase3_density_summary.csv}} & \shortstack[l]{\texttt{598681f34f558054c2b6cb9f92daac65}\\\texttt{6e8dfb2f76a5e85069ad2a9866236334}} \\
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_concentration.csv}{\path{analysis/corpus_phase3_concentration.csv}} & \shortstack[l]{\texttt{7a5c900e7d22e3e638a7d12960203ee2}\\\texttt{39902e175345f1d0a3d5a41ecb1fd2c9}} \\
+    \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase4_exact_duplicate_sensitivity.csv}{\path{analysis/corpus_phase4_exact_duplicate_sensitivity.csv}} & \shortstack[l]{\texttt{15c16d4e23a18faa68dbe3fe9c5f931d}\\\texttt{7620f0194650f04c226e351fb985355d}} \\
+\end{longtable}
+
+Table~\ref{tab:normalizationArtefacts} provides direct links to the complete source, alignment, class, repository, density, concentration, and exact-content tables.
 
 \section{Equivalent SQL and jOOQ source representations}
 
