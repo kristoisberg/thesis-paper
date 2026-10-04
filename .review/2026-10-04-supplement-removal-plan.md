@@ -267,7 +267,13 @@ The public replication documentation is the [README at commit `4a3b4d5`](https:/
 
 Final verification from Step 7 passed: article build, whitespace checks, resource paths and PDF links, three transferred commands, seven checksums, 16 date/retry cells, and preservation of the four scientific counterparts. The main paper remains 29 pages with 50 bibliography entries, compared with 29 pages and 50 entries before migration. The separate seven-page supplement has been retired. Reported results, existing analysis files, figures, prompts, and raw data were unchanged. No unresolved frozen resource paths remain.
 
-The existing document-class path warning and the pre-existing Table 7/Table 6 placement order on page 18 remain recorded separately from the completed migration. No migration-related layout or reference issues remain. A Markdown-only completion record required no further build or analysis rerun; `git diff --check` passed.
+At migration completion, the existing document-class path warning and the pre-existing Table 7/Table 6 placement order on page 18 remained recorded separately from the migration. No migration-related layout or reference issues remained. A Markdown-only completion record required no further build or analysis rerun; `git diff --check` passed. The subsequent correction below resolves the table-order issue.
+
+## Subsequent table-placement correction
+
+At the user's request, changed Table 6's placement in `paper/sections/04_results.tex` from `[H]` to `[tbp]`, matching the normal floating placement used for Table 7. This lets LaTeX preserve their order in the table float queue. Table 6 now appears above Table 7 on page 18, and all nine tables appear in numerical order.
+
+`make paper` and `git diff --check` passed. Visually inspected pages 16 through 19: both tables fit, captions remain readable, and the surrounding discussion and transition into RQ2 flow without clipping. The paper now contains 28 pages, compared with 29 at migration completion. Only the table-placement option changed in the manuscript; captions, data, labels, references, and prose were preserved. Logs contain no compilation errors, undefined citations/references, overfull boxes, or bibliography warnings; the existing document-class path warning remains.
 
 ## Journal guidance
 
