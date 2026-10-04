@@ -2,20 +2,20 @@
 
 \subsection{Detector configuration selection}\label{sec:detectorSelectionResults}
 
-Based on the validation comparison in Table~\ref{tab:configurationSelection}, we selected Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23}. The comparison also included GPT-5.2, GLM-5, and gpt-oss-120B \nobreakcite{gpt52,DBLP:journals/corr/abs-2602-15763,DBLP:journals/corr/abs-2508-10925}, with Few-Shot, Chain-of-Thought, and Tree-of-Thought-inspired prompts following established designs \nobreakcite{DBLP:conf/nips/BrownMRSKDNSSAA20,DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed that comparison in \num{367} seconds, the shortest observed runtime. The reasoning-oriented prompts reached \num{0.90} F1 with higher costs and runtimes. We therefore selected the simpler configuration for the held-out and corpus runs.
+Based on the validation comparison in Table~\ref{tab:configurationSelection}, we selected Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23}. The comparison also included GPT-5.2, GLM-5, and gpt-oss-120B \nobreakcite{gpt52,DBLP:journals/corr/abs-2602-15763,DBLP:journals/corr/abs-2508-10925}, with Few-Shot, Chain-of-Thought, and Tree-of-Thought-inspired prompts following established designs \nobreakcite{DBLP:conf/nips/BrownMRSKDNSSAA20,DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed the comparison in \num{367} seconds, the shortest runtime among the Zero-Shot configurations. The reasoning-oriented prompts reached \num{0.90} F1 with higher costs and runtimes. We therefore selected the simpler configuration for the held-out and corpus runs.
 
 \begin{table}[tbp]
     \centering
     \scriptsize
-    \caption{Originally reported validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs include value-added tax, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5.}
+    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs are reported by OpenRouter in US dollars, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5.}
     \label{tab:configurationSelection}
     \begin{tabular}{llrrrrr}
         \hline
         \textbf{Model} & \textbf{Prompt} & \textbf{P} & \textbf{R} & \textbf{F1} & \textbf{Cost (USD)} & \textbf{Time (s)} \\
         \hline
         GPT-5.2 & Zero-Shot & 0.85 & 0.92 & 0.88 & 26.16 & 2423 \\
-        GLM-5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 11.77 & 5774 \\
-        Claude Opus 4.5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 29.97 & 367 \\
+        GLM-5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 11.76 & 5774 \\
+        Claude Opus 4.5 & Zero-Shot & 0.88 & 0.89 & 0.88 & 31.39 & 367 \\
         gpt-oss-120B & Zero-Shot & 0.83 & 0.87 & 0.83 & 1.49 & 2808 \\
         Claude Opus 4.5 & Few-Shot & 0.88 & 0.89 & 0.88 & 45.00 & 352 \\
         Claude Opus 4.5 & Chain-of-Thought & 0.92 & 0.90 & 0.90 & 40.86 & 956 \\
@@ -104,7 +104,7 @@ A \num{10000}-replicate project-cluster bootstrap placed micro precision between
 
 \subsection{RQ2: How are the selected detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus, including recurring source-fragment patterns for two query classes?}\label{sec:rq2CorpusFlags}
 
-The reconstructed corpus frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
+The corpus source frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
 
 \begin{table}[H]
     \centering

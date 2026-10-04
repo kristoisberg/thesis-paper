@@ -1,0 +1,4 @@
+split,repositories,reference_events,annotated_files,annotated_files_outside_source_frame,relevant_files,recursive_glob_matches,src_glob_matches,distinct_src_files,duplicate_src_matches,files_outside_src,generated_schema_files,application_query_files,unique_file_contents,exact_duplicate_groups,files_in_exact_duplicate_groups,extra_exact_copies
+training,21,332,145,0,509,509,496,496,0,13,176,333,476,33,66,33
+validation,20,581,276,0,1159,1159,823,823,0,336,175,984,1141,13,31,18
+test,20,523,195,2,502,502,502,502,0,0,146,356,502,0,0,0

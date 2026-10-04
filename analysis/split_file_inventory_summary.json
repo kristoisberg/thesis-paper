@@ -1,0 +1,180 @@
+{
+  "archived_validation_runs": {
+    "09-evaluate-prompting-strategy-glm5-cot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-glm5-fs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-glm5-tot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-glm5-zs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-gpt5-cot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-gpt5-fs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-gpt5-tot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-gpt5-zs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-opus-cot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-opus-fs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-opus-tot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-opus-zs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-oss-cot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-oss-fs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-oss-tot.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    },
+    "09-evaluate-prompting-strategy-oss-zs.ipynb": {
+      "completed_files": 1159,
+      "matches_reconstructed_validation": true
+    }
+  },
+  "checks": {
+    "all_16_archived_validation_inventories_match": true,
+    "all_annotations_in_source_frame": false,
+    "all_projects_in_frozen_corpus": true,
+    "annotation_source_frame_checked": true,
+    "fresh_source_frame_matches_frozen_manifest": true,
+    "projects_are_disjoint": true
+  },
+  "cross_split_exact_duplicate_files": 0,
+  "cross_split_exact_duplicate_groups": 0,
+  "method": "Detector **/*.java discovery and original path/content filters; count each repository-relative path once. Exact-content copies remain distinct in the primary count.",
+  "passed": true,
+  "selection_rule_sha256": "0e76695e8ff0705d6b8db74c500539d707926cbc8cb4df658ad4507d9d261b7b",
+  "sha256": {
+    "inputs": {
+      "/home/kristoi/masters-thesis/datasets/final-repositories-corrected.csv": "a092090b82881b1663a4032d7c0321a73e582a9c395e8dc29f53921bb764c1be",
+      "/home/kristoi/masters-thesis/datasets/test-set.csv": "f2be1176e5f655dbb2f5ec4d5fd4630298cb6ac2cc161362f0f138ee7366af7c",
+      "/home/kristoi/masters-thesis/datasets/training-set.csv": "dca995c003ef378682d461d36aa7bc08624ce5c9d8e442532b290aa6ce733c1d",
+      "/home/kristoi/masters-thesis/datasets/validation-set.csv": "3f9b4f69b1c43e2584fa0cd4794fb21909ee026eab04f303216a742d19bb35ca",
+      "/home/kristoi/masters-thesis/scripts/051-select-sample-projects-corrected.ipynb": "bedfee06ad8421fca74ad9ca83df341fb4061d09cbd53ec2aa8ba8ae61020303",
+      "/home/kristoi/masters-thesis/scripts/09-evaluate-prompting-strategy.ipynb": "917f70e4d6fb0ce39d62708e57e23395de8079508dc021645547ea85a5ab050c",
+      "/home/kristoi/masters-thesis/scripts/11-select-files-for-reannotation.ipynb": "962ad865961b1ad5e88b531af2dd551c17702aefa1eec489dc780988bfa751d5",
+      "/home/kristoi/masters-thesis/scripts/23-count-relevant-files-in-validation-set.ipynb": "d68e2d975d9e09149d13a90461eacd42d28c5829ca0d241e95b031e1f3f4aa72",
+      "/home/kristoi/masters-thesis/scripts/24-count-relevant-files-in-test-set.ipynb": "86310176a7a13ffae13726717aca72361d9bef1763a649200ccae34038215302",
+      "/home/kristoi/masters-thesis/scripts/25-count-relevant-files-in-full-set.ipynb": "5b58e2044bd8c6f716fdc58ab7a13fbce68a73777d30d89a1955495bbf9304ee",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-glm5-cot.ipynb": "408f94a316959479fb6369df351cefe662219016e3a2f51f57891a31c794aa82",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-glm5-fs.ipynb": "fb9f9d24623f23640b0115378d2a1efb923f1aeeed0f6797f85562eddeb62943",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-glm5-tot.ipynb": "feaa152d6dc7cfc4e124dd3dedb99d879cdc8093343f7f41b6f8c6e29dcceebe",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-glm5-zs.ipynb": "b9b5a10b99f61d5bfa55246ffd102fa4a7f12f6b075e611ddf74314187183e66",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-gpt5-cot.ipynb": "c4420b0ccfb6a2d152bbdcc1d8eb2ca217c0f727b2063f865b8ce0b1294c8bef",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-gpt5-fs.ipynb": "fe7257499ef82b173f92e26250892b0dea5a84d16941cd078287c86362427f1b",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-gpt5-tot.ipynb": "14cd6dbde1a6b245b6ca867db17e1428590d0b5592a20ba5c6f5052e2a41f4ae",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-gpt5-zs.ipynb": "100ca30004a5eb9c45d762ff1e6efe484bb528e89bab7b817224e5613967a95c",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-opus-cot.ipynb": "d626b645464c376020bf78580da899f209dd0d0826b799d13a3d050097baa144",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-opus-fs.ipynb": "61ba5592aee92e5c51e16e21fd567df5b68951981d319dc2a5a1a2b9a4ec3bdb",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-opus-tot.ipynb": "86399e6380c9fc6a40b3681b9272f795c8d9d96e1b4ae69309e8e4deb35eba4b",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-opus-zs.ipynb": "684337d2de7f9bee3096cbe6c2030d981928f6d670c4050e3935aa12f691f995",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-oss-cot.ipynb": "6b81682f075ab905b8f7044225e9c5228cedbdbcd399c6f8e9ae7792b7f49c6c",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-oss-fs.ipynb": "d5617c2263609533ad22b74a765e46a45f5a3fa212c777c14f303cf9647e293f",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-oss-tot.ipynb": "04c1bc5b9299b2e36be134d53b92cce675bd5b8ccc96c6c56eb90ba3e8b54380",
+      "/home/kristoi/masters-thesis/scripts/backups/09-evaluate-prompting-strategy-oss-zs.ipynb": "8de5d7acb4ab8d6519fd6695060297268dd452012bbb55c0025a994058e5df18",
+      "analysis/corpus_source_manifest.csv": "8200f8990215912efba90a4f5ed431d52c79d7b20e11ce496457f34829c8a214"
+    },
+    "outputs": {
+      "split_annotation_frame_exceptions.csv": "9533088b5c43f743d9e724b10981d4be5e61b82f1b051dcfc6800e0511669129",
+      "split_cross_partition_exact_duplicates.csv": "9661cd789ba66d54bfd2b69c1bf728df9636103f435afef9f831d2adb0881c03",
+      "split_duplicate_glob_matches.csv": "3342eeaabe7cab772f619aa7467d3a5c2e28c649110dee863b4acfacc7b3b5c0",
+      "split_file_counts.csv": "d929b97bf68497832071c5e79ee87c15c4fa6b36dc59b2da1f39042ee444ba1a",
+      "split_file_counts_by_repository.csv": "721fec8407e52cab349936402f4a363c784ef12851e88dbe700be9f91bf46e69",
+      "split_source_manifest.csv": "a7e0a6728178674b94be4b487fbcf86f5265ff8902b5ad28797dc0a7d76a0311"
+    }
+  },
+  "source_snapshot": "/run/media/kristoi/9327-3833/repositories",
+  "splits": [
+    {
+      "annotated_files": 145,
+      "annotated_files_outside_source_frame": 0,
+      "application_query_files": 333,
+      "distinct_src_files": 496,
+      "duplicate_src_matches": 0,
+      "exact_duplicate_groups": 33,
+      "extra_exact_copies": 33,
+      "files_in_exact_duplicate_groups": 66,
+      "files_outside_src": 13,
+      "generated_schema_files": 176,
+      "recursive_glob_matches": 509,
+      "reference_events": 332,
+      "relevant_files": 509,
+      "repositories": 21,
+      "split": "training",
+      "src_glob_matches": 496,
+      "unique_file_contents": 476
+    },
+    {
+      "annotated_files": 276,
+      "annotated_files_outside_source_frame": 0,
+      "application_query_files": 984,
+      "distinct_src_files": 823,
+      "duplicate_src_matches": 0,
+      "exact_duplicate_groups": 13,
+      "extra_exact_copies": 18,
+      "files_in_exact_duplicate_groups": 31,
+      "files_outside_src": 336,
+      "generated_schema_files": 175,
+      "recursive_glob_matches": 1159,
+      "reference_events": 581,
+      "relevant_files": 1159,
+      "repositories": 20,
+      "split": "validation",
+      "src_glob_matches": 823,
+      "unique_file_contents": 1141
+    },
+    {
+      "annotated_files": 195,
+      "annotated_files_outside_source_frame": 2,
+      "application_query_files": 356,
+      "distinct_src_files": 502,
+      "duplicate_src_matches": 0,
+      "exact_duplicate_groups": 0,
+      "extra_exact_copies": 0,
+      "files_in_exact_duplicate_groups": 0,
+      "files_outside_src": 0,
+      "generated_schema_files": 146,
+      "recursive_glob_matches": 502,
+      "reference_events": 523,
+      "relevant_files": 502,
+      "repositories": 20,
+      "split": "test",
+      "src_glob_matches": 502,
+      "unique_file_contents": 502
+    }
+  ]
+}
