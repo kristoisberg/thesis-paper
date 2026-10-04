@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Steps 1 through 4 completed. Steps 5 through 8 remain planned.
+Status: Steps 1 through 5 completed. Steps 6 through 8 remain planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -155,16 +155,26 @@ Inspected the frozen dataset-creation chapter to confirm its account of exclusio
 
 Verification: `git diff --check` and `make paper` passed. The main paper remains 29 pages. Visually inspected changed pages 3, 8, 10, 13, 16, 25, and 26; resource prose and declarations fit without layout issues. No Online Resource or ESM references remain in the main source or included sections. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings; the existing document-class path warning remains. Existing citations, labels, cross-references, and reported results were preserved. NotebookLM and language-revision disclosures remain removed.
 
-Files changed: `paper/main.tex`, `paper/sections/02_background_related_work.tex`, `paper/sections/03_study_design.tex`, `paper/sections/06_threats_to_validity.tex`, and this plan. Supplement source, build dependencies, and packaging assumptions remain work for Step 6. Steps 5 through 8 remain planned.
+Files changed: `paper/main.tex`, `paper/sections/02_background_related_work.tex`, `paper/sections/03_study_design.tex`, `paper/sections/06_threats_to_validity.tex`, and this plan. Supplement source, build dependencies, and packaging assumptions remain work for Step 6. At the completion of Step 4, Steps 5 through 8 remained planned.
 
 ## Step 5. Make the documentation version explicit
 
-- [ ] Record the revision that contains the new README when it exists. The old `bb3bf60` revision cannot be used as a link to a newly created file.
-- [ ] Keep the frozen analysis revision identifiable even if a newer documentation revision is cited separately.
-- [ ] Include a link to the replication README in Code and materials availability. Use an actual immutable documentation link before submission.
-- [ ] Verify that linked resource paths resolve and that the README points to the intended versions of the data and scripts.
+- [x] Record the revision that contains the new README when it exists. The old `bb3bf60` revision cannot be used as a link to a newly created file.
+- [x] Keep the frozen analysis revision identifiable even if a newer documentation revision is cited separately.
+- [x] Include a link to the replication README in Code and materials availability. Use an actual immutable documentation link before submission.
+- [x] Verify that linked resource paths resolve and that the README points to the intended versions of the data and scripts.
 
 Completion condition: manuscript links distinguish the existing evidence snapshots from the new documentation version. Creating the local README does not by itself make a public link to it available.
+
+### Step 5 execution record
+
+Implementation began at commit `fe1fc816468aa2421a5e33d4f44948e3c0d4f28f` with a clean working tree. Added the replication README to Code and materials availability and explicitly identified its documentation commit as `4a3b4d5`. The full immutable link targets `4a3b4d55073adbb38325ca43872852d2a75649c9/analysis/README.md`. The frozen reconstruction scripts, generated tables, and dependencies remain identified separately by analysis commit `bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028`. Study artefact and detector revisions were preserved.
+
+The public documentation URL returned HTTP 200, and its raw contents match both the local README and the Git object at `4a3b4d5` byte for byte. Verified all 34 unique frozen GitHub targets in the README, representing 44 link occurrences, against complete cached study/detector Git trees or local article Git objects. Each uses its intended study, detector, or analysis revision. The relative requirements link exists. Every manuscript README link uses the documentation revision, and all linked heading anchors exist in that version.
+
+Verification: `git diff --check` and `make paper` passed. The paper remains 29 pages. Visually inspected the updated declaration on page 26 and confirmed its immutable link in the PDF annotations. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings; the existing document-class path warning remains. No README contents, evidence files, analyses, or reported results changed.
+
+Files changed: `paper/main.tex` and this plan. The documentation revision is public and verified; no publication-link work remains for this step. Steps 6 through 8 remain planned.
 
 ## Step 6. Remove the supplement source and build dependency
 
