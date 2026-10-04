@@ -51,7 +51,7 @@ One annotator with prior jOOQ and SQL-antipattern experience manually reviewed t
 
 The annotator developed a codebook as decision flowcharts while reviewing the sample. Each flowchart translated a class definition into a sequence of source-level decisions. When a previously unseen variant or a non-occurrence edge case exposed a missing rule, the annotator revised the corresponding flowchart and reviewed earlier files that the change could affect. This process applied revised rules throughout the sample.
 
-The completed review produced \num{1562} reference occurrences across the 19 initially included classes. The seven classes retained for detector evaluation account for \num{1436} of those occurrences. The record structure and revised codebook connect these counts to class-labelled source spans.
+The completed review produced \num{1562} reference occurrences across the 19 initially included classes. The seven classes retained for detector evaluation account for \num{1436} of those occurrences.
 
 We measured temporal repeatability after a 30-day washout period. Using pseudorandom seed \num{123456}, we sampled \qty{10}{\percent} of files with at least one reference annotation and added an equal number of files without annotations. The latter group tested whether a repeated pass would introduce events in files previously judged negative. The procedure selected \num{128} files, which the same annotator reviewed with the same codebook.
 
