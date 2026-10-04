@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Steps 1 through 3 completed. Steps 4 through 8 remain planned.
+Status: Steps 1 through 4 completed. Steps 5 through 8 remain planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -123,27 +123,39 @@ The README is now publicly available at commit `4a3b4d55073adbb38325ca43872852d2
 
 Verification: `git diff --check` and `make paper` passed. The main paper remains 29 pages. Visually inspected changed pages 13 and 14; the new paragraph and transition into Localisation evaluation fit without layout issues. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings. The existing document-class path warning remains. Reported results and citations were unchanged; no analyses or model calls were rerun.
 
-Files changed: `paper/sections/03_study_design.tex` and this plan. Steps 4 through 8 remain planned.
+Files changed: `paper/sections/03_study_design.tex` and this plan. At the completion of Step 3, Steps 4 through 8 remained planned.
 
 ## Step 4. Replace Online Resource references throughout the article
 
 | File and passage | Replacement destination |
 |---|---|
-| `02_background_related_work.tex`, taxonomy and annotation rules | Verified catalogue and decision-rule resources in the frozen study repository. |
+| `02_background_related_work.tex`, annotated classes and decision rules | Verified 19-class annotation list, annotation decision trees, and prompt rules in the frozen study repository. The list does not supply the full Karwin taxonomy. |
 | `03_study_design.tex`, repository mining | Search-string and omitted-repository files. |
-| `03_study_design.tex`, operational scope | Annotation codebook and decision trees. |
+| `03_study_design.tex`, operational scope | Annotation codebook preserved as decision trees, plus the thesis's dataset-creation chapter for exclusions and interpretational boundaries. |
 | `03_study_design.tex`, prompt development | Preserved prompt directories and documented localisation rules. |
 | `03_study_design.tex`, source-fragment coding | Ordered categorisation procedure in the archived notebook. |
 | `06_threats_to_validity.tex`, reliability limits | Replication README and source-file manifest. |
 | `main.tex`, data/code availability | Frozen data, scripts, and the new documentation revision. |
 
-- [ ] Use meaningful linked text and avoid repeating full repository URLs in the prose.
-- [ ] Retain the existing concise reliability account, including missing detector revision, request/provider records, prompt identity, and validation outputs.
-- [ ] Remove the Supplementary information declaration and its `ESM_1.pdf` caption from `paper/main.tex`.
-- [ ] Preserve the data and code availability declarations.
-- [ ] Keep the user's recent removals: the NotebookLM paragraph and the language-revision sentence remain removed.
+- [x] Use meaningful linked text and avoid repeating full repository URLs in the prose.
+- [x] Retain the existing concise reliability account, including missing detector revision, request/provider records, prompt identity, and validation outputs.
+- [x] Remove the Supplementary information declaration and its `ESM_1.pdf` caption from `paper/main.tex`.
+- [x] Preserve the data and code availability declarations.
+- [x] Keep the user's recent removals: the NotebookLM paragraph and the language-revision sentence remain removed.
 
 Completion condition: the article contains no live reference to the retired Online Resource and makes no claim that an index contains externally linked materials.
+
+### Step 4 execution record
+
+Implementation began at commit `d5136488a8f9d1a89e0516437ccc01d500f01009` with a clean working tree. Replaced all Online Resource references in the main article with descriptive links to frozen materials. Background now links to the 19-class annotation list, annotation decision trees, and prompt rules without claiming that the list contains the full Karwin taxonomy. Study Design links to the exact search terms, omitted-project list, decision trees, thesis dataset-creation chapter, prompt templates, and source-fragment categorisation notebook.
+
+Reliability validity retains its existing preservation limits and links separately to the replication README and source-file manifest. Data availability retains the study and analysis revisions and points to the README's resource index. Removed the Supplementary information declaration and `ESM_1.pdf` caption. The code and materials availability declaration remains intact; its explicit documentation-revision wording is scheduled for Step 5.
+
+Inspected the frozen dataset-creation chapter to confirm its account of exclusions and interpretational boundaries, the Zero-Shot query prompt to confirm its localisation rules, and the categorisation notebook to confirm its ordered string and regular-expression checks. Verified all 14 unique frozen repository targets used across the changed files against the archived Git trees or local Git objects, including README heading anchors. Compiled PDF link annotations preserve the full revisions and correct fragments.
+
+Verification: `git diff --check` and `make paper` passed. The main paper remains 29 pages. Visually inspected changed pages 3, 8, 10, 13, 16, 25, and 26; resource prose and declarations fit without layout issues. No Online Resource or ESM references remain in the main source or included sections. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings; the existing document-class path warning remains. Existing citations, labels, cross-references, and reported results were preserved. NotebookLM and language-revision disclosures remain removed.
+
+Files changed: `paper/main.tex`, `paper/sections/02_background_related_work.tex`, `paper/sections/03_study_design.tex`, `paper/sections/06_threats_to_validity.tex`, and this plan. Supplement source, build dependencies, and packaging assumptions remain work for Step 6. Steps 5 through 8 remain planned.
 
 ## Step 5. Make the documentation version explicit
 
