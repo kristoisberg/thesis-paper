@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Steps 1 through 5 completed. Steps 6 through 8 remain planned.
+Status: Steps 1 through 6 completed. Steps 7 and 8 remain planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -174,21 +174,33 @@ The public documentation URL returned HTTP 200, and its raw contents match both 
 
 Verification: `git diff --check` and `make paper` passed. The paper remains 29 pages. Visually inspected the updated declaration on page 26 and confirmed its immutable link in the PDF annotations. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings; the existing document-class path warning remains. No README contents, evidence files, analyses, or reported results changed.
 
-Files changed: `paper/main.tex` and this plan. The documentation revision is public and verified; no publication-link work remains for this step. Steps 6 through 8 remain planned.
+Files changed: `paper/main.tex` and this plan. The documentation revision is public and verified; no publication-link work remains for this step. At the completion of Step 5, Steps 6 through 8 remained planned.
 
 ## Step 6. Remove the supplement source and build dependency
 
 Perform this step after the content transfer and reference updates are complete.
 
-- [ ] Delete `paper/supplementary.tex`.
-- [ ] Update `Makefile` so `paper` builds the main article only, and remove the `supplement` target and its phony entry.
-- [ ] Remove the clean recipe that invokes LaTeX on the deleted source. Keep explicit cleanup for obsolete generated supplement files if useful.
-- [ ] Remove obsolete local `ESM_1` and legacy `supplementary` build products by their exact paths so they cannot be mistaken for current submission files.
-- [ ] Inspect `.github/workflows/paper.yml`. It already uploads only `paper/main.pdf`; preserve that behavior. Change the plural build-step labels if appropriate.
-- [ ] Update the supplement assumptions in `skills/springer-latex-packager/SKILL.md` and `skills/acceptance-checker/SKILL.md`: supplement naming and caption rules apply when a supplement is supplied. The current article's expected outputs should no longer include `paper/supplementary.tex`.
-- [ ] Preserve unrelated checklist rules and historical review reports.
+- [x] Delete `paper/supplementary.tex`.
+- [x] Update `Makefile` so `paper` builds the main article only, and remove the `supplement` target and its phony entry.
+- [x] Remove the clean recipe that invokes LaTeX on the deleted source. Keep explicit cleanup for obsolete generated supplement files if useful.
+- [x] Remove obsolete local `ESM_1` and legacy `supplementary` build products by their exact paths so they cannot be mistaken for current submission files.
+- [x] Inspect `.github/workflows/paper.yml`. It already uploads only `paper/main.pdf`; preserve that behavior. Change the plural build-step labels if appropriate.
+- [x] Update the supplement assumptions in `skills/springer-latex-packager/SKILL.md` and `skills/acceptance-checker/SKILL.md`: supplement naming and caption rules apply when a supplement is supplied. The current article's expected outputs should no longer include `paper/supplementary.tex`.
+- [x] Preserve unrelated checklist rules and historical review reports.
 
 Completion condition: the active build and packaging guidance work without a supplementary source or PDF.
+
+### Step 6 execution record
+
+Implementation began at commit `92b1d819fea9a31747b1357c0e3189b4dce7f6de` with a clean working tree. Deleted `paper/supplementary.tex`, removed the `supplement` target and phony entry, and changed `paper` to depend only on `main`. The clean recipe now runs LaTeX cleanup on `main.tex` and removes `paper/main.bbl`; it no longer invokes or refers to the deleted supplement. No persistent legacy-cleanup recipe was needed after removing the existing products.
+
+Removed these eight generated files by exact path: `paper/ESM_1.aux`, `paper/ESM_1.bbl`, `paper/ESM_1.blg`, `paper/ESM_1.fdb_latexmk`, `paper/ESM_1.fls`, `paper/ESM_1.log`, `paper/ESM_1.out`, and `paper/ESM_1.pdf`. No legacy `paper/supplementary.*` products were present after source deletion.
+
+Changed the workflow labels to Build PDF and Upload PDF. Its upload path remains `paper/main.pdf`, and preview preparation and deployment are unchanged. The Springer packaging skill no longer lists a supplementary source among the expected outputs and points to `analysis/README.md` for this article's replication materials. Both packaging and acceptance-checker guidance now apply Online Resource citation and caption rules only when supplementary files are supplied. Unrelated checklist rules and historical reports were preserved.
+
+Verification: both edited skills passed the skill-creator validator. `git diff --check`, `make clean`, and a fresh `make paper` passed without a supplementary source. Dry runs of both build and clean use only `main.tex`. No supplement source or generated products remain. The article remains 29 pages, its extracted PDF text matches the previous build exactly, and its bibliography hash is unchanged. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings; the existing document-class path warning remains. Article source, references, README, analyses, and reported results were unchanged.
+
+Files changed: `Makefile`, `.github/workflows/paper.yml`, `skills/springer-latex-packager/SKILL.md`, `skills/acceptance-checker/SKILL.md`, the deleted `paper/supplementary.tex`, and this plan. Steps 7 and 8 remain planned.
 
 ## Step 7. Verify the migration
 

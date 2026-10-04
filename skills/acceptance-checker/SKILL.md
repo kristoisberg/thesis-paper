@@ -59,7 +59,7 @@ Check:
 - no `[AUTHOR CONFIRMATION REQUIRED` or other unresolved submission placeholder remains;
 - one top-level Results section contains RQ1--RQ4;
 - prior thesis dissemination appears in a declaration or cover letter, not the Introduction's scientific contribution;
-- supplementary material is cited as a specific Online Resource rather than described as merely intended;
+- supplementary material, when supplied, is cited as a specific Online Resource with a concise caption;
 - exact model identifiers, prompt version, repository commits, and collection snapshot are recorded or explicitly block readiness;
 - source compiles if LaTeX files exist.
 

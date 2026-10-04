@@ -35,9 +35,10 @@ Use these names unless the repo establishes another convention:
 - `paper/references.bib`
 - `paper/cover-letter.md`
 - `paper/statements-and-declarations.tex`
-- `paper/supplementary.tex`
 - `paper/figures/` during drafting
 - `paper/submission-flat/` for final flattened upload
+
+This article's replication materials are indexed in `analysis/README.md`. Include supplementary sources and files only when a supplement is supplied.
 
 ## Packaging Rules
 
@@ -55,7 +56,7 @@ Check:
 - prior thesis dissemination is disclosed in a declaration and cover letter rather than used as scientific motivation;
 - the corresponding author is explicitly marked and approved;
 - model identifiers, prompt version, collection snapshot, and repository commits are recorded where available;
-- supplementary files are cited as numbered Online Resources with concise captions;
+- if supplementary files are supplied, they are cited as numbered Online Resources with concise captions;
 - the data and code statements cite an immutable archived version and persistent identifier before submission readiness;
 - source files compile;
 - no thesis-specific package assumptions leak into the article.
