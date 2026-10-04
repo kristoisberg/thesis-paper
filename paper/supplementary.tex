@@ -45,7 +45,7 @@ This supplement contains supporting detail and indexes the larger frozen replica
     \item[Repository mining.] The frozen repository contains the \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-github-search-terms.tex}{GitHub search strings}, \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-omitted-projects.tex}{omitted-project list}, and mining notebooks under \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts}{\texttt{scripts/}}.
     \item[Annotation materials.] The \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/thesis/appendices/appendix-annotated-antipatterns.tex}{full 19-class catalogue}, \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/diagrams/decision}{decision trees}, and reference datasets are preserved in the frozen repository.
     \item[Detector configuration.] All query and schema \href{https://github.com/kristoisberg/masters-thesis/tree/d9b35e398a6deb544f913bdbc0b211ab38474a44/prompts}{prompts}, model-selection detail, per-class configuration results, and configuration options are preserved with the study artefacts.
-    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, and co-detection matrices and heatmaps. The ordered source-fragment categorisation procedure and stored counts are in \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts/21-find-frequent-offenders.ipynb}{\texttt{scripts/21-find-frequent-offenders.ipynb}}. The article repository contains the \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_normalization.py}{corpus-normalisation script}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase2_class_summary.csv}{class-level breadth and repetition table}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_density_summary.csv}{repository-density table}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_concentration.csv}{concentration decomposition}, and \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase4_exact_duplicate_sensitivity.csv}{exact-content sensitivity table}. Sections~\ref{sec:splitSupport} and~\ref{sec:iouSensitivity} provide stand-alone copies of two compact diagnostics also reported in the article.
+    \item[Evaluation and corpus analysis.] The frozen notebooks contain the localisation and classification diagnostics, detector-informed sensitivity analysis, and co-detection matrices and heatmaps. The ordered source-fragment categorisation procedure and stored counts are in \href{https://github.com/kristoisberg/masters-thesis/blob/d9b35e398a6deb544f913bdbc0b211ab38474a44/scripts/21-find-frequent-offenders.ipynb}{\texttt{scripts/21-find-frequent-offenders.ipynb}}. The article repository contains the \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_normalization.py}{corpus-normalisation script}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase2_class_summary.csv}{class-level breadth and repetition table}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_density_summary.csv}{repository-density table}, \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase3_concentration.csv}{concentration decomposition}, and \href{https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_phase4_exact_duplicate_sensitivity.csv}{exact-content sensitivity table}.
     \item[Implementation.] Architecture, workflow, output, and command-line configuration details accompany the frozen \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/cf82fe56acb728f076df67279ff4a78a138996f3}{detector source} and the original thesis appendices.
 \end{description}
 
@@ -149,96 +149,6 @@ The generated tables and their SHA-256 values are recorded below. The linked ana
 
 Table~\ref{tab:normalizationArtefacts} provides direct links to the complete source, alignment, class, repository, density, concentration, and exact-content tables.
 
-\section{Equivalent SQL and jOOQ source representations}
-
-The following fragments express the same Implicit Columns occurrence in SQL and jOOQ \citep{jooq2025sql}: both select every column from the \texttt{employee} table.
-
-\paragraph{SQL}
-\begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
-SELECT * FROM employee WHERE name = 'Jack'
-\end{lstlisting}
-
-\paragraph{jOOQ}
-\begin{lstlisting}[frame=single,basicstyle=\small\ttfamily]
-var employee = dslContext.select(DSL.asterisk())
-    .from(EMPLOYEE)
-    .where(EMPLOYEE.NAME.eq("Jack"))
-    .fetchOne();
-\end{lstlisting}
-
-\clearpage
-\section{Detection representations and output units}
-
-Table~\ref{tab:detectionApproaches} contrasts the representations and output units of prior detection approaches with the class-labelled source spans evaluated here.
-
-\begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}}
-    \caption{Detection representations and output units relevant to jOOQ source analysis. API denotes application programming interface, AST denotes abstract syntax tree, and LLM denotes large language model; the comparison shows that this study evaluates multiple class-labelled source spans rather than statement warnings or file classifications.}\label{tab:detectionApproaches}\\
-    \hline
-    \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
-    \endfirsthead
-    \caption[]{Detection representations and output units (continued).}\\
-    \hline
-    \textbf{Approach} & \textbf{Representation and output} & \textbf{Relevance to this study} \\ \hline
-    \endhead
-    \hline
-    \endfoot
-    SQL extraction and parsing &
-    SQL recovered from host-language source or query logs; parsed-statement warnings \citep{sharma2018smelly,nagy2017static,DBLP:conf/sigmod/DintyalaNA20}. &
-    Does not directly expose occurrences represented by jOOQ domain-specific language calls or generated schema classes. \\
-    API or AST rules &
-    Host-language syntax and application programming interface (API) patterns or abstract syntax tree (AST) nodes; warnings attached to matched source nodes \citep{DBLP:journals/tse/MohaGDM10}. &
-    Can localise encoded patterns but requires explicit coverage of jOOQ idioms and cross-file relationships. \\
-    LLM source analysis &
-    Source code and supplied context; prior work reports smell recognition or classification \citep{de2025effectiveness,blaauwendraad2025evaluating}. &
-    Can return class-labelled spans, whose agreement and class-specific errors require empirical evaluation. \\
-    This study &
-    Java domain-specific language and generated schema code; multiple class-labelled source-line spans. &
-    Evaluates the occurrence output later counted as detector flags across repositories. \\
-\end{longtable}
-
-\section{Project-disjoint split support}\label{sec:splitSupport}
-
-Table~\ref{tab:splitSupport} shows the \num{21}/\num{20}/\num{20}-repository split and the sparse project support for several classes.
-
-\begin{table}[H]
-    \centering
-    \small
-    \caption{Occurrence and repository support in the \num{21}-repository training, \num{20}-repository validation, and \num{20}-repository test partitions. Each cell gives occurrences followed by repositories in parentheses; several classes occur in only one to five projects per partition.}
-    \label{tab:splitSupport}
-    \begin{tabular}{lrrrr}
-        \hline
-        \textbf{Class} & \textbf{Total} & \textbf{Training} & \textbf{Validation} & \textbf{Test} \\
-        \hline
-        Implicit Columns & 795 & 175 (20) & 350 (19) & 270 (20) \\
-        ID Required & 259 & 55 (18) & 99 (15) & 105 (16) \\
-        Keyless Entry & 122 & 30 (7) & 56 (1) & 36 (3) \\
-        Fear of the Unknown & 95 & 23 (6) & 36 (8) & 36 (5) \\
-        31 Flavors & 71 & 17 (6) & 15 (4) & 39 (1) \\
-        Poor Man's Search Engine & 55 & 19 (5) & 15 (4) & 21 (3) \\
-        Rounding Errors & 39 & 13 (4) & 10 (1) & 16 (2) \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\section{Intersection-over-union sensitivity}\label{sec:iouSensitivity}
-
-Table~\ref{tab:iouSensitivity} shows that pooled micro F1 varies by only \num{0.010} across the four tested localisation thresholds.
-
-\begin{table}[H]
-    \centering
-    \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union (IoU) threshold. TP, FP, and FN denote true positives, false positives, and false negatives. Each row applies the same one-to-one matching rule to all \num{536} predictions and the original reference spans; micro F1 spans \num{0.863}--\num{0.873}.}
-    \label{tab:iouSensitivity}
-    \begin{tabular}{rrrrrrr}
-        \hline
-        \textbf{IoU} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
-        \hline
-        0.25 & 462 & 74 & 61 & 0.862 & 0.883 & 0.873 \\
-        0.50 & 460 & 76 & 63 & 0.858 & 0.880 & 0.869 \\
-        0.75 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
-        1.00 & 457 & 79 & 66 & 0.853 & 0.874 & 0.863 \\
-        \hline
-    \end{tabular}
-\end{table}
 
 \bibliographystyle{../template/spbasic}
 \bibliography{references}

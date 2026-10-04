@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: planned. This document records the proposed work; it does not apply manuscript or build changes.
+Status: Step 1 completed. Steps 2 through 8 remain planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -10,7 +10,7 @@ Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
 Remove the separate supplementary PDF. Keep the scientific argument self-contained in the article, preserve unique replication documentation in `analysis/README.md`, and replace references to Online Resource 1 with accurate links to the relevant materials.
 
-The current supplement is seven pages. Its final four sections repeat material already in the article. Most of its unique content describes preserved files, original executions, dependencies, and reconstruction commands.
+At the planning baseline, the supplement was seven pages. Its final four sections repeated material already in the article. Step 1 removed those copies and reduced the supplement to five pages. Most of its remaining content describes preserved files, original executions, dependencies, and reconstruction commands.
 
 ## Content destinations
 
@@ -30,16 +30,47 @@ The current supplement is seven pages. Its final four sections repeat material a
 
 ## Step 1. Establish the baseline and remove duplicated supplementary sections
 
-- [ ] Record the working-tree state and the current main-paper page count before implementation.
-- [ ] Check the four duplicated sections against their main-paper counterparts. Identify any unique explanatory sentence before removing a copy.
-- [ ] Transfer any unique explanatory sentence identified during comparison to its main-paper counterpart before deleting the supplementary copy.
-- [ ] Remove these four sections from `paper/supplementary.tex`: Equivalent SQL and jOOQ source representations; Detection representations and output units; Project-disjoint split support; Intersection-over-union sensitivity. Keep their existing main-paper counterparts.
-- [ ] Remove the resource-index sentence referring to the supplementary split-support and IoU sections, along with any other references to the deleted sections or labels.
-- [ ] Inventory all live references to `Online Resource`, `ESM_1`, `supplementary.tex`, and supplement build targets. Exclude historical `.review` reports from the migration.
-- [ ] Verify the frozen repository targets for search strings, omitted repositories, annotation records, decision trees, prompts, source-fragment categorisation, scripts, and generated tables.
-- [ ] Distinguish material contained in a document from material linked through an index. In particular, the catalogue is not contained in the supplementary PDF.
+- [x] Record the working-tree state and the current main-paper page count before implementation.
+- [x] Check the four duplicated sections against their main-paper counterparts. Identify any unique explanatory sentence before removing a copy.
+- [x] Transfer any unique explanatory sentence identified during comparison to its main-paper counterpart before deleting the supplementary copy. No transfer was needed.
+- [x] Remove these four sections from `paper/supplementary.tex`: Equivalent SQL and jOOQ source representations; Detection representations and output units; Project-disjoint split support; Intersection-over-union sensitivity. Keep their existing main-paper counterparts.
+- [x] Remove the resource-index sentence referring to the supplementary split-support and IoU sections, along with any other references to the deleted sections or labels.
+- [x] Inventory all live references to `Online Resource`, `ESM_1`, `supplementary.tex`, and supplement build targets. Exclude historical `.review` reports from the migration.
+- [x] Verify the frozen repository targets for search strings, omitted repositories, annotation records, decision trees, prompts, source-fragment categorisation, scripts, and generated tables.
+- [x] Distinguish material contained in a document from material linked through an index. In particular, the catalogue is not contained in the supplementary PDF.
 
 Completion condition: the four duplicated sections and their supplementary cross-references are removed before Step 2 begins, every unique item has a named destination, and every replacement resource claim has a verified target.
+
+### Step 1 execution record
+
+Implementation began at commit `8daecfefba8c9107805aba08b712fe4245649eec` with a clean working tree. The compiled main paper contained 29 pages and the supplement contained seven.
+
+Removed the four duplicated supplementary sections and the resource-index sentence pointing to their split-support and IoU labels. The SQL/jOOQ listings and both numerical tables match the main paper. Differences in the detector-comparison wording repeat explanations already present in Background and Related Work. No unique scientific content required transfer, and no main-paper source changed.
+
+The remaining resource index and reproducibility record have the destinations listed above for Step 2. The catalogue, decision trees, prompts, search terms, and notebooks are externally linked resources; they are not embedded in the supplementary PDF.
+
+The following frozen paths were verified before any replacement links were written:
+
+| Snapshot | Verification and available targets |
+|---|---|
+| `masters-thesis` at `d9b35e3` | GitHub's recursive Git tree returned a complete listing. Verified `thesis/appendices/appendix-github-search-terms.tex`, `appendix-omitted-projects.tex`, and `appendix-annotated-antipatterns.tex` in that directory; `diagrams/decision/`, `prompts/`, and `scripts/`; `datasets/test-set.csv`, `analysis-results.csv`, and `final-repositories-corrected.csv` in that directory; and `scripts/14-evaluate-tool-localisation.ipynb` and `scripts/21-find-frequent-offenders.ipynb`. |
+| Released detector at `cf82fe5` | GitHub's complete recursive Git tree verified `package.json` and `bun.lock` at the frozen revision. |
+| Article analyses at `bb3bf60` | The local Git object verified all three reconstruction scripts, `analysis/requirements.txt`, and all seven manifest/alignment/generated-table files listed in the supplementary checksum table. |
+
+Live references awaiting later steps are inventoried as follows:
+
+| Location | Remaining migration work |
+|---|---|
+| `paper/sections/02_background_related_work.tex` | One Online Resource reference for taxonomy and annotation rules. |
+| `paper/sections/03_study_design.tex` | Four references for mining resources, codebook, prompts, and source-fragment patterns. |
+| `paper/sections/06_threats_to_validity.tex` | One reference for preservation limits and the source manifest. |
+| `paper/main.tex` | Data-availability reference and the Supplementary information declaration/caption. |
+| `paper/supplementary.tex` | Remaining title, metadata, resource index, and reproducibility record, retained until Step 2 transfers the documentation. |
+| `Makefile` | Supplement dependency, target, and cleanup recipe. |
+| `.github/workflows/paper.yml` | Builds through `make paper`; upload and preview already use only `paper/main.pdf`. |
+| Local packaging/checking skills | `springer-latex-packager` expects the supplementary source and Online Resource captions; `acceptance-checker` expects an Online Resource citation. These assumptions are scheduled for Step 6. |
+
+Verification: `git diff --check` and `make paper` passed. Neither PDF log contains undefined citations/references, LaTeX errors, or overfull boxes; the bibliography logs contain no warnings. Searches confirmed that the deleted section labels have no references left in the supplement. The main paper remains 29 pages; the supplement is now five pages. Steps 2 through 8 have not been applied.
 
 ## Step 2. Create the replication README
 
