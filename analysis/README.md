@@ -29,8 +29,6 @@ Three immutable commits identify the preserved study, released implementation, a
 
 The study-artefact revision restores the original Opus Zero-Shot validation notebook after a later rerun had replaced its stored outputs. The restored notebook is byte-identical to its version at `112f3a4eac5fcdb27f380102c1b296d946128ada`. All other tracked study files are unchanged from the earlier study archive at `d9b35e398a6deb544f913bdbc0b211ab38474a44`.
 
-The article-analysis commit predates this README and the split-file audit added on 4 October 2026. Its links identify the previously frozen scripts and tables. The relative links in the split-file audit section identify the new local artefacts, which require a new frozen revision before citation.
-
 The preserved prediction tables contain the parsed class, file, span, code fragment, and explanation fields used in the analyses. Raw API response envelopes, request identifiers, negative-file outputs, failed responses, and complete request metadata were not archived. The source snapshot for the 602 analysed repositories survives without Git history. The [corpus source manifest](https://github.com/kristoisberg/thesis-paper/blob/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis/corpus_source_manifest.csv) records a repository-relative path and SHA-256 content hash for each of the 17,988 selected files. It does not contain the Java source files, so source-based recomputation requires the retained source snapshot separately.
 
 ## Original model executions
@@ -40,7 +38,7 @@ The validation notebooks called [OpenRouter](https://openrouter.ai/) through the
 | Model | Preserved slug | Generation settings and routing evidence |
 |---|---|---|
 | [GPT-5.2](https://deploymentsafety.openai.com/gpt-5-2/introduction) | `openai/gpt-5.2` | xhigh reasoning. Temperature adjustment was unsupported with this setting. Archived notebook requests nevertheless submitted temperature 0.0 to the gateway; its handling of that unsupported field was not recorded. |
-| [GLM-5](https://doi.org/10.48550/ARXIV.2602.15763) | `z-ai/glm-5` | Temperature 0.0, with no reasoning-effort parameter because the effort level was not configurable. Requests fixed Friendli as the backend and disabled fallbacks. |
+| [GLM-5](https://doi.org/10.48550/ARXIV.2602.15763) | `z-ai/glm-5` | Temperature 0.0, with no reasoning-effort parameter because the effort level was not configurable. DeepInfra, which OpenRouter initially selected for GLM-5, had stability problems during the analysis. We therefore routed GLM-5 requests to Friendli and disabled provider fallbacks. |
 | [Claude Opus 4.5](https://www-cdn.anthropic.com/bf10f64990cfda0ba858290be7b8cc6317685f47.pdf) | `anthropic/claude-opus-4.5` | Temperature 0.0 with reasoning disabled. |
 | [gpt-oss-120B](https://doi.org/10.48550/ARXIV.2508.10925) | `openai/gpt-oss-120b` | High reasoning, with the temperature parameter omitted. The default temperature 1.0 was retained because near-zero temperatures caused repeated-token loops. Preserved response metadata reports temperature 1.0. |
 
@@ -53,7 +51,7 @@ Each combination of model and prompt ran once. The following dashboard records g
 | CoT | 6 Mar/1 | 6 Mar/234 | 7 Mar/0 | 6 Mar/3 |
 | ToT | 27 Mar/2 | 27 Mar/14 | 27 Mar/9 | 27 Mar/58 |
 
-All 16 archived validation configurations record the same 1,159 distinct completed files. Their recursive `**/*.java` discovery includes 336 selected files outside `src` directories. The originally reported 823-file count comes from `23-count-relevant-files-in-validation-set.ipynb`, whose `**/src/**/*.java` glob omits those files. The retained snapshot reconstruction matches the complete archived validation inventory.
+The [split-file inventory analysis](split_file_inventory.py) identifies 1,159 distinct relevant files in the validation partition. All 16 archived validation configurations record the same completed-file inventory.
 
 Printed agreement, runtime, and cost summaries also survive. Agreement and runtime summaries reproduce the displayed configuration-selection values after rounding. The original [Opus Zero-Shot notebook](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-opus-zs.ipynb), restored from revision `112f3a4eac5fcdb27f380102c1b296d946128ada`, records runtime 366.72 seconds, weighted precision/recall/F1 of 0.8836/0.8898/0.8839, and API cost $31.392120. These round to the article's 367 seconds, 0.88/0.89/0.88, and $31.39. The validation table uses charges reported by OpenRouter in US dollars. The reported costs are $31.39 for Opus Zero-Shot, $26.16 for GPT-5.2 Zero-Shot, $81.43 for Opus Tree-of-Thought, and $11.76 for GLM-5 Zero-Shot.
 
@@ -101,14 +99,7 @@ It verifies the frozen CSV hash and reproduces the original class-level reposito
 
 ### Corpus normalisation and exact-content sensitivity
 
-This command requires the retained source snapshot, the frozen allowlist `datasets/final-repositories-corrected.csv`, the frozen corpus flags `datasets/analysis-results.csv`, and per-project positive outputs under `datasets/projects/`. Source directories must retain the original layout, with `owner/repository` names represented as `owner_repository`. The script checks that all 602 allowlisted directories and the original 43 excluded directories are present. It also reads these frozen notebooks under `scripts/`:
-
-- `25-count-relevant-files-in-full-set.ipynb`
-- `051-select-sample-projects-corrected.ipynb`
-- `09-evaluate-prompting-strategy.ipynb`
-- `11-select-files-for-reannotation.ipynb`
-- `23-count-relevant-files-in-validation-set.ipynb`
-- `24-count-relevant-files-in-test-set.ipynb`
+This command requires the retained source snapshot, the frozen allowlist `datasets/final-repositories-corrected.csv`, the frozen corpus flags `datasets/analysis-results.csv`, and per-project positive outputs under `datasets/projects/`. Source directories must retain the original layout, with `owner/repository` names represented as `owner_repository`. The script checks that all 602 allowlisted directories and the original 43 excluded directories are present, and verifies its selection rules against the frozen study notebooks under `scripts/`.
 
 The public source manifest provides file identities and hashes; it cannot substitute for the retained Java source snapshot.
 
@@ -121,24 +112,24 @@ python analysis/corpus_normalization.py /path/to/repositories \
 
 It scans the retained source snapshot, verifies the allowlist and frozen flags, reconstructs the 17,988-file frame, and writes all normalisation artefacts for Phases 1 through 4. Every phase has assertion-based acceptance checks and a JSON summary recording methods and checksums. These commands recompute analyses from preserved evidence without making model calls.
 
-### Training, validation, and test file audit
+### Training, validation, and test file counts
 
-The 4 October 2026 recount applies the same recursive discovery and path/content filters as the corpus reconstruction to the projects in the three frozen split CSVs. It counts each repository-relative path once. Byte-identical files at different paths remain distinct file occurrences; their collapsed counts are reported separately.
+The [split-file inventory analysis](split_file_inventory.py) applies recursive `**/*.java` discovery and the corpus path/content filters to the projects in the three frozen split CSVs. It counts each repository-relative path once. Byte-identical files at different paths remain distinct file occurrences; their collapsed counts are reported separately.
 
 ```bash
 python analysis/split_file_inventory.py /path/to/repositories \
   /path/to/masters-thesis --output-dir analysis
 ```
 
-This standard-library script requires the retained source snapshot, `datasets/training-set.csv`, `datasets/validation-set.csv`, `datasets/test-set.csv`, the frozen allowlist, the six notebooks listed above, all 16 validation backups, and the frozen `analysis/corpus_source_manifest.csv`. It verifies project membership, selection rules, every selected file's content hash and metadata against that manifest, and equality of all 16 archived completed-file inventories with the reconstructed validation frame. It makes no model requests.
+This standard-library script requires the retained source snapshot, `datasets/training-set.csv`, `datasets/validation-set.csv`, `datasets/test-set.csv`, the frozen allowlist, the frozen study notebooks under `scripts/`, all 16 validation backups, and the frozen `analysis/corpus_source_manifest.csv`. It verifies project membership, selection rules, every selected file's content hash and metadata against that manifest, and equality of all 16 archived completed-file inventories with the selected validation files. It makes no model requests.
 
-| Partition | Repositories | Distinct relevant paths | Distinct paths under `src` | Outside `src` | Unique file contents |
-|---|---:|---:|---:|---:|---:|
-| Training | 21 | 509 | 496 | 13 | 476 |
-| Validation | 20 | 1,159 | 823 | 336 | 1,141 |
-| Test | 20 | 502 | 502 | 0 | 502 |
+| Partition | Repositories | Distinct relevant paths | Unique file contents |
+|---|---:|---:|---:|
+| Training | 21 | 509 | 476 |
+| Validation | 20 | 1,159 | 1,141 |
+| Test | 20 | 502 | 502 |
 
-Neither glob emits duplicate selected paths within these 61 projects. Thus the narrower counts differ because they omit files outside `src`, rather than because they count paths repeatedly. Training has 33 groups of byte-identical files containing 66 paths; validation has 13 groups containing 31 paths; test has none. No byte-identical file group crosses partitions. This check does not detect modified clones.
+Training has 33 groups of byte-identical files containing 66 paths; validation has 13 groups containing 31 paths; test has none. No byte-identical file group crosses partitions. This check does not detect modified clones.
 
 The annotation frame is distinct from the selected source frame. The split CSVs contain 332, 581, and 523 retained-class reference events across 145, 276, and 195 annotated paths, respectively. All training and validation annotated paths belong to the selected frame. Two test-reference paths do not, each carrying one reference event. In `jOOQ/jOOQ-mcve`, the overbroad `mysql/tables` blacklist excludes an annotated application table. In `therepanic/trustwin-casino-project`, an extra annotation uses the wrong module path, `game-overgo-service`; the original reference already contains the corresponding ID Required event at line 56 under the correct `game-miner-service` path. The thesis reports removing invalid reference occurrences in its corrected analysis, but the corrected notebook preserves aggregate counts rather than an event-level revision, so removal of this particular extra annotation cannot be verified from that notebook. This audit does not alter the frozen annotations, selection rules, or matching results.
 
