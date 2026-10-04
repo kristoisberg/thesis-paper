@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Steps 1 and 2 completed. Steps 3 through 8 remain planned.
+Status: Steps 1 through 3 completed. Steps 4 through 8 remain planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -96,22 +96,34 @@ Documented the required inputs beside each reconstruction command. Corpus normal
 
 Verification: all three command blocks match the supplement; all seven SHA-256 values match the supplement, local files, and frozen analysis revision. All 44 immutable GitHub links resolve to paths in the frozen repository trees, and the relative requirements link exists. Markdown whitespace checks and `git diff --check` passed. No analyses or model executions were rerun, and no PDF build was needed for this documentation-only step.
 
-Files changed: `analysis/README.md` and this plan. The README explicitly notes that `bb3bf60` predates it; an immutable public documentation revision remains work for Step 5. The supplementary source remains intact until Step 6. Steps 3 through 8 remain planned.
+Files changed: `analysis/README.md` and this plan. The README explicitly notes that `bb3bf60` predates it; an immutable public documentation revision remained work for Step 5 at the completion of Step 2. The supplementary source remains intact until Step 6. At the completion of Step 2, Steps 3 through 8 remained planned.
 
 ## Step 3. Add the useful execution context to Study Design
 
 Edit `paper/sections/03_study_design.tex`, under Detector configuration and execution.
 
-- [ ] Add the validation execution dates recorded in the archive: 6–7 March 2026 for Zero-Shot, Few-Shot, and Chain-of-Thought, and 27 March for Tree-of-Thought-inspired runs.
-- [ ] Add the recorded held-out and corpus execution dates, 4 April and 15 April 2026.
-- [ ] Summarise retry handling and the available routing evidence. GLM-5 requests fixed Friendli and disabled fallbacks; comparable routing records for the other models are unavailable.
-- [ ] Keep the detailed per-configuration retry table, dashboard clock times, model slugs, and dependency inventory in the README.
-- [ ] Make the validation-output preservation limitation clear where the originally reported comparison is introduced. If needed, add one concise sentence explaining the archived-file-count discrepancy, with a link to the detailed record.
-- [ ] Keep the existing corrected model settings and distinguish parameters submitted to the gateway from settings supported by the model.
+- [x] Add the validation execution dates recorded in the archive: 6–7 March 2026 for Zero-Shot, Few-Shot, and Chain-of-Thought, and 27 March for Tree-of-Thought-inspired runs.
+- [x] Add the recorded held-out and corpus execution dates, 4 April and 15 April 2026.
+- [x] Summarise retry handling and the available routing evidence. GLM-5 requests fixed Friendli and disabled fallbacks; comparable routing records for the other models are unavailable.
+- [x] Keep the detailed per-configuration retry table, dashboard clock times, model slugs, and dependency inventory in the README.
+- [x] Make the validation-output preservation limitation clear where the originally reported comparison is introduced. If needed, add one concise sentence explaining the archived-file-count discrepancy, with a link to the detailed record.
+- [x] Keep the existing corrected model settings and distinguish parameters submitted to the gateway from settings supported by the model.
 
 Aim for one short execution-context paragraph plus any essential clarification. Do not add the full archival inventory to Methods or change reported experimental results.
 
 Completion condition: readers can assess the timing, execution controls, and provenance limitations from the article, with detailed records available through a specific link.
+
+### Step 3 execution record
+
+Implementation began at commit `4a3b4d55073adbb38325ca43872852d2a75649c9` with a clean working tree. Under Detector configuration and execution, added one paragraph recording the archived validation dates, held-out and corpus dates, validation retries, GLM-5's Friendli routing constraint, and held-out and corpus retry limits. Dates are attributed to dashboard records. Detailed per-configuration retries, clock times, slugs, and dependencies remain in the README.
+
+Added a sentence beside the originally reported 823-file validation comparison explaining that surviving notebook copies process 1,159 files and that the exact underlying comparison outputs are unavailable. Preserved the corrected model settings and clarified that archived GPT-5.2 requests submitted an unsupported temperature field whose gateway handling is unknown.
+
+The README is now publicly available at commit `4a3b4d55073adbb38325ca43872852d2a75649c9`. The new Methods paragraph links directly to its original-model-executions section using that full immutable revision. The URL returned HTTP 200, and inspection of the compiled PDF confirmed the correct link and fragment. Step 5 still needs to update the availability declaration and distinguish documentation from the frozen analysis revision throughout the manuscript.
+
+Verification: `git diff --check` and `make paper` passed. The main paper remains 29 pages. Visually inspected changed pages 13 and 14; the new paragraph and transition into Localisation evaluation fit without layout issues. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings. The existing document-class path warning remains. Reported results and citations were unchanged; no analyses or model calls were rerun.
+
+Files changed: `paper/sections/03_study_design.tex` and this plan. Steps 4 through 8 remain planned.
 
 ## Step 4. Replace Online Resource references throughout the article
 
