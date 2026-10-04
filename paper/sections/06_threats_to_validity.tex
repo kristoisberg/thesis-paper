@@ -38,4 +38,4 @@ The repeat-annotation exercise measures the same annotator's consistency after 3
 
 The selected detector was run once on the held-out partition and once on the corpus, leaving run-to-run variance unmeasured. The hosted model and gateway can also change, so reproduction depends on continued service access as well as preserved local artefacts.
 
-The corpus source snapshot survives without Git history, and its manifest preserves repository-relative paths and SHA-256 content hashes. The surviving artefacts support source-level inspection and deterministic normalisation. Exact reconstruction of the original model requests remains unavailable.
+The preserved source snapshot and analysis scripts support inspection of the results and recomputation of the reported analyses. Exact replay of the original executions remains unavailable because the archive lacks the detector revision used, complete request and provider records, and the original prompt identities. The exact validation outputs underlying the reported file counts, costs, and runtimes are also unavailable. Online Resource~1 documents these preservation limits and the source-file manifest.

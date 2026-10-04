@@ -105,7 +105,7 @@ The eight query and schema prompt files survive under \path{prompts/zero-shot/},
 
 \subsection{Dependencies and analysis scripts}
 
-The original notebook archive contains 26 top-level notebooks and 16 model--prompt backups. Notebook metadata records Python \texttt{3.14.3} in 38 notebooks and \texttt{3.13.5} in four backups. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and \texttt{requests\_async}, but the original environment has no requirements or lock file. Exact original package versions are therefore unavailable. The released detector records Bun \texttt{1.2.21} and pins its JavaScript dependency graph in \path{bun.lock}; this later release cannot establish the original run environment.
+The original data processing and evaluations used Jupyter notebooks \citep{jupyterHomepage}. The original notebook archive contains 26 top-level notebooks and 16 model--prompt backups. Notebook metadata records Python \texttt{3.14.3} in 38 notebooks and \texttt{3.13.5} in four backups. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and \texttt{requests\_async}, but the original environment has no requirements or lock file. Exact original package versions are therefore unavailable. The released detector records Bun \texttt{1.2.21} and pins its JavaScript dependency graph in \path{bun.lock}; this later release cannot establish the original run environment.
 
 The article's reconstruction scripts were verified with Python \texttt{3.14.7}. Their direct third-party dependencies are pinned in \path{analysis/requirements.txt}. The corpus-normalisation script uses the Python standard library. From the article repository root, the three commands are:
 
