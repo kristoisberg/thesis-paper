@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Steps 1 through 7 completed. Step 8 remains planned.
+Status: Complete. All eight steps completed.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -10,23 +10,23 @@ Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
 Remove the separate supplementary PDF. Keep the scientific argument self-contained in the article, preserve unique replication documentation in `analysis/README.md`, and replace references to Online Resource 1 with accurate links to the relevant materials.
 
-At the planning baseline, the supplement was seven pages. Its final four sections repeated material already in the article. Step 1 removed those copies and reduced the supplement to five pages. Most of its remaining content describes preserved files, original executions, dependencies, and reconstruction commands.
+At the planning baseline, the supplement was seven pages. Its final four sections repeated material already in the article. Step 1 removed those copies and reduced the supplement to five pages. Step 2 transferred the unique resource index and replication documentation to `analysis/README.md`. The article now links directly to frozen materials, and Step 6 retired the supplement source and build products.
 
-## Content destinations
+## Final content destinations
 
-| Current supplementary content | Destination and action |
+| Former supplementary content | Final destination and action |
 |---|---|
-| Resource index | Move to `analysis/README.md`, with direct links to the frozen files and directories. |
-| Snapshot and preserved-output inventory | Move to the README. Keep original study, released detector, and article-analysis revisions distinct. |
-| Execution dates, model settings, routing, and retries | Preserve the complete record in the README. Add a concise execution summary to Study Design. |
-| Validation date/retry table | Move to the README. Explain that these are archival records whose relationship to the originally reported validation results has limits. |
-| Missing records and replay limitations | Preserve the detailed account in the README and the concise account under Reliability validity. |
-| Dependencies and reconstruction commands | Move to the README beside links to the scripts and `requirements.txt`. |
-| Corpus file inventory and SHA-256 values | Preserve in the README or link to existing machine-readable records that contain the same information. |
-| Equivalent SQL and jOOQ example | Remove the supplementary copy. Keep the existing main-paper figure. |
-| Detection representations and output units | Remove the supplementary copy. Keep the existing Background and Related Work table. |
-| Project-disjoint split support | Remove the supplementary copy. Keep the existing Study Design table. |
-| IoU sensitivity | Remove the supplementary copy. Keep the existing Results table. |
+| Resource index | `analysis/README.md`, with direct links to frozen files and directories; manuscript passages link directly to the relevant resources. |
+| Snapshot and preserved-output inventory | README, with distinct study, released-detector, frozen-analysis, and documentation revisions. |
+| Execution dates, model settings, routing, and retries | Complete record in the README; concise execution summary under Detector configuration and execution in Study Design. |
+| Validation date/retry table | README, with the limitation relating the archived 1,159-file copies to the originally reported 823-file comparison. |
+| Missing records and replay limitations | Detailed account in the README; concise account under Reliability validity and validation-output clarification in Study Design. |
+| Dependencies and reconstruction commands | README beside links to the three scripts and `requirements.txt`. |
+| Corpus file inventory and SHA-256 values | Linked source manifest and generated CSV files; all seven complete hashes preserved in the README. |
+| Equivalent SQL and jOOQ example | Existing main-paper Figure 1 preserved; supplementary copy removed. |
+| Detection representations and output units | Existing Background and Related Work Table 2 preserved; supplementary copy removed. |
+| Project-disjoint split support | Existing Study Design Table 3 preserved; supplementary copy removed. |
+| IoU sensitivity | Existing Results Table 7 preserved; supplementary copy removed. |
 
 ## Step 1. Establish the baseline and remove duplicated supplementary sections
 
@@ -236,13 +236,38 @@ The layout auditor visually inspected pages 3, 5, 7, 8, 10, 12 through 16, 18, 2
 
 The isolated baseline and current article each contain 29 pages and the same 50 bibliography entries. All article citation sequences, labels, and cross-references are preserved. Results, Discussion, Conclusion, and the bibliography source are byte-identical to the baseline. The reported counts, metrics, model-selection results, prompts, and raw data were unchanged. The former seven-page supplement has been retired; no bibliography entries were deleted.
 
-Only this plan changed during Step 7. Verification is complete, and Step 8 remains planned.
+Only this plan changed during Step 7. Verification was complete; Step 8 remained planned at that point.
 
 ## Step 8. Record the completed outcome
 
-- [ ] Update this plan with the files changed, the final content destinations, and verification results.
-- [ ] Record the actual replication-documentation revision or any remaining publication-link work separately from completed local changes.
-- [ ] Report the new main-paper page count and whether any unresolved resource paths remain.
+- [x] Update this plan with the files changed, the final content destinations, and verification results.
+- [x] Record the actual replication-documentation revision or any remaining publication-link work separately from completed local changes.
+- [x] Report the new main-paper page count and whether any unresolved resource paths remain.
+
+### Step 8 execution record and completed outcome
+
+Final recording began at commit `b5ef81e723f23637a776fafceef33e286d16ee3b` with a clean working tree. Updated the destination table above to describe the completed migration and marked all eight steps complete. Only this plan changed during Step 8.
+
+The complete migration changed these files:
+
+| File | Completed change |
+|---|---|
+| `analysis/README.md` | Created the resource index and complete replication record, including execution settings, archival limits, required inputs, commands, dependencies, and checksums. |
+| `paper/main.tex` | Replaced the Online Resource index reference, identified the documentation revision separately from the analysis revision, and removed the supplementary-information declaration. |
+| `paper/sections/02_background_related_work.tex` | Linked the annotated class list and decision rules without claiming a full catalogue. |
+| `paper/sections/03_study_design.tex` | Added concise execution and provenance context and replaced four Online Resource references with frozen resource links. |
+| `paper/sections/06_threats_to_validity.tex` | Linked the detailed preservation account and source manifest while retaining the reliability limitations. |
+| `paper/supplementary.tex` | Removed duplicated material, then deleted the source after the unique documentation transfer. |
+| `Makefile` | Removed the supplement target, dependency, and cleanup invocation; build and clean now operate on the main article. |
+| `.github/workflows/paper.yml` | Changed build/upload labels to singular; retained the main-PDF upload and preview paths. |
+| `skills/springer-latex-packager/SKILL.md` and `skills/acceptance-checker/SKILL.md` | Made supplementary-file rules conditional and removed the supplementary source from expected article outputs. |
+| `.review/2026-10-04-supplement-removal-plan.md` | Recorded scope, destinations, execution history, verification, and completion. |
+
+The public replication documentation is the [README at commit `4a3b4d5`](https://github.com/kristoisberg/thesis-paper/blob/4a3b4d55073adbb38325ca43872852d2a75649c9/analysis/README.md), full revision `4a3b4d55073adbb38325ca43872852d2a75649c9`. The scripts and tables remain frozen separately at [analysis commit `bb3bf60`](https://github.com/kristoisberg/thesis-paper/tree/bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028/analysis), full revision `bb3bf6056cc7bbda29bb0fb5f0b720e7f9d06028`. Both are identified in the availability declaration. No documentation-publication or resource-link work remains within this migration; no new DOI deposit was created or claimed.
+
+Final verification from Step 7 passed: article build, whitespace checks, resource paths and PDF links, three transferred commands, seven checksums, 16 date/retry cells, and preservation of the four scientific counterparts. The main paper remains 29 pages with 50 bibliography entries, compared with 29 pages and 50 entries before migration. The separate seven-page supplement has been retired. Reported results, existing analysis files, figures, prompts, and raw data were unchanged. No unresolved frozen resource paths remain.
+
+The existing document-class path warning and the pre-existing Table 7/Table 6 placement order on page 18 remain recorded separately from the completed migration. No migration-related layout or reference issues remain. A Markdown-only completion record required no further build or analysis rerun; `git diff --check` passed.
 
 ## Journal guidance
 
