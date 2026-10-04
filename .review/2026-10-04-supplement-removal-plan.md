@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Steps 1 through 6 completed. Steps 7 and 8 remain planned.
+Status: Steps 1 through 7 completed. Step 8 remains planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -200,20 +200,43 @@ Changed the workflow labels to Build PDF and Upload PDF. Its upload path remains
 
 Verification: both edited skills passed the skill-creator validator. `git diff --check`, `make clean`, and a fresh `make paper` passed without a supplementary source. Dry runs of both build and clean use only `main.tex`. No supplement source or generated products remain. The article remains 29 pages, its extracted PDF text matches the previous build exactly, and its bibliography hash is unchanged. Logs contain no undefined citations/references, compilation errors, overfull boxes, or bibliography warnings; the existing document-class path warning remains. Article source, references, README, analyses, and reported results were unchanged.
 
-Files changed: `Makefile`, `.github/workflows/paper.yml`, `skills/springer-latex-packager/SKILL.md`, `skills/acceptance-checker/SKILL.md`, the deleted `paper/supplementary.tex`, and this plan. Steps 7 and 8 remain planned.
+Files changed: `Makefile`, `.github/workflows/paper.yml`, `skills/springer-latex-packager/SKILL.md`, `skills/acceptance-checker/SKILL.md`, the deleted `paper/supplementary.tex`, and this plan. At the completion of Step 6, Steps 7 and 8 remained planned.
 
 ## Step 7. Verify the migration
 
-- [ ] Run `git diff --check`.
-- [ ] Run the updated `make paper` and inspect the log for compilation errors, undefined citations/references, and overfull boxes.
-- [ ] Inspect the changed PDF pages for paragraph flow, table placement, clickable resource links, and a coherent transition out of Study Design.
-- [ ] Search active manuscript, build, workflow, and packaging files for obsolete Online Resource and supplement references. Historical `.review` entries and deliberate legacy cleanup paths may remain.
-- [ ] Confirm that the four scientific examples/tables remain in the article and their existing labels and references resolve.
-- [ ] Check all transferred checksum values and command lines against the previous supplement and existing records. Run deterministic reconstruction commands only if their required source inputs are available and a new change or discrepancy warrants execution.
-- [ ] Confirm that no reported counts, metrics, model-selection results, prompts, or raw data changed during the documentation migration.
-- [ ] Compare page counts and bibliography changes. Citations used only in the retired supplement may leave the compiled article bibliography; do not delete shared bibliography entries automatically.
+- [x] Run `git diff --check`.
+- [x] Run the updated `make paper` and inspect the log for compilation errors, undefined citations/references, and overfull boxes.
+- [x] Inspect the changed PDF pages for paragraph flow, table placement, clickable resource links, and a coherent transition out of Study Design.
+- [x] Search active manuscript, build, workflow, and packaging files for obsolete Online Resource and supplement references. Historical `.review` entries and deliberate legacy cleanup paths may remain.
+- [x] Confirm that the four scientific examples/tables remain in the article and their existing labels and references resolve.
+- [x] Check all transferred checksum values and command lines against the previous supplement and existing records. Run deterministic reconstruction commands only if their required source inputs are available and a new change or discrepancy warrants execution.
+- [x] Confirm that no reported counts, metrics, model-selection results, prompts, or raw data changed during the documentation migration.
+- [x] Compare page counts and bibliography changes. Citations used only in the retired supplement may leave the compiled article bibliography; do not delete shared bibliography entries automatically.
 
 Completion condition: the article builds cleanly, resources remain findable, unique documentation survives, and the scientific results are unchanged.
+
+### Step 7 execution record
+
+Verification began at commit `e339ce850a019360af45aa66ce80815cc3613492` with a clean working tree. `git diff --check` passed for the working tree and the complete migration since `8daecfefba8c9107805aba08b712fe4245649eec`. The updated `make paper` passed. The log contains no compilation errors, undefined citations/references, overfull boxes, or bibliography warnings; the existing document-class path warning remains.
+
+Compared the README with the former supplement retrieved from commit `92b1d819fea9a31747b1357c0e3189b4dce7f6de`. All three command lines match exactly. All seven full SHA-256 values match the former split values, current CSV files, and files at frozen analysis revision `bb3bf60`. All 16 validation date/retry cells match. Existing analysis scripts, generated evidence, thesis inputs, and figures are unchanged; no reconstruction or model rerun was warranted.
+
+Verified all 39 unique immutable repository URLs across the manuscript and README, including heading anchors, against the complete frozen repository trees or local Git objects. The public README matches the local file. All 16 explicit manuscript resource URLs appear correctly in the compiled PDF. No unresolved frozen resource paths remain. No obsolete supplement references remain in manuscript, build, or workflow files, and no supplement source or generated products remain. Packaging guidance retains conditional Online Resource rules, and the untouched Springer template retains its generic ESM support.
+
+The four scientific counterparts are byte-identical to the pre-migration article, their labels resolve, and the text still references them:
+
+| Retained item | Label | PDF page |
+|---|---|---|
+| Equivalent SQL and jOOQ example | `fig:implicitColumnsRepresentations` | 5 |
+| Detector representation comparison | `tab:detectionApproaches` | 7 |
+| Project-disjoint split support | `tab:trainingTestValidationSplit` | 12 |
+| IoU sensitivity grid | `tab:iouSensitivity` | 18 |
+
+The layout auditor visually inspected pages 3, 5, 7, 8, 10, 12 through 16, 18, 25, and 26. Resource prose, examples, captions, and declarations fit without clipping, and Study Design transitions coherently into Results. One minor placement issue remains: page 18 displays Table 7 above Table 6. An isolated build of the pre-migration article at `8daecfe` confirms the same order on the same page. This pre-existing issue was recorded without changing Results.
+
+The isolated baseline and current article each contain 29 pages and the same 50 bibliography entries. All article citation sequences, labels, and cross-references are preserved. Results, Discussion, Conclusion, and the bibliography source are byte-identical to the baseline. The reported counts, metrics, model-selection results, prompts, and raw data were unchanged. The former seven-page supplement has been retired; no bibliography entries were deleted.
+
+Only this plan changed during Step 7. Verification is complete, and Step 8 remains planned.
 
 ## Step 8. Record the completed outcome
 
