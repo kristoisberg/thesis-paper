@@ -2,7 +2,7 @@
 
 Date: 2026-10-04
 
-Status: Step 1 completed. Steps 2 through 8 remain planned.
+Status: Steps 1 and 2 completed. Steps 3 through 8 remain planned.
 
 Baseline: `df785ba27c9ff38eaae79af6f5677cbb621290b0`.
 
@@ -70,21 +70,33 @@ Live references awaiting later steps are inventoried as follows:
 | `.github/workflows/paper.yml` | Builds through `make paper`; upload and preview already use only `paper/main.pdf`. |
 | Local packaging/checking skills | `springer-latex-packager` expects the supplementary source and Online Resource captions; `acceptance-checker` expects an Online Resource citation. These assumptions are scheduled for Step 6. |
 
-Verification: `git diff --check` and `make paper` passed. Neither PDF log contains undefined citations/references, LaTeX errors, or overfull boxes; the bibliography logs contain no warnings. Searches confirmed that the deleted section labels have no references left in the supplement. The main paper remains 29 pages; the supplement is now five pages. Steps 2 through 8 have not been applied.
+Verification: `git diff --check` and `make paper` passed. Neither PDF log contains undefined citations/references, LaTeX errors, or overfull boxes; the bibliography logs contain no warnings. Searches confirmed that the deleted section labels have no references left in the supplement. The main paper remains 29 pages; the supplement is now five pages. At the completion of Step 1, Steps 2 through 8 had not been applied.
 
 ## Step 2. Create the replication README
 
-- [ ] Create `analysis/README.md` as the entry point for the article's replication materials.
-- [ ] Transfer the resource index, snapshot inventory, detailed preservation limits, execution date/retry table, dependencies, reconstruction commands, and checksum information.
-- [ ] Preserve the existing immutable identifiers: study artefacts at `d9b35e3`, released detector at `cf82fe5`, and the previously frozen article analyses at `bb3bf60`. Use the full revisions in links.
-- [ ] Explain that the released detector postdates the original executions and does not identify the binary used for them.
-- [ ] Separate recomputation from preserved outputs from replay of the original model executions. Document what the released scripts can reproduce and which inputs they require.
-- [ ] Keep the distinction between original notebook environments and the environment used to verify the reconstruction scripts.
-- [ ] Preserve original model slugs, settings, provider constraints, recorded retry totals, and missing metadata. Retain the GPT-5.2 gateway-field caveat and the explanation for gpt-oss-120B's default temperature.
-- [ ] Preserve the discrepancy between the 1,159-file archived notebook copies and the originally reported 823-file validation set. Do not present archived dates or retries as proof that those copies produced the published configuration table.
-- [ ] Remove the publication-workflow statement "A repository DOI remains required" from the transferred narrative. Describe the actual archival identifiers available. Track any future deposit separately.
+- [x] Create `analysis/README.md` as the entry point for the article's replication materials.
+- [x] Transfer the resource index, snapshot inventory, detailed preservation limits, execution date/retry table, dependencies, reconstruction commands, and checksum information.
+- [x] Preserve the existing immutable identifiers: study artefacts at `d9b35e3`, released detector at `cf82fe5`, and the previously frozen article analyses at `bb3bf60`. Use the full revisions in links.
+- [x] Explain that the released detector postdates the original executions and does not identify the binary used for them.
+- [x] Separate recomputation from preserved outputs from replay of the original model executions. Document what the released scripts can reproduce and which inputs they require.
+- [x] Keep the distinction between original notebook environments and the environment used to verify the reconstruction scripts.
+- [x] Preserve original model slugs, settings, provider constraints, recorded retry totals, and missing metadata. Retain the GPT-5.2 gateway-field caveat and the explanation for gpt-oss-120B's default temperature.
+- [x] Preserve the discrepancy between the 1,159-file archived notebook copies and the originally reported 823-file validation set. Do not present archived dates or retries as proof that those copies produced the published configuration table.
+- [x] Remove the publication-workflow statement "A repository DOI remains required" from the transferred narrative. Describe the actual archival identifiers available. Track any future deposit separately.
 
 Completion condition: all unique supplementary documentation is readable and accessible from the README without requiring the supplementary PDF.
+
+### Step 2 execution record
+
+Implementation began at commit `5cc427f88a9dec03de156fbe03bae1c4911db55c` with a clean working tree. Created `analysis/README.md` and transferred the remaining unique resource index and replication documentation. The README distinguishes the three frozen snapshots, original execution records, reconstruction environment, and limits on replay. It preserves the validation-file-count discrepancy and all recorded settings, dates, retries, and missing metadata.
+
+Inspection of the frozen `appendix-annotated-antipatterns.tex` showed that it lists the 19 annotated classes without supplying their definitions. The README therefore labels that link "List of the 19 annotated antipatterns" rather than claiming a full catalogue or operational definitions. Later manuscript link updates must respect this distinction.
+
+Documented the required inputs beside each reconstruction command. Corpus normalisation requires the retained source snapshot with all 602 allowlisted and 43 excluded repository directories, six specified notebooks, and per-project outputs; the public source manifest cannot substitute for the Java source files.
+
+Verification: all three command blocks match the supplement; all seven SHA-256 values match the supplement, local files, and frozen analysis revision. All 44 immutable GitHub links resolve to paths in the frozen repository trees, and the relative requirements link exists. Markdown whitespace checks and `git diff --check` passed. No analyses or model executions were rerun, and no PDF build was needed for this documentation-only step.
+
+Files changed: `analysis/README.md` and this plan. The README explicitly notes that `bb3bf60` predates it; an immutable public documentation revision remains work for Step 5. The supplementary source remains intact until Step 6. Steps 3 through 8 remain planned.
 
 ## Step 3. Add the useful execution context to Study Design
 
