@@ -137,7 +137,16 @@ The corpus execution covered all \num{602} repositories, including the \num{61} 
 
 We assign each selected file one source role. Files containing the detector's generated-table indicators form the \emph{generated schema} role, which contains \num{7226} files. The other \num{10762} selected files form the \emph{application/query source} role. Generated-schema files are eligible for database-design classes, and application/query files are eligible for query classes. Fear of the Unknown spans both representations, so we analyse its two roles separately.
 
-For repository $r$ and class-role pair $c$, let $Y_{rc}$ be the number of flags, $F_{rc}$ the number of eligible files, and $A_{rc}$ the number of eligible files with at least one flag. Flagged-file breadth is $100A_{rc}/F_{rc}$, within-file repetition is $Y_{rc}/A_{rc}$, and flag density is $100Y_{rc}/F_{rc}$. The pooled density divides flags summed across repositories by eligible files summed across repositories. The repository-equal density is the mean of repository densities among repositories with eligible files. Eligible repositories without flags contribute zero; repositories without eligible files have undefined rates and are omitted. We also report an all-class broad density over all relevant files.
+We measure how widely flags occur across eligible files, how often they repeat within flagged files, and their density. For repository $r$ and class-role pair $c$, let $Y_{rc}$ be the number of flags, $F_{rc}$ the number of eligible files, and $A_{rc}$ the number of eligible files with at least one flag. The three measures are
+\[
+    \begin{aligned}
+        \text{Flagged-file breadth}_{rc} &= 100A_{rc}/F_{rc}, \\
+        \text{Within-file repetition}_{rc} &= Y_{rc}/A_{rc}, \\
+        \text{Flag density}_{rc} &= 100Y_{rc}/F_{rc}.
+    \end{aligned}
+\]
+
+We aggregate density across repositories in two ways. The pooled density divides flags summed across repositories by eligible files summed across repositories. The repository-equal density is the mean of repository densities among repositories with eligible files. Eligible repositories without flags contribute zero; repositories without eligible files have undefined rates and are omitted. We also report an all-class broad density over all relevant files.
 
 To separate repository size from density, we retain all \num{602} repository records and apply the existing total-relevant-file strata: small repositories contain at most \num{31} files, medium repositories contain \numrange{32}{94}, and large repositories contain more than \num{94}. For each class-role frame and for the broad result, we select the ceiling of \qty{10}{\percent} of flagged repositories by flag count, with repository name breaking cutoff ties. We compare that group's shares of flags and eligible files with its density relative to the remaining repositories and report bounds over every possible cutoff-tie selection.
 

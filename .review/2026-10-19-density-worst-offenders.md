@@ -51,3 +51,11 @@ These passages may admit stylistic improvements, but that does not make them ser
 The logic reviewer also nominated Results lines 134–136, which contain several repository-density summaries and comparisons. The parent considers these a lower priority: the prose is detailed, but the argument is more explicit than in the three selected passages. Preserve the distinction between size strata and highest-flag repositories if that material is edited later.
 
 Both reviewers identified the duplicate-file paragraph and corpus-metric definitions as the strongest priorities. The parent selected the unclear correction chronology as the third because it obstructs understanding of the methodological limitation, rather than merely asking readers to follow technical results.
+
+## Application and verification
+
+Applied all three changes at the user's request. Results now separates the duplicate-file accounting into a referenced table and explains the two counting procedures before interpreting class distributions and union-weighted concentration. Study Design displays the unchanged metric formulas and gives aggregation its own paragraph. Threats explains the original sampling frame, later count corrections, unchanged sample/partitions, and remaining exclusion, with configuration selection in a separate paragraph.
+
+All previously reported formatted numerical values in the three edited files are retained. A read-only reviewer verified the formulas, aggregation/eligibility rules, duplicate accounting, union versus representative interpretations, and sampling chronology against the prior text and local analysis records. No actionable issues were found.
+
+`make paper` and `git diff --check` passed. No unresolved references or citations were reported. The new table and displayed formulas were visually checked in the compiled PDF. No overfull boxes occur in the revised passages; an existing 1.11-point warning remains in the Study Design overview. The rebuilt artifact is `paper/main.pdf`.

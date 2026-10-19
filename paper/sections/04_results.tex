@@ -135,7 +135,30 @@ Across all repositories, pooled density is \num{88.56} flags per 100 relevant fi
 
 Repository size therefore explains part of the raw concentration. The 61 highest-count repositories contain \qty{59.1}{\percent} of all flags and \qtyrange{48.1}{49.6}{\percent} of relevant files across the three-way cutoff tie. Their density is \numrange{1.47}{1.56} times that of the remaining repositories. High-count repositories combine greater file volume with higher density, while the large stratum as a whole has the lowest pooled density.
 
-Exact-content sensitivity preserves both headline results. Of the \num{17988} file occurrences, \num{1109}, or \qty{6.17}{\percent}, belong to \num{488} exact-duplicate groups and contain \num{1080}, or \qty{6.78}{\percent}, of the raw flags. The groups contain \num{621} copies beyond their first occurrences. Taking the union of class-and-span events across byte-identical copies yields \num{15355} exact-content events over \num{17367} unique contents. Eight groups have inconsistent event sets, but selecting one physical representative from each group yields \numrange{15340}{15349} events without changing the interpretation. ID Required remains broader with almost no repetition, and Implicit Columns remains narrower and repetitive. The highest-count decile contains \qty{59.4}{\percent} of exact-content events, \qtyrange{50.1}{50.3}{\percent} of eligible unique-content weight, and \numrange{1.44}{1.46} times the remaining density. Byte-identical copies therefore do not explain the conclusions.
+Table~\ref{tab:exactContentSensitivity} separates the duplicate-file accounting from the alternative event counts. Eight groups of byte-identical files have inconsistent sets of detector events. We therefore compare the union of class-and-span events across copies with counts obtained by selecting one physical representative per group.
+
+\begin{table}[tbp]
+    \centering
+    \small
+    \caption{Exact-content sensitivity accounting. File and flag percentages use \num{17988} file occurrences and \num{15931} raw flags, respectively. Union counts retain each distinct event observed across byte-identical copies; representative counts retain one physical copy per duplicate group.}
+    \label{tab:exactContentSensitivity}
+    \begin{tabular}{p{0.64\textwidth}r}
+        \hline
+        \textbf{Measure} & \textbf{Result} \\
+        \hline
+        File occurrences in exact-duplicate groups & \num{1109} (\qty{6.17}{\percent}) \\
+        Raw flags in those groups & \num{1080} (\qty{6.78}{\percent}) \\
+        Exact-duplicate groups & \num{488} \\
+        Copies beyond the first in each group & \num{621} \\
+        Unique file contents & \num{17367} \\
+        Exact-content events, union across copies & \num{15355} \\
+        Groups with inconsistent event sets & \num{8} \\
+        Events, one representative per group & \numrange{15340}{15349} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The class-distribution findings persist under both counting procedures. ID Required remains broader across eligible files with almost no repetition, and Implicit Columns remains narrower and repetitive. Under union-based exact-content weighting, the highest-count decile contains \qty{59.4}{\percent} of events and \qtyrange{50.1}{50.3}{\percent} of eligible unique-content weight. Its density is \numrange{1.44}{1.46} times that of the remaining repositories. Byte-identical copies therefore do not explain these class-distribution and concentration patterns.
 
 \subsubsection{Exploratory source-fragment strata}\label{sec:fragmentStrata}
 

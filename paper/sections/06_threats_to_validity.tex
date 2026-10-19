@@ -16,7 +16,9 @@ The primary evaluation retains the original annotations, whereas the sensitivity
 
 Class retention and project partitioning were data-dependent. The support rule used the complete \num{61}-repository annotation set, and the split was selected from \num{1000000} seeds using per-class occurrence balance. Project-disjoint assignment prevents file overlap, but the retained classes and split composition remain adapted to the observed sample.
 
-The preliminary sampling frame contained one duplicate repository and an incomplete path list for excluding irrelevant generated files. These conditions remain part of the sample and partitions. Later analysis stages corrected the file counts and retained all \num{15931} detector flags. An overbroad file-exclusion rule skips an annotated application table in the test partition. Model and prompt selection also used one validation partition and one observed run per configuration, making the choice sensitive to that partition and execution.
+The sampling frame used for annotation and partitioning contained one duplicate repository and an incomplete exclusion list for irrelevant generated files. Later analyses corrected the file counts and retained all \num{15931} detector flags, but did not revise the original sample or project partitions. An overbroad file-exclusion rule also skips an annotated application table in the test partition.
+
+Model and prompt selection used one validation partition and one observed run per configuration. The selected configuration may therefore depend on that partition and execution.
 
 \subsection{External validity}
 
