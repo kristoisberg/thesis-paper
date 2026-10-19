@@ -1,6 +1,6 @@
 \section{Discussion}\label{sec:discussion}
 
-The detector's flags could help developers select code for manual inspection. This would involve checking whether the flagged code meets the antipattern definition and whether the application's requirements justify a change. The following implications describe possible uses of the findings. The study did not evaluate a developer review workflow. We then propose an independent audit in which annotators examine flagged and unflagged code to measure detection errors.
+The detector's flags could help developers select code for manual inspection. This would involve checking whether the flagged code meets the antipattern definition and whether the application's requirements justify a change. The study did not evaluate a developer review workflow. We first discuss how developers could use the findings to inspect flagged code. We then outline an independent audit in which annotators examine flagged and unflagged code to measure detection errors.
 
 \subsection{Interpreting flags by antipattern class}
 
@@ -12,15 +12,15 @@ Fear of the Unknown illustrates how incomplete reference annotations affect agre
 
 Poor Man's Search Engine raises a separate question about whether consecutive search expressions should count as separate findings. Grouping them into one predicted span produced most of the class's false negatives. The span may contain the relevant code even when the occurrence counts differ from the reference. During manual inspection, each search expression could be checked separately, with the enclosing query providing context.
 
-\subsection{Implications for reviewing repositories}
+\subsection{Interpreting repository-level distributions}
 
-The distribution of each class's flags suggests where developers could focus manual inspection. ID Required flags cover almost half of the generated-schema files and average about one flag per flagged file. Implicit Columns flags cover about one quarter of application/query files and average nearly three flags per flagged file. For ID Required, this suggests checking key designs across many schema definitions. For Implicit Columns, it suggests examining several query expressions together within a smaller share of application files.
+The two dominant classes differ in how broadly and repeatedly they are flagged across the corpus. ID Required flags cover almost half of the generated-schema files and average about one flag per flagged file. Implicit Columns flags cover about one quarter of application/query files and average nearly three flags per flagged file. For ID Required, this suggests checking key designs across many schema definitions. For Implicit Columns, it suggests examining several query expressions together within a smaller share of application files.
 
 For ID Required, developers would need to examine the table definition and its candidate keys. Under the operational definition in Table~\ref{tab:evaluatedAntipatterns}, a primary key named \texttt{id} is sufficient for a flag. File coverage therefore partly reflects how widely this naming choice occurs. Developers would need to assess whether the key design is appropriate and whether a proposed natural or compound key meets the application's requirements. The study reports how widely the detector applies this rule. The consequences of the flagged designs remain unmeasured.
 
 For Implicit Columns, developers could examine repeated expressions together and trace how the application uses the fetched records. They could check whether each expression needs every selected field and which explicit projections would preserve behaviour. Inspecting these expressions together could reveal a shared query-construction convention, which would need confirmation in the source before treating the flags as one refactoring task.
 
-Repository counts and density could help developers choose which repositories to inspect. Total counts show how many flags there are to inspect. Density shows how concentrated those flags are relative to the number of eligible files. Pooling classes gives each flag equal weight despite differences in their definitions and the decisions needed to act on them. Class-specific breadth and density could help developers choose where to start. Assessing remediation effort and priority also requires evidence about the validity and consequences of individual findings.
+Repository totals need to be interpreted alongside the number of eligible files. A high flag count can reflect a large repository, a high density of flags, or both. An independent audit could use class-specific counts and densities to sample repositories with different distributions of detector output.
 
 \subsection{Priorities for independent corpus validation}
 
