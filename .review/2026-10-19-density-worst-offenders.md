@@ -59,3 +59,7 @@ Applied all three changes at the user's request. Results now separates the dupli
 All previously reported formatted numerical values in the three edited files are retained. A read-only reviewer verified the formulas, aggregation/eligibility rules, duplicate accounting, union versus representative interpretations, and sampling chronology against the prior text and local analysis records. No actionable issues were found.
 
 `make paper` and `git diff --check` passed. No unresolved references or citations were reported. The new table and displayed formulas were visually checked in the compiled PDF. No overfull boxes occur in the revised passages; an existing 1.11-point warning remains in the Study Design overview. The rebuilt artifact is `paper/main.pdf`.
+
+## Follow-up audit after application
+
+At the user's request, both reviewers independently reread the current sections 1, 2, 3, 4, and 6, using the original three passages as the minimum severity threshold. Both found no remaining density problems comparable to those passages. The revised material separates accounting, interpretation, metric definitions, aggregation, and correction history. No further density changes are recommended at this threshold. No manuscript files were changed during this follow-up audit.
