@@ -68,6 +68,43 @@ Per-request retry histories, final failure records, backend provider identifiers
 
 The eight query and schema prompt files survive in [`prompts/zero-shot/`](https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/prompts/zero-shot), [`prompts/few-shot/`](https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/prompts/few-shot), [`prompts/chain-of-thought/`](https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/prompts/chain-of-thought), and [`prompts/tree-of-thought/`](https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/prompts/tree-of-thought). The validation notebooks load these files directly. The held-out and corpus prompt templates are preserved in [`src/prompts.ts`](https://github.com/kristoisberg/jooq-antipattern-detector/blob/80f3ff4eeabdc3fec860bc35bb9a4566fe130763/src/prompts.ts) at the run-specific detector revisions. These source templates and the prompt-construction code are byte-identical between the two revisions. The original compiled binaries and complete per-request payloads were not archived.
 
+### Validation evidence map
+
+All 16 combinations of model and prompt were executed. The article displays seven rows: the four Zero-Shot configurations and the three other Claude Opus 4.5 prompts. The mapping below links each run to its preserved notebook. Each notebook records the same 1,159 completed files and 581 reference occurrences. These summaries are archived observations, not new model executions.
+
+P, R, and F1 below are the printed reference-support-weighted scores. Runtime is the printed batch runtime in seconds; the article rounds scores to two decimals and runtime to whole seconds.
+
+| Archived run | Article table row | P | R | F1 | Runtime (s) |
+|---|---|---:|---:|---:|---:|
+| [GPT-5.2 / Zero-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-gpt5-zs.ipynb) | 1 | 0.8537 | 0.9225 | 0.8801 | 2423.31 |
+| [GPT-5.2 / Few-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-gpt5-fs.ipynb) | Not displayed | 0.8593 | 0.9243 | 0.8830 | 2506.91 |
+| [GPT-5.2 / Chain-of-Thought](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-gpt5-cot.ipynb) | Not displayed | 0.8462 | 0.9139 | 0.8730 | 2896.33 |
+| [GPT-5.2 / Tree-of-Thought-inspired](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-gpt5-tot.ipynb) | Not displayed | 0.8706 | 0.9139 | 0.8873 | 4701.55 |
+| [GLM-5 / Zero-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-glm5-zs.ipynb) | 2 | 0.8837 | 0.8933 | 0.8768 | 5774.14 |
+| [GLM-5 / Few-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-glm5-fs.ipynb) | Not displayed | 0.8938 | 0.9002 | 0.8882 | 4280.87 |
+| [GLM-5 / Chain-of-Thought](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-glm5-cot.ipynb) | Not displayed | 0.8709 | 0.8847 | 0.8654 | 9628.06 |
+| [GLM-5 / Tree-of-Thought-inspired](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-glm5-tot.ipynb) | Not displayed | 0.9150 | 0.8812 | 0.8730 | 5358.76 |
+| [Claude Opus 4.5 / Zero-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-opus-zs.ipynb) | 3 | 0.8836 | 0.8898 | 0.8839 | 366.72 |
+| [Claude Opus 4.5 / Few-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-opus-fs.ipynb) | 5 | 0.8800 | 0.8881 | 0.8803 | 351.81 |
+| [Claude Opus 4.5 / Chain-of-Thought](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-opus-cot.ipynb) | 6 | 0.9248 | 0.9002 | 0.9030 | 955.93 |
+| [Claude Opus 4.5 / Tree-of-Thought-inspired](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-opus-tot.ipynb) | 7 | 0.9199 | 0.8967 | 0.9007 | 4700.71 |
+| [gpt-oss-120B / Zero-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-oss-zs.ipynb) | 4 | 0.8262 | 0.8692 | 0.8339 | 2808.35 |
+| [gpt-oss-120B / Few-Shot](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-oss-fs.ipynb) | Not displayed | 0.8264 | 0.8675 | 0.8396 | 543.45 |
+| [gpt-oss-120B / Chain-of-Thought](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-oss-cot.ipynb) | Not displayed | 0.8059 | 0.8520 | 0.8207 | 894.59 |
+| [gpt-oss-120B / Tree-of-Thought-inspired](https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups/09-evaluate-prompting-strategy-oss-tot.ipynb) | Not displayed | 0.8101 | 0.8262 | 0.8134 | 2138.84 |
+
+The article cost column uses OpenRouter-reported charges confirmed by the study author during the October archive restoration. Notebook-summed response costs are a separate record and do not always equal those charges. The following mapping preserves both sources without replacing the article costs. The author confirmation and restoration checks are recorded in [the October restoration report](../.review/2026-10-04-opus-original-run-restoration.md).
+
+| Article table row | Configuration | OpenRouter charge used in article (USD) | Printed notebook cost (USD) |
+|---|---|---:|---:|
+| 1 | GPT-5.2 / Zero-Shot | 26.16 | 26.077763 |
+| 2 | GLM-5 / Zero-Shot | 11.76 | 10.950958 |
+| 3 | Claude Opus 4.5 / Zero-Shot | 31.39 | 31.392120 |
+| 4 | gpt-oss-120B / Zero-Shot | 1.49 | 1.493565 |
+| 5 | Claude Opus 4.5 / Few-Shot | 45.00 | 44.999000 |
+| 6 | Claude Opus 4.5 / Chain-of-Thought | 40.86 | 40.862095 |
+| 7 | Claude Opus 4.5 / Tree-of-Thought-inspired | 81.43 | 80.850875 |
+
 ## Dependencies and recomputation
 
 The original data processing and evaluations used [Jupyter notebooks](https://jupyter.org/). The archive contains 26 top-level notebooks and 16 backups for combinations of model and prompt. Notebook metadata records Python 3.14.3 in 38 notebooks and Python 3.13.5 in four backups. The notebooks import NumPy, pandas, scikit-learn, matplotlib, seaborn, the OpenAI Python SDK, Pydantic, and `requests_async`. The original environment has no requirements or lock file, so its exact package versions are unavailable.

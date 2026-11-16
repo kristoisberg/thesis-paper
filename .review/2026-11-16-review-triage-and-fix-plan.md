@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Manuscript implementation has not started; the thesis-source assessment is an addition to step 6.
+Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Step 1 is complete; its changes and verification are recorded in [the step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md). The thesis-source assessment is an addition to step 6. Steps 2–8 remain pending.
 
 ## Scope and decisions
 
@@ -70,7 +70,7 @@ The retained source snapshot at the historical media path was unavailable during
 
 Items: 17, 21, 35; prerequisites for 15, 20–23, and 36.
 
-Files: `paper/main.tex`, `paper/sections/03_study_design.tex`, `analysis/README.md`; a compact verification record under `.review/`.
+Files: `paper/main.tex`, `paper/sections/03_study_design.tex`, `paper/sections/06_threats_to_validity.tex`, `analysis/README.md`; a compact verification record under `.review/`.
 
 - Retain study revision `9913a76`; correct every displayed hash to match its actual target.
 - Identify a published documentation commit containing the recovered-run information and update all stale README links consistently. Keep historical analysis/code pins separate from the documentation pin.
