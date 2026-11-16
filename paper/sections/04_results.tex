@@ -24,9 +24,9 @@ Based on the validation comparison in Table~\ref{tab:configurationSelection}, we
     \end{tabular}
 \end{table}
 
-\subsection{RQ1: What occurrence-level agreement does the selected detector achieve on held-out jOOQ projects?}\label{sec:rq1Agreement}
+\subsection{RQ1: What occurrence-level agreement does the detector achieve on held-out jOOQ projects?}\label{sec:rq1Agreement}
 
-In one run, the selected detector returned \num{536} predictions from \num{502} relevant files in the \num{20}-repository test partition. The original reference contained \num{523} spans. At the prespecified intersection-over-union threshold of \num{0.50}, the one-to-one matching procedure yielded \num{460} true positives, \num{76} false positives, and \num{63} false negatives. The corresponding micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}.
+In one run, the detector returned \num{536} predictions from \num{502} relevant files in the \num{20}-repository test partition. The original reference contained \num{523} spans. At the prespecified intersection-over-union threshold of \num{0.50}, the one-to-one matching procedure yielded \num{460} true positives, \num{76} false positives, and \num{63} false negatives. The corresponding micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}.
 
 Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial class differences. F1-scores ranged from \num{0.481} for Fear of the Unknown to \num{0.974} for 31 Flavors. Implicit Columns, 31 Flavors, and Rounding Errors each exceeded \num{0.89}, whereas Keyless Entry, Fear of the Unknown, and Poor Man's Search Engine remained below \num{0.70}. The macro precision, recall, and F1-score were \num{0.797}, \num{0.813}, and \num{0.793}; the reference-support-weighted values were \num{0.885}, \num{0.880}, and \num{0.877}. These aggregates reinforce the need to interpret each corpus flag class in light of its own held-out agreement.
 
@@ -102,7 +102,7 @@ Only Implicit Columns and Poor Man's Search Engine changed across these threshol
 
 A \num{10000}-replicate project-cluster bootstrap placed micro precision between \num{0.798} and \num{0.931}, micro recall between \num{0.820} and \num{0.913}, and micro F1 between \num{0.820} and \num{0.912}. These percentile ranges describe sensitivity to the composition of the selected test projects.
 
-\subsection{RQ2: How are the selected detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus?}\label{sec:rq2CorpusFlags}
+\subsection{RQ2: How are the detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus?}\label{sec:rq2CorpusFlags}
 
 The corpus source frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
 
@@ -110,7 +110,7 @@ The corpus source frame contains \num{17988} relevant file occurrences in \num{6
     \centering
     \scriptsize
     \setlength{\tabcolsep}{2pt}
-    \caption{Selected-detector output in the identified \num{602}-repository corpus. G denotes the \num{7226} generated-schema files and A the \num{10762} application/query files; All contains \num{17988} relevant file occurrences. Repository coverage and file breadth give counts followed by percentages in parentheses. The two Fear of the Unknown repository counts overlap in two repositories. Repetition is flags per flagged file. Pooled and repository-equal densities are flags per 100 eligible files; the latter gives each eligible repository equal weight and includes zero-flag repositories.}
+    \caption{Detector output in the identified \num{602}-repository corpus. G denotes the \num{7226} generated-schema files and A the \num{10762} application/query files; All contains \num{17988} relevant file occurrences. Repository coverage and file breadth give counts followed by percentages in parentheses. The two Fear of the Unknown repository counts overlap in two repositories. Repetition is flags per flagged file. Pooled and repository-equal densities are flags per 100 eligible files; the latter gives each eligible repository equal weight and includes zero-flag repositories.}
     \label{tab:corpusFlags}
     \begin{tabular}{lrrrrr}
         \hline

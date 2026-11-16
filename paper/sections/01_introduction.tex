@@ -4,21 +4,21 @@ SQL antipatterns are recurring database-design or query-construction choices tha
 
 Compared with traditional code smells \nobreakcite[Ch. 3]{fowler2019refactoring}, \nobreaktextcite{muse2020prevalence} found that SQL antipattern occurrences tended to remain unfixed for longer and were more likely to persist throughout a system's lifetime. The researchers suggested that this pattern may reflect either developers' lack of awareness of SQL antipatterns and their disadvantages or the comparatively low priority assigned to fixing them. Detection can expose these choices during development, but the analysed source representation determines what a detector can observe.
 
-jOOQ embeds SQL construction in Java through a fluent domain-specific language and generated schema classes \nobreakcite{jooq2025sql,jooq2025codegen}. A query may therefore be distributed across Java source units rather than available as a complete SQL statement. Existing SQL-antipattern detectors analyse executed statements, recover SQL text from host-language source, or classify source units \nobreakcite{sharma2018smelly,nagy2017static,nagy2018sqlinspect,DBLP:conf/sigmod/DintyalaNA20,de2025effectiveness}. Existing evaluations leave open how well a detector can identify and locate individual SQL antipatterns in jOOQ source.
+jOOQ embeds SQL construction in Java through a fluent domain-specific language and generated schema classes \nobreakcite{jooq2025sql,jooq2025codegen}. A query may therefore be distributed across Java source units rather than available as a complete SQL statement. Existing SQL-antipattern detectors analyse executed statements \nobreakcite{DBLP:conf/sigmod/DintyalaNA20}, recover SQL text from host-language source \nobreakcite{sharma2018smelly,nagy2017static,nagy2018sqlinspect}, or detect smells in PL/SQL snippets \nobreakcite{de2025effectiveness}. Existing evaluations leave open how well a detector can identify and locate individual SQL antipatterns in jOOQ source.
 
-We address this gap by comparing a large language model (LLM)-based detector's predicted antipattern classes and source locations with manual annotations from held-out projects. We then analyse its flags across repositories in light of this evaluation.
+We address this gap by implementing a large language model (LLM)-based detector and comparing its predicted antipattern classes and source locations with manual annotations from held-out projects. We then analyse its flags across repositories in light of this evaluation.
 
 The study addresses two research questions:
 
 \begin{itemize}
-    \item \textbf{RQ1:} What occurrence-level agreement does the selected detector achieve on held-out jOOQ projects?
-    \item \textbf{RQ2:} How are the selected detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus?
+    \item \textbf{RQ1:} What occurrence-level agreement does the detector achieve on held-out jOOQ projects?
+    \item \textbf{RQ2:} How are the detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus?
 \end{itemize}
 
 The study makes three contributions:
 
 \begin{itemize}
     \item an occurrence-level reference dataset containing \num{1562} class-labelled spans across 19 operationalised SQL antipatterns from 61 sampled jOOQ repositories, with seven classes retained for detector analysis;
-    \item a project-disjoint evaluation of a selected LLM-based detector against original reference spans, including class-specific errors and sensitivity to span-matching thresholds and test-project composition; and
-    \item a file-normalised characterisation of detector flags in 602 identified repositories, including breadth, repetition, repository-size and exact-content sensitivity, and recurring source-fragment patterns for two query classes.
+    \item a project-disjoint evaluation of the LLM-based detector against original reference spans, including class-specific errors and sensitivity to span-matching thresholds and test-project composition; and
+    \item a file-normalised characterisation of detector flags in 602 identified repositories, covering breadth, repetition, repository-size sensitivity, and exact-content sensitivity; complemented by an analysis of recurring patterns in source fragments for two query classes.
 \end{itemize}

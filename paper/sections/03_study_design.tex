@@ -4,7 +4,7 @@
 
 We evaluate how closely the detector's predicted antipattern occurrences match the reference annotations. We then describe how its flags are distributed across antipattern classes, files, and repositories in the full corpus.
 
-We first identified open-source Java repositories that use jOOQ and retain generated schema classes. We then annotated a size-stratified sample, partitioned its projects into training, validation, and test sets, selected one detector configuration on the validation set, and evaluated it on the held-out test set. Finally, we applied the selected detector to the full identified corpus. As an exploratory part of this corpus analysis, we coded recurring source-fragment patterns among two query classes.
+We first identified open-source Java repositories that use jOOQ and retain generated schema classes. We then annotated a size-stratified sample, partitioned its projects into training, validation, and test sets, selected one detector configuration on the validation set, and evaluated it on the held-out test set. Finally, we applied the detector to the full identified corpus. As an exploratory part of this corpus analysis, we coded recurring source-fragment patterns among two query classes.
 
 Reference and predicted occurrences are class-labelled line spans within files, which the held-out evaluation matches one to one. The corpus analysis measures flag counts, flagged-file breadth, within-file repetition, and file-normalised density across source roles and repositories.
 
