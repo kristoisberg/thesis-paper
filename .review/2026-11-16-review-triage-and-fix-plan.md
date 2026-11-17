@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Step 1 is complete; its changes and verification are recorded in [the step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md). The thesis-source assessment is an addition to step 6. Steps 2–8 remain pending.
+Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1 and 2 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md) and [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 3–8 remain pending.
 
 ## Scope and decisions
 

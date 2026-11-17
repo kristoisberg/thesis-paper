@@ -55,18 +55,18 @@ Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial
 
 The disagreements in Table~\ref{tab:detectionErrors} cluster around local query semantics, inferred relationships, missing-value conventions, and occurrence grouping. Inspection also exposed omissions and span errors in the original reference annotations. Because detector disagreements guided this review, the primary result retains the original reference.
 
-\begin{table}[tbp]
+\begin{table}[H]
     \centering
     \small
-    \caption{Dominant disagreement mechanisms observed during qualitative review of the held-out run. Counts refer to false positives or false negatives against the original reference spans.}
+    \caption{Selected disagreement mechanisms observed during qualitative review of the held-out run. Counts refer to false positives or false negatives against the original reference spans. The categories do not exhaustively classify every error.}
     \label{tab:detectionErrors}
     \begin{tabular}{p{2.9cm}p{7.8cm}}
         \hline
         \textbf{Antipattern} & \textbf{Observed disagreement mechanisms} \\
         \hline
-        Implicit Columns & Fourteen of \num{17} false negatives used \texttt{returning()} or \texttt{returningResult()}. Other disagreements involved span boundaries and reference errors. \\
-        ID Required & Six false negatives involved primary-key columns named \texttt{id}. One false positive proposed an unsuitable natural key; other disagreements exposed reference errors. \\
-        Keyless Entry & Fifteen of \num{30} false positives involved audit-log tables, which the prompt did not exempt. One involved an ambiguous column name, and the remainder included missing or disputed reference annotations. \\
+        Implicit Columns & Fourteen of \num{17} false negatives used \texttt{returning()} or \texttt{returningResult()}. The remaining four false positives and three false negatives involved span boundaries and reference errors. \\
+        ID Required & Six false negatives involved primary-key columns named \texttt{id}. One false positive proposed an unsuitable natural key. Residual disagreements comprise \num{12} false positives and \num{10} false negatives. \\
+        Keyless Entry & Fifteen of \num{30} false positives involved audit-log tables, which the prompt did not exempt. One involved an ambiguous column name. The remaining \num{14} false positives included missing or disputed reference annotations. There was also one false negative. \\
         Fear of the Unknown & All \num{17} false negatives involved defaults or sentinel values. Of \num{24} false positives, \num{23} exposed omissions in the original reference and one suggested a refactoring rather than an occurrence. \\
         31 Flavors & One false negative involved a numeric \texttt{CHECK} range encoding categories. The single false positive inferred a fixed value set from a \texttt{status} column without supporting schema evidence. \\
         Poor Man's Search Engine & Seven false negatives and two false positives resulted from grouping consecutive occurrences into one span. Two false positives used \texttt{LIKE} without wildcards, and one false negative placed \texttt{containsIgnoreCase} in an intermediate collection. \\
@@ -77,7 +77,7 @@ The disagreements in Table~\ref{tab:detectionErrors} cluster around local query 
 
 Four mechanisms dominated: all-column \texttt{returning()} calls, keyless audit logs, sentinel defaults, and grouped search expressions. The remaining disagreements mainly involved line boundaries, sparse schema evidence, or class-specific semantics already summarised in the table.
 
-The detector-informed revision contained \num{563} reference spans and changed the pooled totals to \num{512} true positives, \num{24} false positives, and \num{51} false negatives. These totals yield micro precision \num{0.955}, recall \num{0.909}, and F1-score \num{0.932}. We treat this result as an optimistic sensitivity analysis.
+After the detector-informed review, the revised counts were \num{512} true positives, \num{24} false positives, and \num{51} false negatives, corresponding to \num{563} reference events. These counts yield micro precision \num{0.955}, recall \num{0.909}, and F1 \num{0.932}. The predictions are unchanged. We treat these results as an optimistic sensitivity analysis.
 
 Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} reports the complete threshold grid.
 

@@ -1,0 +1,220 @@
+{
+  "corpus_membership": {
+    "all_flags_in_manifest": true,
+    "flags": 15931,
+    "physical_source_reinspection": false,
+    "selected_files": 17988
+  },
+  "input_sha256": {
+    "analysis/corpus_flag_alignment.csv": "b035fd06e7c829da8f995770e769c7d3491d0d32794837ddc2191f960f78c728",
+    "analysis/corpus_source_manifest.csv": "8200f8990215912efba90a4f5ed431d52c79d7b20e11ce496457f34829c8a214",
+    "datasets/test-set.csv": "f2be1176e5f655dbb2f5ec4d5fd4630298cb6ac2cc161362f0f138ee7366af7c",
+    "scripts/14-evaluate-tool-localisation.ipynb": "8efd33f04e88a878bc3389a5bbc05e9ef2982e4b3b98fc1e6af953812de96cb5",
+    "scripts/15-calculate-tool-localisation-corrected.ipynb": "dfdfb4171d030dd43903a747315fe7db45c89bd356861decf2b7051af05b1310"
+  },
+  "late_removed_repository": [
+    "Davincii254/Stroom"
+  ],
+  "primary": {
+    "predictions": 536,
+    "references": 523,
+    "tp_fp_fn": [
+      460,
+      76,
+      63
+    ]
+  },
+  "reference_path_checks": [
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-h2/src/main/java/org/jooq/mcve/java/h2/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-mariadb/src/main/java/org/jooq/mcve/java/mariadb/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-mysql/src/main/java/org/jooq/mcve/java/mysql/tables/Test.java",
+      "has_exact_prediction": false,
+      "in_selected_frame": false,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 0,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-oracle/src/main/java/org/jooq/mcve/java/oracle/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-postgres/src/main/java/org/jooq/mcve/java/postgres/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-sqlite/src/main/java/org/jooq/mcve/java/h2/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-sqlite/src/main/java/org/jooq/mcve/java/sqlite/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "jOOQ-mcve-java-sqlserver/src/main/java/org/jooq/mcve/java/sqlserver/tables/Test.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "jOOQ_jOOQ-mcve",
+      "singleton_match_count": 1,
+      "span": [
+        55,
+        55
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "game-miner-service/src/main/java/eu/panic/gameminerservice/generatedClasses/tables/NotificationsTable.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "therepanic_trustwin-casino-project",
+      "singleton_match_count": 1,
+      "span": [
+        56,
+        56
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "game-overgo-service/src/main/java/eu/panic/gameminerservice/generatedClasses/tables/NotificationsTable.java",
+      "has_exact_prediction": false,
+      "in_selected_frame": false,
+      "project": "therepanic_trustwin-casino-project",
+      "singleton_match_count": 0,
+      "span": [
+        56,
+        56
+      ]
+    },
+    {
+      "class": "ID Required",
+      "file": "game-tower-service/src/main/java/eu/panic/gametowerservice/generatedClasses/tables/NotificationsTable.java",
+      "has_exact_prediction": true,
+      "in_selected_frame": true,
+      "project": "therepanic_trustwin-casino-project",
+      "singleton_match_count": 1,
+      "span": [
+        56,
+        56
+      ]
+    }
+  ],
+  "removed_repository_in_annotated_sample": false,
+  "revised_aggregates": [
+    {
+      "Antipattern": "Implicit Columns",
+      "FN": 15,
+      "FP": 1,
+      "TP": 256,
+      "f1": 0.9696969696969697
+    },
+    {
+      "Antipattern": "ID Required",
+      "FN": 7,
+      "FP": 1,
+      "TP": 101,
+      "f1": 0.9619047619047619
+    },
+    {
+      "Antipattern": "Keyless Entry",
+      "FN": 0,
+      "FP": 16,
+      "TP": 49,
+      "f1": 0.8596491228070176
+    },
+    {
+      "Antipattern": "Fear of the Unknown",
+      "FN": 17,
+      "FP": 1,
+      "TP": 42,
+      "f1": 0.8235294117647058
+    },
+    {
+      "Antipattern": "31 Flavors",
+      "FN": 1,
+      "FP": 1,
+      "TP": 38,
+      "f1": 0.9743589743589743
+    },
+    {
+      "Antipattern": "Poor Man's Search Engine",
+      "FN": 8,
+      "FP": 4,
+      "TP": 13,
+      "f1": 0.6842105263157895
+    },
+    {
+      "Antipattern": "Rounding Errors",
+      "FN": 3,
+      "FP": 0,
+      "TP": 13,
+      "f1": 0.896551724137931
+    }
+  ],
+  "revised_micro_f1": 0.9317561419472248,
+  "revised_totals_tp_fp_fn": [
+    512,
+    24,
+    51
+  ],
+  "revised_weighted_f1": 0.9309021030623323
+}

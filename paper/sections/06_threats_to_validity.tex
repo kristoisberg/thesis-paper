@@ -12,11 +12,11 @@ The exact-content sensitivity identifies byte-identical files by SHA-256. Modifi
 
 \subsection{Internal validity}
 
-The primary evaluation retains the original annotations, whereas the sensitivity analysis revised records after inspecting detector disagreements. This process favours errors visible to the detector and can miss shared omissions. The revised-reference result is therefore optimistic.
+The primary evaluation retains the original annotations. The sensitivity analysis uses counts revised after inspecting detector disagreements. This process favours errors visible to the detector and can miss shared omissions. Only class-level counts were retained for this sensitivity analysis, limiting independent verification of individual annotation changes.
 
 Class retention and project partitioning were data-dependent. The support rule used the complete \num{61}-repository annotation set, and the split was selected from \num{1000000} seeds using per-class occurrence balance. Project-disjoint assignment prevents file overlap, but the retained classes and split composition remain adapted to the observed sample.
 
-The sampling frame used for annotation and partitioning contained one duplicate repository and an incomplete exclusion list for irrelevant generated files. Later analyses corrected the file counts and retained all \num{15931} detector flags, but did not revise the original sample or project partitions. An overbroad file-exclusion rule also skips an annotated application table in the test partition.
+The initial file counts used an incomplete exclusion list for irrelevant generated files. Correcting those counts did not change the annotated sample or project partitions. All retained corpus flags belonged to the selected file frame. Two ID Required references fell outside the selected test files: one in a MySQL table excluded by the path filter and one with an incorrect module path. Both remained in the primary evaluation and contributed two of the \num{63} false negatives.
 
 Model and prompt selection used one validation partition and one observed run per configuration. The selected configuration may therefore depend on that partition and execution.
 
@@ -36,7 +36,9 @@ The bootstrap resamples whole projects, keeping each project's annotations and p
 
 \subsection{Reliability validity}
 
-The repeat-annotation exercise measures the same annotator's consistency after 30 days. Its F1-score of \num{0.925} does not establish reproducibility across annotators or adjudicated correctness.
+The repeat-annotation exercise measures the same annotator's consistency after 30 days across the original 19-class scope. Its F1-score of \num{0.938} does not establish reproducibility across annotators or adjudicated correctness for the seven retained detector classes.
+
+File-level completion records were not retained for the corpus run, so unsuccessful requests cannot be distinguished from successful responses containing no detections.
 
 The detector was run once on the held-out partition and once on the corpus, leaving run-to-run variance unmeasured. The hosted model and gateway can also change, so reproduction depends on continued service access as well as preserved local artefacts.
 

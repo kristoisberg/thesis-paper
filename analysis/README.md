@@ -124,6 +124,23 @@ python analysis/localisation_robustness.py /path/to/masters-thesis \
 
 It reconstructs all 536 held-out predictions, reproduces the primary 460 true positives, 76 false positives, and 63 false negatives, evaluates four intersection-over-union thresholds, and runs the 10,000-iteration project bootstrap with seed 123456.
 
+### Repeat-annotation recount
+
+The repeat-annotation exercise used the original 19-class codebook across 128 files; 15 classes occur in the union of both passes. Of the 64 originally unannotated files, 63 remained unannotated. Recompute the exact labelled-event comparison without model requests or new annotations:
+
+```bash
+python analysis/repeat_annotation_check.py /path/to/masters-thesis \
+  > analysis/repeat_annotation_summary.json
+```
+
+The standard-library script reads `datasets/files-to-reannotate.csv`, `datasets/ground-truth.csv`, and `datasets/reannotated-ground-truth.csv`. The [summary](repeat_annotation_summary.json) records input hashes and the full recount. Multiset intersection by project, file, class, and inclusive span yields 144 matches among 158 original and 149 repeated events: precision 0.966, recall 0.911, and F1 0.938.
+
+The script also replays the archived notebook's span-first procedure, reproducing its historical 142 same-class pairs. At line 99 of `boogiespook/waltz-test`'s `EntityStatisticDefinition.java`, both passes contain Keyless Entry and Naive Trees, but the row order reverses. The span-first procedure cross-pairs these labels and creates two artificial disagreements. The article corrects this calculation without changing the frozen annotation files. This correction concerns repeat-annotation reliability; held-out detector counts remain 460 TP, 76 FP, and 63 FN.
+
+### Detector-informed revised counts
+
+The frozen `scripts/15-calculate-tool-localisation-corrected.ipynb` stores revised class-level TP/FP/FN aggregates supplied to its metric function. The seven rows sum to 512 TP, 24 FP, and 51 FN, implying reference support of 563 and pooled micro F1 0.931756. The reference-support-weighted F1 is a distinct value, 0.930902. The event-level revised reference and a record of individual changes were not retained, so the aggregates cannot establish which specific annotation was added, removed, or remapped. They support an optimistic, detector-informed count sensitivity rather than a reconstructable replacement dataset.
+
 ### Original repository concentration
 
 This command requires the frozen `datasets/analysis-results.csv` containing the 15,931 corpus flags.
@@ -171,6 +188,8 @@ This standard-library script requires the retained source snapshot, `datasets/tr
 Training has 33 groups of byte-identical files containing 66 paths; validation has 13 groups containing 31 paths; test has none. No byte-identical file group crosses partitions. This check does not detect modified clones.
 
 The annotation frame is distinct from the selected source frame. The split CSVs contain 332, 581, and 523 retained-class reference events across 145, 276, and 195 annotated paths, respectively. All training and validation annotated paths belong to the selected frame. Two test-reference paths do not, each carrying one reference event. In `jOOQ/jOOQ-mcve`, the overbroad `mysql/tables` blacklist excludes an annotated application table. In `therepanic/trustwin-casino-project`, an extra annotation uses the wrong module path, `game-overgo-service`; the original reference already contains the corresponding ID Required event at line 56 under the correct `game-miner-service` path. The thesis reports removing invalid reference occurrences in its corrected analysis, but the corrected notebook preserves aggregate counts rather than an event-level revision, so removal of this particular extra annotation cannot be verified from that notebook. This audit does not alter the frozen annotations, selection rules, or matching results.
+
+Both out-of-frame references are unmatched and remain among the 63 primary false negatives. The two SQLite-module paths ending in `h2/tables/Test.java` and `sqlite/tables/Test.java` are separate files in the frozen manifest with different hashes; both have exact matching predictions. Their unusual names do not establish an annotation error. Full-source semantic reinspection was unavailable during the November reconciliation. The late removal of `Davincii254/Stroom` from the 603-project list did not affect any of the 61 annotated repositories or their partitions.
 
 The outputs are [split-level counts](split_file_counts.csv), [per-repository counts](split_file_counts_by_repository.csv), the [2,170-path source manifest](split_source_manifest.csv), [duplicate glob matches](split_duplicate_glob_matches.csv), [cross-partition exact duplicates](split_cross_partition_exact_duplicates.csv), and [annotation-frame exceptions](split_annotation_frame_exceptions.csv). The two duplicate tables contain headers only because no matches were found. The [JSON summary](split_file_inventory_summary.json) records checks, input hashes, and output hashes. Its `all_annotations_in_source_frame` check is false because the two test exceptions are retained explicitly.
 
