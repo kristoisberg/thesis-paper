@@ -4,6 +4,8 @@
 
 The seven antipattern classes follow study-specific operational definitions derived from Karwin's catalogue \nobreakcite{karwin2023sql}. Different boundaries for sentinel values, implicit projections, search patterns, or inferred keys would change the counts. Agreement with the single-annotator reference therefore measures conformance to these definitions and one annotator's application of them, without independent consensus on annotation correctness.
 
+For schema-level Fear of the Unknown, a nullable declaration with a non-NULL default was sufficient screening evidence. A default does not prevent explicit NULL values. Annotation could also inspect business logic, which may be unavailable in a single-file detector request. These screening rules and differences in available context can contribute to disagreements independently of model capability.
+
 The primary matching rule treats class-labelled line spans as events and requires one-to-one overlap at intersection over union \num{0.50}. It captures class, occurrence count, and approximate localisation, but may count grouping differences as errors even when the detector identifies the same problematic code. True negatives are undefined, and the threshold analysis tests robustness only to the chosen span boundary.
 
 The corpus measures use role-eligible files as denominators rather than class-specific opportunities for an antipattern. For example, an application file may contain no eligible projection or search predicate. They also retain detector errors observed in the held-out evaluation. The exploratory categories classify returned fragments without resolving call targets. Accordingly, the corpus results characterise detector-output density, breadth, repetition, and fragment composition. Estimating antipattern prevalence or API risk would require an independent audit with API-opportunity denominators.
@@ -14,7 +16,7 @@ The exact-content sensitivity identifies byte-identical files by SHA-256. Modifi
 
 The primary evaluation retains the original annotations. The sensitivity analysis uses counts revised after inspecting detector disagreements. This process favours errors visible to the detector and can miss shared omissions. Only class-level counts were retained for this sensitivity analysis, limiting independent verification of individual annotation changes.
 
-Class retention and project partitioning were data-dependent. The support rule used the complete \num{61}-repository annotation set, and the split was selected from \num{1000000} seeds using per-class occurrence balance. Project-disjoint assignment prevents file overlap, but the retained classes and split composition remain adapted to the observed sample.
+Codebook refinement, class retention, and project partitioning were data-dependent. The codebook was developed across the \num{61} repositories before partitioning, so its rules could reflect cases from projects later assigned to the test set. The support rule used the complete annotation set, and the split was selected from \num{1000000} seeds using per-class occurrence balance. Project-disjoint assignment prevents file overlap, but the definitions, retained classes, and split composition remain adapted to the observed sample.
 
 The initial file counts used an incomplete exclusion list for irrelevant generated files. Correcting those counts did not change the annotated sample or project partitions. All retained corpus flags belonged to the selected file frame. Two ID Required references fell outside the selected test files: one in a MySQL table excluded by the path filter and one with an incorrect module path. Both remained in the primary evaluation and contributed two of the \num{63} false negatives.
 
@@ -39,6 +41,8 @@ The bootstrap resamples whole projects, keeping each project's annotations and p
 The repeat-annotation exercise measures the same annotator's consistency after 30 days across the original 19-class scope. Its F1-score of \num{0.938} does not establish reproducibility across annotators or adjudicated correctness for the seven retained detector classes.
 
 File-level completion records were not retained for the corpus run, so unsuccessful requests cannot be distinguished from successful responses containing no detections.
+
+The number of requests affected by input truncation was not recorded. Character-based budgeting does not establish that every request satisfied the model's token limits, and omitted source or key context could affect detections.
 
 The detector was run once on the held-out partition and once on the corpus, leaving run-to-run variance unmeasured. The hosted model and gateway can also change, so reproduction depends on continued service access as well as preserved local artefacts.
 

@@ -10,39 +10,39 @@ Karwin's catalogue, first published in 2010, provides the base definitions used 
 
 The Implicit Columns antipattern illustrates how a query-level choice creates maintenance risk. The antipattern occurs when a \texttt{SELECT} statement leaves the necessary columns unspecified and selects all columns with the \texttt{*} wildcard \nobreakcite[Ch. 19]{karwin2023sql}. Database-table operations such as dropping a column can change the ordinal positions of the remaining columns. Code that depends on the earlier positions can then receive columns in altered positions and behave incorrectly. The wildcard can also make the database management system process and transfer columns that the application does not use. In SQLite-based Android applications, removing Implicit Columns reduced mean query runtime by \qty{27}{\percent} and energy use by \qty{29}{\percent} \nobreakcite[p. 60]{lyu2019quantifying}.
 
-The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatterns} states this study's operational definitions, including the boundaries that differ from the broader conceptual definitions. The frozen study repository preserves the \href{https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/thesis/appendices/appendix-annotated-antipatterns.tex}{19-class annotation list}, \href{https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/diagrams/decision}{annotation decision trees}, and \href{https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/prompts}{prompt decision rules}.
+The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatterns} states the annotation criteria, including boundaries that differ from the broader conceptual definitions. Section~\ref{sec:experimentsQuantitative} describes differences between these criteria and the detector instructions. The frozen study repository preserves the \href{https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/thesis/appendices/appendix-annotated-antipatterns.tex}{19-class annotation list}, \href{https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/diagrams/decision}{annotation decision trees}, and \href{https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/prompts}{prompt decision rules}.
 
 \begin{longtable}{@{}p{0.24\textwidth}p{0.70\textwidth}@{}}
-    \caption{Operational definitions of the seven SQL antipattern classes retained for detector evaluation.}
+    \caption{Annotation criteria for the seven SQL antipattern classes retained for detector evaluation.}
     \label{tab:evaluatedAntipatterns}\\
     \hline
-    \thead[l]{Class} & \thead[l]{Operational definition} \\ \hline
+    \thead[l]{Class} & \thead[l]{Annotation criterion} \\ \hline
     \endfirsthead
-    \caption[]{Operational definitions of the seven retained classes (continued).}\\
+    \caption[]{Annotation criteria for the seven retained classes (continued).}\\
     \hline
-    \thead[l]{Class} & \thead[l]{Operational definition} \\ \hline
+    \thead[l]{Class} & \thead[l]{Annotation criterion} \\ \hline
     \endhead
     \hline
     \endfoot
     \hline
     \endlastfoot
     ID Required &
-    A generated table class, excluding views, defines a primary key named exactly \texttt{id}, ignoring case, or defines a synthetic primary key despite a suitable natural or compound unique key \nobreakcite[Ch. 4]{karwin2023sql}. \\
+    A generated table class, excluding views, defines a primary-key column named exactly \texttt{id}, ignoring case, or uses a synthetic primary key despite a suitable natural or compound unique key \nobreakcite[Ch. 4]{karwin2023sql}. The naming condition alone suffices. Key suitability requires application-level review. \\
 
     Keyless Entry &
-    A generated table class, excluding views, contains a column interpreted as referring to another table but lacks a foreign-key constraint, provided the supplied key definitions contain a suitable referenced primary or unique key \nobreakcite[Ch. 5]{karwin2023sql}. \\
+    A generated table class, excluding views, contains a column interpreted as referring to another table but lacks a foreign-key constraint, provided a suitable referenced primary or unique key exists \nobreakcite[Ch. 5]{karwin2023sql}. \\
 
     Rounding Errors &
     A schema stores an exact fractional quantity in \texttt{FLOAT} or \texttt{REAL} rather than \texttt{DECIMAL} or \texttt{NUMERIC} \nobreakcite[Ch. 10]{karwin2023sql}. \\
 
     31 Flavors &
-    A column encodes a fixed allowed-value list with a \texttt{CHECK} constraint or \texttt{ENUM} instead of a lookup table. Emptiness checks and range constraints are excluded \nobreakcite[Ch. 11]{karwin2023sql}. \\
+    A column encodes a fixed allowed-value list with a \texttt{CHECK} constraint or \texttt{ENUM} instead of a lookup table \nobreakcite[Ch. 11]{karwin2023sql}. Numeric ranges encoding discrete business categories are included. Ordinary validity ranges and emptiness checks are excluded. \\
 
     Fear of the Unknown &
-    A schema uses a semantically meaningless sentinel for missing data, marks a practically non-null column as nullable, or jOOQ query logic applies null-unsafe logic to a nullable database column. Java-only null handling and query values supplied from Java are excluded \nobreakcite[Ch. 14]{karwin2023sql}. \\
+    A schema uses a semantically meaningless sentinel for missing data, or a nullable column has a non-NULL default or business logic that treats it as non-null. Query occurrences involve null-unsafe logic applied to a nullable database column. Java-only null handling and query values supplied from Java are excluded \nobreakcite[Ch. 14]{karwin2023sql}. \\
 
     Poor Man's Search Engine &
-    A jOOQ condition uses \texttt{LIKE}, \texttt{ILIKE}, or a regular expression for full-text matching. Prefix searches are excluded. Calls whose parameters do not reveal whether full-text wildcards are present are included by the detector rule \nobreakcite[Ch. 17]{karwin2023sql}. \\
+    A jOOQ \texttt{SELECT} uses \texttt{LIKE}, \texttt{ILIKE}, or substring methods such as \texttt{contains} and \texttt{containsIgnoreCase} for full-text-style matching in a \texttt{WHERE} condition \nobreakcite[Ch. 17]{karwin2023sql}. Unresolved wildcard behaviour is included conservatively. Prefix searches are excluded. \\
 
     Implicit Columns &
     A jOOQ query or generated data-access-object (DAO) operation fetches all columns without an explicit projection. Calls within \texttt{fetchCount} or \texttt{fetchExists} are excluded \nobreakcite[Ch. 19]{karwin2023sql,jooq2025select}. \\

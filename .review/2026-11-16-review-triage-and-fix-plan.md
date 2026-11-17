@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1 and 2 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md) and [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 3–8 remain pending.
+Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–3 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 4–8 remain pending.
 
 ## Scope and decisions
 
@@ -103,6 +103,7 @@ Files: `paper/sections/02_background_related_work.tex`, `03_study_design.tex`, `
 
 - Explain near ID Required's definition that the standalone `id` naming condition is deliberately broad and does not establish an unsuitable surrogate key.
 - Include substring convenience methods in Poor Man's Search Engine. Describe the shared unresolved-input convention and any material differences between the archived decision tree and prompts; do not claim complete equivalence.
+- Describe the verified 31 Flavors range/span and Keyless Entry key-kind prompt imprecisions. Distinguish deliberate broader prompt coverage from those omissions, and preserve the shared query-nullability requirement confirmed by the author despite its implicit flowchart representation.
 - Explain which schema evidence is present in retained table source and attached Keys context. Standalone EnumType implementations are excluded. A non-NULL default does not prevent an explicit NULL.
 - Clarify that codebook refinement used the full annotation sample before partitioning. Later prompt iteration and model selection excluded test projects, but inherited operational rules were sample-informed.
 - Describe lexical file/source-role selection, Keys selection by longest character-level relative-path prefix, and tie handling.
