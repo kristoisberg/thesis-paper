@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–3 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 4–8 remain pending.
+Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–4 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 5–8 remain pending.
 
 ## Scope and decisions
 
@@ -126,6 +126,8 @@ Files: `paper/sections/03_study_design.tex`, `04_results.tex`, `06_threats_to_va
 - Explain that eight inconsistent source-content groups are not verified identical complete requests and cannot identify causes or estimate run-to-run variance.
 
 Done when the text matches existing algorithms without unnecessary algorithm changes. Do not add macro bootstrap intervals or rare-class interval tables by default; existing class-level outputs can be linked. No resampling method supplies additional independent project support.
+
+Verification: the seven partition-table rows satisfy the per-class minima and give a score of 0.5167739250, which rounds to the notebook’s 0.5168. The localisation script reproduced the primary counts and all three pooled bootstrap intervals. The corpus summary confirms eight groups with inconsistent event sets. The paper built with the two existing line-overflow warnings.
 
 ### 5. Add the agreed existing-data results and improve selection reporting
 

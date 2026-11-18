@@ -153,7 +153,7 @@ python analysis/localisation_robustness.py /path/to/masters-thesis \
   --bootstrap 10000 --seed 123456
 ```
 
-It reconstructs all 536 held-out predictions, reproduces the primary 460 true positives, 76 false positives, and 63 false negatives, evaluates four intersection-over-union thresholds, and runs the 10,000-iteration project bootstrap with seed 123456.
+It reconstructs all 536 held-out predictions, reproduces the primary 460 true positives, 76 false positives, and 63 false negatives, evaluates four intersection-over-union thresholds, and runs the 10,000-iteration project bootstrap with seed 123456. The output reports defined-replicate counts for each metric separately, both pooled and by class. Percentiles use only replicates with a defined value for the corresponding metric.
 
 ### Repeat-annotation recount
 
