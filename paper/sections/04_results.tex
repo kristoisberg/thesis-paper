@@ -9,7 +9,7 @@ We selected Claude Opus 4.5 with Zero-Shot prompts, reasoning disabled, and temp
 \begin{table}[tbp]
     \centering
     \scriptsize
-    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs are reported by OpenRouter in US dollars, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts. The final three compare alternative prompts with Claude Opus 4.5.}
+    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs are reported by OpenRouter in US dollars, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts. The final three compare alternative prompts with Claude Opus 4.5. ToT denotes Tree-of-Thought.}
     \label{tab:configurationSelection}
     \begin{tabular}{llrrrrr}
         \hline
@@ -21,7 +21,7 @@ We selected Claude Opus 4.5 with Zero-Shot prompts, reasoning disabled, and temp
         gpt-oss-120B & Zero-Shot & 0.83 & 0.87 & 0.83 & 1.49 & 2808 \\
         Claude Opus 4.5 & Few-Shot & 0.88 & 0.89 & 0.88 & 45.00 & 352 \\
         Claude Opus 4.5 & Chain-of-Thought & 0.92 & 0.90 & 0.90 & 40.86 & 956 \\
-        Claude Opus 4.5 & Tree-of-Thought & 0.92 & 0.90 & 0.90 & 81.43 & 4701 \\
+        Claude Opus 4.5 & ToT-inspired & 0.92 & 0.90 & 0.90 & 81.43 & 4701 \\
         \hline
     \end{tabular}
 \end{table}
@@ -100,7 +100,7 @@ After the detector-informed review, the revised counts were \num{512} true posit
 
 Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} reports the complete threshold grid.
 
-\begin{table}[tbp]
+\begin{table}[H]
     \centering
     \small
     \caption{Sensitivity of pooled occurrence-level agreement to the line-span intersection-over-union (IoU) threshold. True positives (TP), false positives (FP), and false negatives (FN) follow the same one-to-one matching rule for all \num{536} predictions and \num{523} original reference spans. Micro F1 ranges from \num{0.863} to \num{0.873}.}

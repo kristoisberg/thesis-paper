@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–7 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Step 8 remains pending.
+Status: all eight steps are complete. The [closure ledger](2026-11-19-step-8-closure.md) records the final checks and remaining evidence limits. The primary held-out and full-corpus results are unchanged. See also the [Step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [Step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [Step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md).
 
 ## Scope and decisions
 
@@ -182,7 +182,7 @@ Files: `paper/references.bib`, `paper/main.tex`, relevant section citations/capt
 
 Done when compiled citation labels are unambiguous, citation postnotes attach to the intended source, and all visible resource identities match their links.
 
-Verification for step 7: the compiled paper shows OpenAI 2025a and 2025b, assigns Chapter 19 to Karwin and Chapter 3 to Isberg, and renders the IoU interval with an en dash. The visible resource names and short revisions correspond to their PDF link targets. The existing wording already describes the MySQL table as excluded by the path filter.
+Verification for step 7: the compiled paper shows OpenAI 2025a and 2025b, assigns Chapter 19 to Karwin, and renders the IoU interval with an en dash. The thesis citations give the relevant dataset-creation sections and appendices. The visible resource descriptions and short revisions correspond to their PDF link targets. The existing wording already describes the MySQL table as excluded by the path filter.
 
 ### 8. Rebuild and audit the complete revision
 
@@ -195,6 +195,8 @@ Dependencies: steps 1–7.
 - Produce a short closure ledger mapping each accepted finding to the change and validation evidence. Record unresolved historical limitations explicitly. Do not claim that editorial fixes resolve missing baseline or independent-annotation evidence.
 
 Done when the analysis artefacts, paper, replication instructions, and closure ledger agree and the final PDF is readable.
+
+Verification for Step 8 is in the [closure ledger](2026-11-19-step-8-closure.md). The final PDF builds without unresolved references, unresolved citations, or overfull boxes.
 
 ## Disposition of all follow-up items
 

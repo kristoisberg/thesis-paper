@@ -103,7 +103,7 @@ Validation notebooks use a separate Python path: Keys candidates come from unsor
 
 All 16 combinations of model and prompt were executed. The article displays seven rows: the four Zero-Shot configurations and the three other Claude Opus 4.5 prompts. The mapping below links each run to its preserved notebook. Each notebook records the same 1,159 completed files and 581 reference occurrences. These summaries are archived observations, not new model executions.
 
-P, R, and F1 below are the printed reference-support-weighted scores. Runtime is the printed batch runtime in seconds; the article rounds scores to two decimals and runtime to whole seconds.
+P, R, and F1 below are the printed reference-support-weighted scores. For precision, each validation prediction counts as covered if it overlaps any reference of the same class in the same file at line-span IoU 0.50 or higher. Recall applies the same rule to each reference span. These separate counts can reuse a span across matches. The held-out evaluation uses one-to-one matching. The article rounds the printed scores to two decimals and the batch runtime to whole seconds.
 
 | Archived run | Article table row | P | R | F1 | Runtime (s) |
 |---|---|---:|---:|---:|---:|

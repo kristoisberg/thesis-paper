@@ -2,7 +2,7 @@
 
 \subsection{Study overview}
 
-We evaluate how closely the detector's predicted antipattern occurrences match the reference annotations. We then describe how its flags are distributed across antipattern classes, files, and repositories in the full corpus.
+We evaluate agreement between the detector's predicted occurrences and the reference annotations. We then describe how its flags are distributed across antipattern classes, files, and repositories in the full corpus.
 
 We first identified open-source Java repositories that use jOOQ and retain generated schema classes. We then annotated a size-stratified sample, partitioned its projects into training, validation, and test sets, selected one detector configuration on the validation set, and evaluated it on the held-out test set. Finally, we applied the detector to the full identified corpus. As an exploratory part of this corpus analysis, we coded recurring source-fragment patterns among two query classes.
 
@@ -25,7 +25,7 @@ Finally, we reviewed the remaining repositories for copies that could cross proj
 \begin{figure}[tbp]
     \centering
     \includegraphics[width=200pt]{figures/data_funnel_diagram.png}
-    \caption{Repository selection for the study. A GitHub manifest search on 10 January 2026 returned \num{3829} repositories; source-content filters and duplicate review produced a preliminary corpus of \num{603} repositories and a final corpus of \num{602}. The resulting corpus is the study's identified target population.}
+    \caption{Repository selection for the study. A GitHub manifest search on 10 January 2026 returned \num{3829} repositories. We required version-controlled generated jOOQ classes and non-generated Java source referencing jOOQ or a generated class. Duplicate review reduced the resulting \num{645} repositories to \num{603} for sampling and \num{602} for corpus analysis.}
     \label{fig:dataFunnel}
 \end{figure}
 
@@ -97,7 +97,7 @@ The data-dependent support rule and seed search balanced occurrence counts. Whol
 
 \subsection{Detector configuration and execution}\label{sec:experimentsQuantitative}
 
-We limited each detector invocation to one request and one response. This scope allowed the same execution structure to cover four prompting strategies without adding multi-turn state. We developed universal prompts against the training partition and compared revisions with its reference annotations across the evaluated models. We performed no model-specific tuning.
+We used a single-turn interaction for each file. This allowed the same execution structure to cover four prompting strategies. We developed universal prompts against the training partition and compared revisions with its reference annotations across the evaluated models. We performed no model-specific tuning.
 
 Zero-Shot and Few-Shot followed established prompting designs \nobreakcite{DBLP:journals/csur/LiuYFJHN23,DBLP:conf/nips/BrownMRSKDNSSAA20}. Chain-of-Thought and Tree-of-Thought-inspired prompts elicited explicit intermediate analysis \nobreakcite{DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}.
 
@@ -109,7 +109,7 @@ Before submission, we removed leading and trailing whitespace from every source 
 
 Prompt development began with broad class instructions that left more of each decision to the model. During comparison with the training reference annotations, we found cases where the returned interpretation differed from the study's codebook. We therefore made operational decisions explicit and added relevant method calls, coding patterns, and exclusions where the class name alone did not determine the intended rule. The annotation decision trees documented variants encountered in the sample. The detector prompts also described relevant variants that were not observed there.
 
-For Poor Man's Search Engine, the annotation tree covered \texttt{LIKE}/\texttt{ILIKE} and substring conditions in \texttt{SELECT} statements' \texttt{WHERE} clauses. The prompt additionally covered regular expressions, which were not observed in the annotated sample. Both included unresolved wildcard inputs conservatively.
+For Poor Man's Search Engine, the annotation tree covered \texttt{LIKE}/\texttt{ILIKE} and substring conditions in \texttt{SELECT} statements' \texttt{WHERE} clauses. The prompt covered search conditions in any clause and included regular expressions, a variant absent from the annotated sample. Both included unresolved wildcard inputs conservatively.
 
 The validation set lacked Keyless Entry cases involving unique keys other than primary keys and 31 Flavors cases with ranges encoding discrete business categories. Validation therefore did not expose the restriction to primary keys or the overly broad exclusion of range comparisons in the prompts.
 
@@ -121,6 +121,8 @@ The selected set comprised OpenAI GPT-5.2 \nobreakcite{gpt52}, Z.ai GLM-5 \nobre
 
 We compared all \num{16} combinations of these four models and four prompting configurations on the \num{20}-repository validation set containing \num{1159} relevant files. The \href{https://github.com/kristoisberg/masters-thesis/tree/9913a7670fce52b135651f95ff18cd505c61b142/scripts/backups}{archived validation notebooks} preserve the complete comparison. Validation requests used the OpenAI Python SDK \nobreakcite{openAiPython2026GitHub} through OpenRouter \nobreakcite{openRouter2026homepage}. GPT-5.2 used xhigh reasoning, which did not support temperature adjustment. GLM-5 used temperature \num{0.0}, and its reasoning effort was not configurable. Claude Opus 4.5 used temperature \num{0.0} with reasoning disabled. We retained the default temperature of \num{1.0} for gpt-oss-120B with high reasoning because near-zero temperatures caused repeated-token loops. We ran each model-prompt pair once and selected the final configuration by observed agreement, cost, and runtime.\label{sec:models}
 
+Validation precision counted predictions that overlapped at least one reference of the same class in the same file at a line-span intersection over union of \num{0.50} or higher. Recall counted reference spans that overlapped at least one prediction under the same rule. The held-out evaluation used the one-to-one matching procedure described below.
+
 OpenAI Codex with GPT-5.4 \nobreakcite{gpt54} assisted implementation of the detector under human-defined requirements, review, and acceptance. The final detector recursively selected relevant Java files, attached key-definition context where available, submitted a structured request for each file, retried failures, and retained each returned class-labelled span. We executed one primary run on the \num{20} held-out projects, targeting \num{502} relevant files. The run cost \usd{14.34}, took \num{386} seconds, and returned \num{536} predictions. The corpus execution was recorded as using the same model, settings, and Zero-Shot prompt family. It produced the flags used for RQ2 and the exploratory source-fragment analysis.
 
 For the held-out and corpus runs, the detector selected Keys candidates from all discovered Java files containing the literal signature \texttt{public class Keys }. It chose the repository-relative path with the longest character-level prefix shared with the target path, using sorted path order to resolve ties. If no candidate existed, the schema request received no key context. This path-based selection did not verify that the chosen Keys class defined the target table's keys.
@@ -129,7 +131,7 @@ The detector's default prompt budget for Claude was \num{240000} characters and 
 
 The Zero-Shot, Few-Shot, and Chain-of-Thought validation runs took place on 6--7 March 2026, and the Tree-of-Thought-inspired runs on 27 March. Validation notebooks retried empty or failed responses. DeepInfra, which OpenRouter initially selected for GLM-5, had stability problems during the analysis. We therefore routed GLM-5 requests to Friendli and disabled provider fallbacks.
 
-The held-out test and corpus runs took place on 4 and 15 April 2026, respectively. The corresponding detector revisions are \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/80f3ff4eeabdc3fec860bc35bb9a4566fe130763}{\texttt{80f3ff4}} and \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/245b50aa381d9917e5febf9f4ab0cd13d1b9d944}{\texttt{245b50a}}, which preserve identical embedded prompt templates. The held-out command allowed up to \num{1000} retries per file. The corpus command allowed two retries per file. The \href{https://github.com/kristoisberg/thesis-paper/blob/09dd6965b4e95b92a132f3a3c866a6cd897811cd/analysis/README.md\#original-model-executions}{replication README} preserves the detailed execution records and their provenance limits.
+The held-out test and corpus runs took place on 4 and 15 April 2026, respectively. The corresponding detector revisions are \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/80f3ff4eeabdc3fec860bc35bb9a4566fe130763}{\texttt{80f3ff4}} and \href{https://github.com/kristoisberg/jooq-antipattern-detector/tree/245b50aa381d9917e5febf9f4ab0cd13d1b9d944}{\texttt{245b50a}}, which preserve identical embedded prompt templates. The held-out command allowed up to \num{1000} retries per file. The corpus command allowed two retries per file. The \href{https://github.com/kristoisberg/thesis-paper/blob/80a9898da632ee43e81cc9404365f9f5f21c3bb1/analysis/README.md\#original-model-executions}{replication guide} documents the execution records.
 
 \subsection{Localisation evaluation and error analysis}
 
@@ -171,7 +173,5 @@ We aggregate density across repositories in two ways. The pooled density divides
 To separate repository size from density, we retain all \num{602} repository records and apply the existing total-relevant-file strata: small repositories contain at most \num{31} files, medium repositories contain \numrange{32}{94}, and large repositories contain more than \num{94}. For each class-role frame and for the broad result, we select the ceiling of \qty{10}{\percent} of flagged repositories by flag count, using repository names to determine membership when flag counts tie at the cutoff. We compare the selected group's flag share, eligible-file share, and density relative to the remaining repositories. For file share and relative density, we also report bounds across all selections of tied repositories that preserve the group size.
 
 Finally, we test sensitivity to repeated content. A relevant file occurrence belongs to an exact-duplicate group when its SHA-256 appears more than once. Exact-content events are unique by content hash, class, source role, and inclusive line span. To calculate repository concentration, we give each file copy weight $1/k_h$, where $k_h$ is the number of files with content hash $h$. For exact-content event $e$, each file reporting it contributes event weight $1/m_e$, where $m_e$ is the number of copies that report that event. Each distinct content and each distinct event thus contribute one unit in total. This procedure covers byte-identical files; modified clones remain outside the sensitivity analysis.
-
-The execution was recorded as using the selected model, settings, and Zero-Shot prompt family. The corpus analysis describes detector output; prevalence and API-specific risk estimates would require an independent audit, class-specific error estimates, and class-specific API-opportunity denominators.
 
 For Implicit Columns and Poor Man's Search Engine, we assigned one exploratory source-fragment category to each detector flag. A fixed, precedence-ordered list of string and regular-expression patterns was applied to the code fragment returned by the detector, with the first matching pattern determining the category. We report leading patterns individually, pool the remaining recurring matches as other categorised patterns, and combine sparse or unmatched fragments in one group. The frozen \href{https://github.com/kristoisberg/masters-thesis/blob/9913a7670fce52b135651f95ff18cd505c61b142/scripts/21-find-frequent-offenders.ipynb}{source-fragment categorisation notebook} preserves the ordered patterns.
