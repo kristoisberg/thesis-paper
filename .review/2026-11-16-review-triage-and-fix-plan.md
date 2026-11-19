@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–5 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 6–8 remain pending.
+Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–6 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 7–8 remain pending.
 
 ## Scope and decisions
 
@@ -164,6 +164,8 @@ Files: `paper/sections/01_introduction.tex`, `02_background_related_work.tex`, `
 - Consolidate overlapping limitations across Methods, Results, Discussion, and Threats. Preserve the October readability improvements and the user's accepted introduction/contribution wording except where evidence requires a substantive correction.
 
 Done when no claim implies intrinsic model superiority, independently developed operational definitions, corpus prevalence, or classification-only prior work without evidence. Necessary qualifications should be near the claims they change; implementation minutiae can remain in the replication guide.
+
+Step 6 integrates Chen’s hybrid ORM analysis, Silva’s prompt comparison, and Gomes’s investigation of code metrics and prompt context. Sadik and Govind and the earlier PL/SQL prevalence study were considered. The retained sources keep the comparison focused on representation, output, and evaluation. The discussion states the need for a deterministic comparison to measure any LLM advantage.
 
 ### 7. Fix bibliography, labels, and small presentation issues
 

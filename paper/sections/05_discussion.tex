@@ -20,7 +20,7 @@ For ID Required, developers would need to examine the table definition and its c
 
 For Implicit Columns, developers could examine repeated expressions together and trace how the application uses the fetched records. They could check whether each expression needs every selected field and which explicit projections would preserve behaviour. Inspecting these expressions together could reveal a shared query-construction convention, which would need confirmation in the source before treating the flags as one refactoring task.
 
-The disagreements in Table~\ref{tab:detectionErrors} illustrate why corpus flags need independent review. For Keyless Entry, the role of an audit-log table can affect whether it needs a foreign key. For Fear of the Unknown, a flag can reveal a missing annotation.
+The disagreement patterns for Keyless Entry and Fear of the Unknown in Table~\ref{tab:detectionErrors} inform the audit priorities below.
 
 Repository totals need to be interpreted alongside the number of eligible files. A high flag count can reflect a large repository, a high density of flags, or both. An independent audit could use class-specific counts and densities to sample repositories with different distributions of detector output.
 
@@ -34,4 +34,4 @@ For Implicit Columns, the held-out errors identify another priority. Fourteen of
 
 The audit of Poor Man's Search Engine should distinguish full-text matching from excluded search forms and record unresolved wildcard behaviour separately. The operational definition conservatively includes unresolved cases, so their uncertainty should remain visible. Annotating consecutive expressions individually, with the enclosing query as context, would also separate judgments about search semantics from disagreements about occurrence grouping.
 
-The independent annotations could also support comparison with a deterministic jOOQ baseline, following established rule-based detection approaches \nobreakcite{DBLP:journals/tse/MohaGDM10}. Candidate rules could detect all-column projections and the primary-key naming condition used for ID Required. Judgments about suitable keys or audit-log relationships would require application context. Comparing the rules and the LLM detector on the same files, class definitions, and occurrence-matching procedure could assess their agreement, cost, and runtime and help identify where model-based interpretation adds value.
+Our held-out evaluation measured agreement for the LLM detector alone. Measuring any advantage would require comparison with deterministic jOOQ rules on the same annotated files \nobreakcite{DBLP:journals/tse/MohaGDM10}. Candidate rules could detect all-column projections and the primary-key naming condition used for ID Required. Judgments about suitable keys or audit-log relationships would require application context. Using the same class definitions and span-matching procedure would allow comparison of agreement, cost, and runtime.

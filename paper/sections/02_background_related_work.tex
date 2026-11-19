@@ -73,7 +73,7 @@ var employee = dslContext.select(DSL.asterisk())
 
 Because jOOQ produces the corresponding SQL at runtime \nobreakcite{jooq2025withgen}, source-level detection must interpret DSL calls and generated schema representations rather than rely only on recoverable SQL strings.
 
-\subsection{Detection approaches and the localisation gap}\label{sec:staticAnalysis}
+\subsection{Detection approaches and evaluation units}\label{sec:staticAnalysis}
 
 Traditional static detection of antipatterns and code smells includes metrics-based and rule-based approaches. Metrics-based approaches identify smells through threshold values for software measures such as lines of code, complexity, and coupling \nobreakcite{DBLP:conf/icsm/Marinescu04}. Several thresholds can be combined to characterise a structural profile spanning multiple source properties. The resulting decision depends on the selected measures and threshold values.
 
@@ -81,7 +81,7 @@ Rule-based approaches search a source representation such as an abstract syntax 
 
 Metric and pattern rules can produce false positives when the context needed to interpret a match is absent \nobreakcite[pp. 10--11]{DBLP:journals/jserd/PaivaDFS17}. Reports that are rejected during human review can reduce the practical usability of a tool and developers' confidence in its output \nobreakcite{DBLP:conf/icse/JohnsonSMB13}. The representation and the information encoded by a detector therefore affect both coverage and interpretation of its warnings.
 
-Researchers have also explored machine-learning techniques for code-smell detection \nobreakcite{DBLP:journals/ese/FontanaMZM16}. These approaches learn from human-annotated examples of smelly and clean code \nobreakcite{DBLP:journals/ese/FontanaMZM16}. Deep-learning approaches have subsequently been evaluated for the same task \nobreakcite[pp. 3492--3494]{DBLP:journals/cluster/MalhotraJK23}. LLM-based detectors analyse source code together with supplied natural-language instructions and context. They have been evaluated for code-quality detection \nobreakcite{blaauwendraad2025evaluating} and for smell detection in PL/SQL source \nobreakcite[p. 410]{de2025effectiveness}. These learned approaches still require an explicit output unit against which detections can be assessed.
+Researchers have also explored machine-learning techniques for code-smell detection \nobreakcite{DBLP:journals/ese/FontanaMZM16}. These approaches learn from human-annotated examples of smelly and clean code \nobreakcite{DBLP:journals/ese/FontanaMZM16}. Deep-learning approaches have subsequently been evaluated for the same task \nobreakcite[pp. 3492--3494]{DBLP:journals/cluster/MalhotraJK23}. Studies of Java code smells have compared generic and smell-specific prompts \nobreakcite{DBLP:conf/esem/SilvaSMAV24} and examined how definitions, source context, code metrics, and model settings affect classification \nobreakcite{DBLP:conf/sbes/GomesSMP25}.
 
 SQL-antipattern detectors use several representations before producing a warning. DbDeo extracts SQL statements from host-language source with regular expressions, parses the statements into models, and applies rules for nine schema-related antipatterns \nobreakcite{sharma2018smelly}. Extraction and parsing thus mediate between the host-language file and the parsed-statement warning. In their evaluation, the authors attributed all reported false positives to errors in the extraction and parsing phases \nobreakcite{sharma2018smelly}.
 
@@ -89,7 +89,9 @@ SQLInspect resolves SQL strings within Java procedures and passes the recovered 
 
 Other approaches begin from database-side representations. SQLCheck parses application query logs and applies static and dynamic analysis to individual queries and relationships among consecutive queries \nobreakcite{DBLP:conf/sigmod/DintyalaNA20}.  \textcite{eessaar2022,eessaar2023} uses queries based on database system catalogue to detect occurrences of database design antipatterns in the schema design.
 
-Prior LLM studies report recognition or classification of problematic code \nobreakcite{blaauwendraad2025evaluating}. PL/SQL work reports smell detection over procedural SQL source \nobreakcite[p. 410]{de2025effectiveness}. The present detector instead returns multiple class-labelled line spans from Java DSL and generated-schema code (Table~\ref{tab:detectionApproaches}).
+\textcite{DBLP:journals/tse/ChenSJHNF16} locate redundant data access in applications that use object-relational mapping (ORM). They combine static analysis of database-accessing methods with execution traces and generated SQL. Their analysis checks which retrieved data the transaction uses. Our Implicit Columns criterion identifies jOOQ expressions that fetch all columns without an explicit projection.
+
+LLM-based detection can also report source locations. In PL/SQL snippets, \textcite{de2025effectiveness} asked models to return the smell type and affected lines. Table~\ref{tab:detectionApproaches} compares the source representations and outputs of these approaches.
 
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
     \caption{Representations and output units of detection approaches relevant to jOOQ source analysis. API denotes application programming interface, AST denotes abstract syntax tree, and LLM denotes large language model.}
@@ -109,17 +111,21 @@ Prior LLM studies report recognition or classification of problematic code \nobr
     SQL recovered from host-language source or query logs; parsed-statement warnings \nobreakcite{sharma2018smelly,nagy2017static,DBLP:conf/sigmod/DintyalaNA20}. &
     Does not directly localise jOOQ DSL calls or generated schema classes. \\
 
+    Hybrid ORM analysis &
+    Database-accessing methods, execution traces, and generated SQL \nobreakcite{DBLP:journals/tse/ChenSJHNF16}. &
+    Identifies redundant access using evidence from exercised transactions. \\
+
     API or AST rules &
-    Host-language syntax and API patterns or AST nodes; warnings attached to matched source nodes \nobreakcite{DBLP:journals/tse/MohaGDM10}. &
-    Can localise encoded patterns but requires explicit coverage of jOOQ idioms and cross-file relationships. \\
+    Host-language syntax and API patterns or AST nodes, with warnings attached to matched source nodes \nobreakcite{DBLP:journals/tse/MohaGDM10}. &
+    Can flag all-column projections and key naming patterns. Other criteria can require evidence about related tables or application behaviour. \\
 
     LLM source analysis &
-    Source code and supplied context; prior work reports smell recognition or classification \nobreakcite{de2025effectiveness,blaauwendraad2025evaluating}. &
-    Can return class-labelled spans whose agreement and class-specific errors require empirical evaluation. \\
+    Java smell classifications or smell types with line locations in PL/SQL snippets \nobreakcite{DBLP:conf/esem/SilvaSMAV24,DBLP:conf/sbes/GomesSMP25,de2025effectiveness}. &
+    Provides examples of prompt-based classification and localisation in other source representations. \\
 
     This study &
     Java DSL and generated schema code; multiple class-labelled source-line spans. &
     Evaluates span agreement before counting detector flags across repositories. \\
 \end{longtable}
 
-File-level classification cannot show how many occurrences a detector recovers or whether their spans agree with a reference. Prior work does not report occurrence-level localisation for the seven retained classes in jOOQ code. We therefore evaluate same-file, same-class line-span agreement before counting detector flags across repositories.
+For the seven SQL antipattern classes considered here, the detector returns class-labelled spans in Java DSL expressions and generated schema classes. We match these spans one to one against reference spans within the same file and class. This measures occurrence-level agreement before we examine the distribution of detector flags across repositories.
