@@ -20,6 +20,8 @@ For ID Required, developers would need to examine the table definition and its c
 
 For Implicit Columns, developers could examine repeated expressions together and trace how the application uses the fetched records. They could check whether each expression needs every selected field and which explicit projections would preserve behaviour. Inspecting these expressions together could reveal a shared query-construction convention, which would need confirmation in the source before treating the flags as one refactoring task.
 
+The disagreements in Table~\ref{tab:detectionErrors} illustrate why corpus flags need independent review. For Keyless Entry, the role of an audit-log table can affect whether it needs a foreign key. For Fear of the Unknown, a flag can reveal a missing annotation.
+
 Repository totals need to be interpreted alongside the number of eligible files. A high flag count can reflect a large repository, a high density of flags, or both. An independent audit could use class-specific counts and densities to sample repositories with different distributions of detector output.
 
 \subsection{Priorities for independent corpus validation}

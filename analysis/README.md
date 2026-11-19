@@ -172,6 +172,14 @@ The script also replays the archived notebook's span-first procedure, reproducin
 
 The frozen `scripts/15-calculate-tool-localisation-corrected.ipynb` stores revised class-level TP/FP/FN aggregates supplied to its metric function. The seven rows sum to 512 TP, 24 FP, and 51 FN, implying reference support of 563 and pooled micro F1 0.931756. The reference-support-weighted F1 is a distinct value, 0.930902. The event-level revised reference and a record of individual changes were not retained, so the aggregates cannot establish which specific annotation was added, removed, or remapped. They support an optimistic, detector-informed count sensitivity rather than a reconstructable replacement dataset.
 
+### Corpus sensitivity by annotation-sample membership
+
+The [subset comparison](corpus_sample_sensitivity.csv) joins the existing per-repository corpus counts to the 61 annotated repositories listed in the split inventory. It pools eligible files, flagged files, and flags separately over the annotated subset, the other 541 repositories, and the full corpus. Rates use the pooled counts and are blank when their denominator is zero. The all-class rows also give flag counts by source role, which can be divided by the corresponding eligible-file counts in the ID Required and Implicit Columns rows to compare density within each role.
+
+```bash
+python analysis/corpus_sample_sensitivity.py > analysis/corpus_sample_sensitivity.csv
+```
+
 ### Original repository concentration
 
 This command requires the frozen `datasets/analysis-results.csv` containing the 15,931 corpus flags.

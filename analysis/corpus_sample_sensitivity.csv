@@ -1,0 +1,10 @@
+subset,repositories,analysis_label,eligible_files,flagged_files,flags,breadth_percent,flags_per_flagged_file,flags_per_100_eligible_files,generated_schema_flags,application_query_flags
+annotated,61,ID Required [generated schema],497,260,261,52.313883,1.003846,52.515091,,
+remaining,541,ID Required [generated schema],6729,3331,3336,49.502155,1.001501,49.576460,,
+full,602,ID Required [generated schema],7226,3591,3597,49.695544,1.001671,49.778577,,
+annotated,61,Implicit Columns [application/query source],1673,291,745,17.393903,2.560137,44.530783,,
+remaining,541,Implicit Columns [application/query source],9089,2316,6544,25.481351,2.825561,71.999120,,
+full,602,Implicit Columns [application/query source],10762,2607,7289,24.224122,2.795934,67.729047,,
+annotated,61,Any retained class [broad detector-output density],2170,625,1384,28.801843,2.214400,63.778802,588,796
+remaining,541,Any retained class [broad detector-output density],15818,7028,14547,44.430396,2.069863,91.964850,7455,7092
+full,602,Any retained class [broad detector-output density],17988,7653,15931,42.545030,2.081667,88.564599,8043,7888

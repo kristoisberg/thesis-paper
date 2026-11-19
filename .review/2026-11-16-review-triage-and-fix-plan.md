@@ -2,7 +2,7 @@
 
 Date: 16 November 2026.
 
-Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–4 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 5–8 remain pending.
+Status: the author confirmed the revision plan and its scope, then requested that the repository's original thesis also be checked for useful literature. Steps 1–5 are complete. See the [step 1 evidence ledger](2026-11-16-step-1-evidence-ledger.md), [step 2 reconciliation](2026-11-17-step-2-annotation-reconciliation.md), and [step 3 operational-boundary checks](2026-11-17-step-3-operational-boundaries.md). Step 2 also corrects a verified repeat-annotation pairing error: exact labelled-event F1 is 0.938, replacing the archived span-first calculation of 0.925. The primary held-out detector results are unchanged. The thesis-source assessment is an addition to step 6. Steps 6–8 remain pending.
 
 ## Scope and decisions
 
@@ -146,6 +146,8 @@ Files: a small extension to existing corpus analysis or a focused script under `
 - Report the preserved 12,391 seconds, if included, as summed per-repository analysis time. No verified corpus-dollar total or exact end-to-end wall time has been identified; do not extrapolate from test cost.
 
 Done when the new aggregation is reproducible, subset counts reconcile to full-corpus counts, weighting/denominators are explicit, and the prose reflects the actual sensitivity result. Limit the added analysis to the agreed metrics; a full new set of decile and fragment tables is unnecessary.
+
+Verification for step 5: the subset script reproduces the saved CSV and verifies that the 61 and 541 repository counts sum to the full corpus for all three analysis rows. The nine manuscript rows match the CSV and the four revised class rows match the notebook counts. The paper builds with the two existing line-overflow warnings.
 
 ### 6. Correct scientific positioning and integrate related work
 

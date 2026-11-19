@@ -2,12 +2,14 @@
 
 \subsection{Detector configuration selection}\label{sec:detectorSelectionResults}
 
-Based on the validation comparison in Table~\ref{tab:configurationSelection}, we selected Claude Opus 4.5 \nobreakcite{opus45Card}, with reasoning disabled, temperature \num{0.0}, and the Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23}. The comparison also included GPT-5.2, GLM-5, and gpt-oss-120B \nobreakcite{gpt52,DBLP:journals/corr/abs-2602-15763,DBLP:journals/corr/abs-2508-10925}, with Few-Shot, Chain-of-Thought, and Tree-of-Thought-inspired prompts following established designs \nobreakcite{DBLP:conf/nips/BrownMRSKDNSSAA20,DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22,tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. Three models reported the same displayed reference-support-weighted F1-score of \num{0.88} with Zero-Shot prompts. Claude Opus 4.5 completed the comparison in \num{367} seconds, the shortest runtime among the Zero-Shot configurations. The reasoning-oriented prompts reached \num{0.90} F1 with higher costs and runtimes. We therefore selected the simpler configuration for the held-out and corpus runs.
+We ran all \num{16} model and prompt combinations. Table~\ref{tab:configurationSelection} shows seven. Four compare OpenAI GPT-5.2 \nobreakcite{gpt52}, Z.ai GLM-5 \nobreakcite{DBLP:journals/corr/abs-2602-15763}, Anthropic Claude Opus 4.5 \nobreakcite{opus45Card}, and OpenAI gpt-oss-120B \nobreakcite{DBLP:journals/corr/abs-2508-10925} with Zero-Shot prompts \nobreakcite{DBLP:journals/csur/LiuYFJHN23}. Three show the selected model with Few-Shot \nobreakcite{DBLP:conf/nips/BrownMRSKDNSSAA20}, Chain-of-Thought \nobreakcite{DBLP:conf/nips/KojimaGRMI22,DBLP:conf/nips/Wei0SBIXCLZ22}, and Tree-of-Thought-inspired prompts \nobreakcite{tree-of-thought-prompting,DBLP:conf/nips/YaoYZS00N23}. The results reflect the reasoning settings, provider routing, and retry conditions of each run.
+
+We selected Claude Opus 4.5 with Zero-Shot prompts, reasoning disabled, and temperature \num{0.0}. Its weighted F1 was \num{0.8839}, compared with \num{0.8801} for GPT-5.2 and \num{0.8768} for GLM-5 with Zero-Shot prompts. At \num{367} seconds it was the fastest Zero-Shot configuration, although GLM-5 cost less. Claude Opus 4.5 reached about \num{0.90} F1 with Chain-of-Thought and Tree-of-Thought-inspired prompts at higher cost and longer runtime. We chose the simpler prompt with a short observed runtime and agreement close to that of the higher-scoring prompts.
 
 \begin{table}[tbp]
     \centering
     \scriptsize
-    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs are reported by OpenRouter in US dollars, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts; the final three compare alternative prompts with Claude Opus 4.5.}
+    \caption{Validation results used to select the detector configuration. Precision, recall, and F1 are reference-support-weighted occurrence-agreement metrics over \num{20} validation repositories. Costs are reported by OpenRouter in US dollars, and runtime is in seconds. The first four rows compare models with Zero-Shot prompts. The final three compare alternative prompts with Claude Opus 4.5.}
     \label{tab:configurationSelection}
     \begin{tabular}{llrrrrr}
         \hline
@@ -28,7 +30,7 @@ Based on the validation comparison in Table~\ref{tab:configurationSelection}, we
 
 In one run, the detector returned \num{536} predictions from \num{502} relevant files in the \num{20}-repository test partition. The original reference contained \num{523} spans. At the prespecified intersection-over-union threshold of \num{0.50}, the one-to-one matching procedure yielded \num{460} true positives, \num{76} false positives, and \num{63} false negatives. The corresponding micro precision, recall, and F1-score were \num{0.858}, \num{0.880}, and \num{0.869}.
 
-Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial class differences. F1-scores ranged from \num{0.481} for Fear of the Unknown to \num{0.974} for 31 Flavors. Implicit Columns, 31 Flavors, and Rounding Errors each exceeded \num{0.89}, whereas Keyless Entry, Fear of the Unknown, and Poor Man's Search Engine remained below \num{0.70}. The macro precision, recall, and F1-score were \num{0.797}, \num{0.813}, and \num{0.793}; the reference-support-weighted values were \num{0.885}, \num{0.880}, and \num{0.877}. These aggregates reinforce the need to interpret each corpus flag class in light of its own held-out agreement.
+Table~\ref{tab:toolDetections} shows that the aggregate result masks substantial class differences. F1-scores ranged from \num{0.481} for Fear of the Unknown to \num{0.974} for 31 Flavors. Implicit Columns, 31 Flavors, and Rounding Errors each exceeded \num{0.89}, whereas Keyless Entry, Fear of the Unknown, and Poor Man's Search Engine remained below \num{0.70}. The macro precision, recall, and F1-score were \num{0.797}, \num{0.813}, and \num{0.793}; the reference-support-weighted values were \num{0.885}, \num{0.880}, and \num{0.877}. These aggregates reinforce the need to interpret each corpus flag class in light of its own held-out agreement. The \num{39} references for 31 Flavors came from one test repository, and the \num{16} for Rounding Errors came from two. Their high F1 scores therefore describe agreement on a small number of projects.
 
 \begin{table}[H]
     \centering
@@ -77,7 +79,24 @@ The disagreements in Table~\ref{tab:detectionErrors} cluster around local query 
 
 Four mechanisms dominated: all-column \texttt{returning()} calls, keyless audit logs, sentinel defaults, and grouped search expressions. The remaining disagreements mainly involved line boundaries, sparse schema evidence, or class-specific semantics already summarised in the table.
 
-After the detector-informed review, the revised counts were \num{512} true positives, \num{24} false positives, and \num{51} false negatives, corresponding to \num{563} reference events. These counts yield micro precision \num{0.955}, recall \num{0.909}, and F1 \num{0.932}. The predictions are unchanged. We treat these results as an optimistic sensitivity analysis.
+After the detector-informed review, the revised counts were \num{512} true positives, \num{24} false positives, and \num{51} false negatives, corresponding to \num{563} reference events. These counts yield micro precision \num{0.955}, recall \num{0.909}, and F1 \num{0.932}. The predictions are unchanged. We treat these results as an optimistic sensitivity analysis. Table~\ref{tab:revisedClassCounts} shows the four classes with changed counts.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Class-level sensitivity to detector-informed changes in the reference counts. TP, FP, and FN are revised counts with predictions held fixed. Only aggregate revised counts are available, which limits verification of individual annotation changes.}
+    \label{tab:revisedClassCounts}
+    \begin{tabular}{lrrrrr}
+        \hline
+        Class & TP & FP & FN & Original F1 & Revised F1 \\
+        \hline
+        Implicit Columns & 256 & 1 & 15 & 0.960 & 0.970 \\
+        ID Required & 101 & 1 & 7 & 0.860 & 0.962 \\
+        Keyless Entry & 49 & 16 & 0 & 0.693 & 0.860 \\
+        Fear of the Unknown & 42 & 1 & 17 & 0.481 & 0.824 \\
+        \hline
+    \end{tabular}
+\end{table}
 
 Micro F1 varied by \num{0.010} across the tested span boundaries. Table~\ref{tab:iouSensitivity} reports the complete threshold grid.
 
@@ -104,7 +123,7 @@ A \num{10000}-replicate project-cluster bootstrap placed micro precision between
 
 \subsection{RQ2: How are the detector's flags distributed across the seven SQL antipatterns, eligible files, and repositories in the 602-repository corpus?}\label{sec:rq2CorpusFlags}
 
-The corpus source frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
+The corpus source frame contains \num{17988} relevant file occurrences in \num{602} repositories, and the detector produced \num{15931} positive flags. The recorded analysis times summed across repositories totalled \num{12391} seconds. At least one retained class was flagged in \num{7653} files, or \qty{42.5}{\percent}, and \num{601} repositories, or \qty{99.8}{\percent}.
 
 \begin{table}[H]
     \centering
@@ -130,6 +149,33 @@ The corpus source frame contains \num{17988} relevant file occurrences in \num{6
 \end{table}
 
 Table~\ref{tab:corpusFlags} separates class totals, repository coverage, flagged-file breadth, within-file repetition, and density in the corresponding source-role frame. The two most frequent classes have different output structures. ID Required flags cover \num{3591} of \num{7226} generated-schema files, or \qty{49.7}{\percent}, and average \num{1.00} per flagged file. Implicit Columns flags cover \num{2607} of \num{10762} application/query files, or \qty{24.2}{\percent}, and average \num{2.80} flags per flagged file. The first class is therefore broader across its eligible file frame, whereas the second repeats more within flagged files. Implicit Columns and ID Required together account for \num{10886} flags, or \qty{68.3}{\percent} of the output.
+
+The same breadth and repetition pattern holds outside the annotated sample (Table~\ref{tab:sampleSensitivity}). In the other \num{541} repositories, ID Required covered \qty{49.5}{\percent} of eligible files and averaged one flag per flagged file. Implicit Columns covered \qty{25.5}{\percent} and averaged \num{2.83} flags per flagged file. This comparison describes detector output by sample membership.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \setlength{\tabcolsep}{2pt}
+    \caption{Pooled flag measures by annotation-sample membership. G denotes generated schema and A denotes application/query source. Breadth is the percentage of eligible files flagged. Repetition is flags per flagged file. Density is flags per 100 eligible files.}
+    \label{tab:sampleSensitivity}
+    \begin{tabular}{llrrrrrr}
+        \hline
+        Class and role & Subset & Eligible & Flagged & Flags & Breadth & Repetition & Density \\
+        \hline
+        ID Required (G) & Annotated (61) & 497 & 260 & 261 & 52.3 & 1.00 & 52.52 \\
+        & Remaining (541) & 6729 & 3331 & 3336 & 49.5 & 1.00 & 49.58 \\
+        & Full (602) & 7226 & 3591 & 3597 & 49.7 & 1.00 & 49.78 \\
+        Implicit Columns (A) & Annotated (61) & 1673 & 291 & 745 & 17.4 & 2.56 & 44.53 \\
+        & Remaining (541) & 9089 & 2316 & 6544 & 25.5 & 2.83 & 72.00 \\
+        & Full (602) & 10762 & 2607 & 7289 & 24.2 & 2.80 & 67.73 \\
+        Any retained class & Annotated (61) & 2170 & 625 & 1384 & 28.8 & 2.21 & 63.78 \\
+        & Remaining (541) & 15818 & 7028 & 14547 & 44.4 & 2.07 & 91.96 \\
+        & Full (602) & 17988 & 7653 & 15931 & 42.5 & 2.08 & 88.56 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The remaining repositories had higher pooled density across all classes. Generated schema accounted for \qty{42.5}{\percent} of their eligible files, compared with \qty{22.9}{\percent} in the annotated sample. Generated-schema density was slightly lower outside the sample (\num{110.79} versus \num{118.31} flags per 100 files), while application/query density was higher (\num{78.03} versus \num{47.58}). Both the file mix and the higher density within application/query files contribute to the pooled difference.
 
 Across all repositories, pooled density is \num{88.56} flags per 100 relevant files. The repository-equal mean is \num{93.63}, and the median is \num{83.46}, with an interquartile interval of \numrange{51.28}{120.00}. Raw flag count correlates with relevant-file count at Spearman $\rho=\num{0.778}$. Large repositories contain \qty{43.8}{\percent} of relevant files and \qty{39.8}{\percent} of flags. Their broad density is \num{80.50}, below the small- and medium-repository densities of \num{93.19} and \num{96.65}.
 
