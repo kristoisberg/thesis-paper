@@ -45,7 +45,7 @@ The detector experiments retain seven classes. Table~\ref{tab:evaluatedAntipatte
     A jOOQ \texttt{SELECT} uses \texttt{LIKE}, \texttt{ILIKE}, or substring methods such as \texttt{contains} and \texttt{containsIgnoreCase} for full-text-style matching in a \texttt{WHERE} condition \nobreakcite[Ch. 17]{karwin2023sql}. Unresolved wildcard behaviour is included conservatively. Prefix searches are excluded. \\
 
     Implicit Columns &
-    A jOOQ query or generated data-access-object (DAO) operation fetches all columns without an explicit projection. Calls within \texttt{fetchCount} or \texttt{fetchExists} are excluded \nobreakcite[Ch. 19]{karwin2023sql,jooq2025select}. \\
+    A jOOQ query or generated data-access-object (DAO) operation fetches all columns without an explicit projection. Calls within \texttt{fetchCount} or \texttt{fetchExists} are excluded \citetext{\citealp[Ch. 19]{karwin2023sql}; \citealp{jooq2025select}}. \\
 \end{longtable}
 
 \subsection{jOOQ source representation}\label{sec:jooq}
@@ -120,8 +120,8 @@ LLM-based detection can also report source locations. In PL/SQL snippets, \textc
     Can flag all-column projections and key naming patterns. Other criteria can require evidence about related tables or application behaviour. \\
 
     LLM source analysis &
-    Java smell classifications or smell types with line locations in PL/SQL snippets \nobreakcite{DBLP:conf/esem/SilvaSMAV24,DBLP:conf/sbes/GomesSMP25,de2025effectiveness}. &
-    Provides examples of prompt-based classification and localisation in other source representations. \\
+    Java smell classifications \nobreakcite{DBLP:conf/esem/SilvaSMAV24,DBLP:conf/sbes/GomesSMP25}. Smell types and line locations in PL/SQL snippets \nobreakcite{de2025effectiveness}. &
+    Shows that prompt-based detectors can classify smells and report source locations. \\
 
     This study &
     Java DSL and generated schema code; multiple class-labelled source-line spans. &
